@@ -17,7 +17,7 @@ Add these lines to your `composer.json` file
 ```json
 {
     "require": {
-        "jestrux/pier": "master"
+        "jestrux/pier": "dev-master"
     },
     "repositories": [
         {
