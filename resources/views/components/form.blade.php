@@ -7,7 +7,9 @@
         settings: {!! $model->settings !!}
     }
 
-    window.pierModelValues = {!! collect($values == null ? [] : $values)->toJson() !!};
+    @if($values != null)
+        window.pierModelValues = {!! collect($values)->toJson() !!};
+    @endif
 
     window.pierRedirectTo = "{{$redirectTo}}";
 </script>
