@@ -35,11 +35,11 @@ class PierServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../config/config.php' => config_path('pier.php'),
-            ], 'config');
+            ], 'pier-config');
     
             $this->publishes([
                 __DIR__.'/../resources/assets' => public_path('pier'),
-            ], 'public');
+            ], 'pier-assets');
         }
     }
 
