@@ -22,7 +22,7 @@ Add these lines to your `composer.json` file
     "repositories": [
         {
             "type": "git",
-            "url": "https://github.com/jestrux/pier.git"
+            "url": "https://github.com/jestrux/pier-package.git"
         }
     ]
 }
