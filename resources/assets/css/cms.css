@@ -1,0 +1,476 @@
+*{
+    box-sizing: border-box !important;
+}
+.flex-layout,
+.modal {
+    display: -webkit-flex;
+    display: -ms-flex
+}
+
+#container,
+.modal,
+aside {
+    height: 100vh
+}
+
+.modal {
+    position: fixed;
+    top: 0
+}
+
+.rounded-btn,
+aside li a {
+    text-decoration: none;
+    text-transform: uppercase
+}
+
+#pageTitle::first-letter,
+.rounded-btn,
+.ticket-item .item-title:first-letter,
+aside li a {
+    text-transform: uppercase
+}
+
+@font-face {
+    font-family: Cabin;
+    src: url(../fonts/cabin/Cabin-Regular.ttf)
+}
+
+@font-face {
+    font-family: Lobster;
+    src: url(../fonts/lobster/Lobster-Regular.ttf)
+}
+
+@font-face {
+    font-family: Script;
+    src: url(../fonts/arimo/Arimo-Regular.ttf)
+}
+
+body,
+html {
+    padding: 0;
+    margin: 0;
+    overflow: hidden
+}
+
+.serif {
+    font-family: Georgia, serif
+}
+
+.sans-serif {
+    font-family: Arimo, Verdana, Geneva, sans-serif
+}
+
+.script {
+    font-family: Lobster, Verdana, Geneva, sans-serif
+}
+
+.flex-layout {
+    display: -moz-flex;
+    display: -o-flex;
+    display: flex
+}
+
+.flex-layout.column {
+    flex-direction: column
+}
+
+.flex-layout.center {
+    align-items: center
+}
+
+.flex-layout.center-center {
+    -ms-align-items: center;
+    align-items: center;
+    justify-content: center
+}
+
+.flex-layout.wrap {
+    flex-wrap: wrap
+}
+
+.modal {
+    left: 0;
+    width: 100vw;
+    z-index: 999;
+    pointer-events: none;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, .6)
+}
+
+#container,
+#userMenu,
+#userMenu #dp,
+aside li a {
+    position: relative
+}
+
+#userMenu:hover #details,
+.modal.open {
+    pointer-events: auto;
+    opacity: 1
+}
+
+.modal.no-backdrop {
+    background-color: transparent
+}
+
+.modal .modal-content {
+    background-color: #fff;
+    border-radius: 3px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .2)
+}
+
+.modal .modal-title {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.modal .modal-title .title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    padding: 0
+}
+
+.modal .modal-body {
+    padding: 30px 16px
+}
+
+.modal .modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+    background: #e8e8e8;
+}
+
+.modal .modal-buttons button {
+    margin: 0 8px
+}
+
+.summary-card {
+    background: #fff;
+    margin: 10px;
+    min-width: calc(33.333% - 20px);
+    box-shadow: 0 0 12px rgba(0, 0, 0, .1);
+    text-align: center
+}
+
+.summary-card .card-content {
+    padding: 30px 20px 20px
+}
+
+.summary-card .card-title {
+    display: block;
+    font-size: 1.5em
+}
+
+.summary-card .card-count {
+    display: block;
+    font-size: 3em;
+    font-weight: 700;
+    margin-bottom: 10px
+}
+
+.summary-card .card-link {
+    display: block;
+    border-top: 1px solid #ddd;
+    color: #000;
+    padding: 12px 12px 20px
+}
+
+#mainNav button,
+#mainNav form,
+#mainNav input,
+aside li a {
+    display: inline-block
+}
+
+#container {
+    display: flex;
+}
+
+aside {
+    width: 260px;
+    background: #fff;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+    z-index: 2;
+}
+
+aside .long-header {
+    font-size: 20px;
+    font-weight: bolder;
+    padding: 30px 30px;
+    padding-top: 80px;
+}
+
+aside ul {
+    margin: 20px 0 0;
+    padding: 0
+}
+
+aside li {
+    list-style-type: none;
+}
+
+aside li a {
+    padding: 14px 25px;
+    display: block;
+    color: #777;
+    font-size: 16px;
+}
+
+aside a.active{
+    color: #2c5282
+}
+
+aside li a:after {
+    content: "";
+    position: absolute;
+    left: 25px;
+    bottom: 2px;
+    height: 1px;
+    background: #2c5282;
+    width: 65%;
+    max-width: 90px;
+    display: none
+}
+
+aside li a.active:after {
+    display: block
+}
+
+main {
+    overflow: hidden;
+    background: #fafafa;
+}
+
+#mainNav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    min-height: 60px;
+    padding-left: 45px;
+    background-color: #fff;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
+    z-index: 1;
+    flex-shrink: 0;
+}
+
+#pageTitle {
+    font-size: 20px;
+    margin: 0 12px;
+    font-family: verdana
+}
+
+#userMenu {
+    padding: 10px
+}
+
+#userMenu #dp {
+    border-radius: 50%;
+    background-color: #ddd;
+    width: 42px;
+    height: 42px;
+    overflow: hidden;
+    margin: 8px 0
+}
+
+#userMenu #dp img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%
+}
+
+#userMenu #details {
+    white-space: nowrap;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 20px 70px 15px 30px;
+    background-color: #fff;
+    box-shadow: -2px 1px 12px rgba(0, 0, 0, .1);
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#userMenu:hover #details {
+    transform: none;
+    transition: opacity .25s ease-out
+}
+
+#userMenu #details a,
+#userMenu #details span {
+    display: block;
+}
+
+#mainContent {
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.rounded-btn {
+    background-color: transparent;
+    text-align: center;
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: 28px;
+    border: 1px solid #999;
+    font-size: 12px;
+    font-family: verdana;
+    color: #000;
+    margin-top: 12px;
+    min-width: 60px
+}
+
+.input-group {
+    margin: 10px 0;
+    width: 100%;
+    position: relative
+}
+
+.flex-layout .input-group {
+    margin-right: 10px;
+    width: 50%
+}
+
+.flex-layout .input-group:last-child {
+    margin-right: 0;
+    margin-left: 10px
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px
+}
+
+.flex-layout .input-group label {
+    margin-bottom: 0
+}
+
+.input-group input,
+.input-group textarea,
+.input-group select {
+    font-size: 20px;
+    width: 100%
+}
+
+form .input-group + .input-group{
+	margin-top: 30px;
+}
+
+form .input-group label,
+form .input-group select,
+form .input-group textarea,
+form .input-group input{
+	display: block;
+	width: 100%;
+}
+
+form .input-group label{
+	font-size: 1.15em;
+	color: #444;
+}
+
+form .input-group select, 
+form .input-group textarea,
+form .input-group input{
+	margin-top: 0.2em;
+	background-color: transparent;
+	font-size: 18px;
+	padding: 0.3em 0.6em;
+	border: 1px solid #bbb;
+    border: none;
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+	min-width: 220px;
+    outline: none;
+    border-radius: 2px;
+	transition: all 0.35s ease-in-out;
+}
+
+form .input-group select,
+form .input-group input{
+    height: 40px;
+}
+
+form .input-group textarea:focus,
+form .input-group select:focus,
+form .input-group input:focus{
+	border-bottom: 1px solid #333;
+}
+
+
+/* PURE CSS TABLE */
+.pure-table {
+    /* Remove spacing between table cells (from Normalize.css) */
+    border-collapse: collapse;
+    border-spacing: 0;
+    empty-cells: show;
+    border: 1px solid #cbcbcb;
+}
+
+.pure-table caption {
+    color: #000;
+    font: italic 85%/1 arial, sans-serif;
+    padding: 1em 0;
+    text-align: center;
+}
+
+.pure-table td,
+.pure-table th {
+    border-left: 1px solid #cbcbcb;/*  inner column border */
+    border-width: 0 0 0 1px;
+    font-size: inherit;
+    margin: 0;
+    overflow: visible; /*to make ths where the title is really long work*/
+    padding: 0.5em 1em; /* cell padding */
+}
+
+.pure-table thead {
+    background-color: #e0e0e0;
+    color: #000;
+    text-align: left;
+    vertical-align: bottom;
+    text-transform: capitalize;
+}
+
+
+.pure-table td {
+    background-color: transparent;
+}
+
+.pure-table-odd td {
+    background-color: #f2f2f2;
+}
+
+/* nth-child selector for modern browsers */
+.pure-table-striped tr:nth-child(2n-1) td {
+    background-color: #f2f2f2;
+}
+
+/* BORDERED TABLES */
+.pure-table-bordered td {
+    border-bottom: 1px solid #cbcbcb;
+}
+.pure-table-bordered tbody > tr:last-child > td {
+    border-bottom-width: 0;
+}
+
+
+/* HORIZONTAL BORDERED TABLES */
+
+.pure-table-horizontal td,
+.pure-table-horizontal th {
+    border-width: 0 0 1px 0;
+    border-bottom: 1px solid #cbcbcb;
+}
+.pure-table-horizontal tbody > tr:last-child > td {
+    border-bottom-width: 0;
+}
