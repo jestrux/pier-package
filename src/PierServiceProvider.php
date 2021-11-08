@@ -5,6 +5,7 @@ namespace Jestrux\Pier;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Jestrux\Pier\View\Components\Data;
+use Jestrux\Pier\View\Components\DataGrid;
 use Jestrux\Pier\View\Components\Filter;
 use Jestrux\Pier\View\Components\Form;
 use Jestrux\Pier\View\Components\SearchBar;
@@ -57,6 +58,7 @@ class PierServiceProvider extends ServiceProvider
             Filter::class,
             Form::class,
             SearchBar::class,
+            DataGrid::class,
         ]);
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'pier');
         $this->registerRoutes();

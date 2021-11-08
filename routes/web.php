@@ -39,11 +39,24 @@ Route::post('/data-refetch', function (Request $request) {
     return view($filename, ["data" => $data]);
 });
 
+Route::post('/data-grid-refetch', function (Request $request) {
+    $props = $request->all();
+    $model = $request->input("model");
+    $filters = $request->input("filters");
+
+    $data = PierMigration::browse($model, $filters);
+
+    $props['data'] = $data;
+
+    return view("pier::data-grid-list", $props);
+});
+
 Route::prefix('model')->group(function () {
     Route::post('/', [EditorController::class, 'create']);
     Route::get('/', [EditorController::class, 'list']);
     Route::get('{model_name}/truncate', [EditorController::class, 'truncate']);
     Route::get('{model_name}/drop', [EditorController::class, 'drop']);
+    Route::post('{model_name}/migrate', [EditorController::class, 'migrate']);
     Route::post('{model_name}/populate', [EditorController::class, 'populate']);
     Route::get('{model_name}/describe', [EditorController::class, 'describe']);
     Route::get('{model_name}/fields', [EditorController::class, 'fields']);
@@ -61,4 +74,11 @@ Route::prefix('api')->group(function () {
     Route::post('{model_name}/upload_file', [APIController::class, 'upload_file']);
     Route::patch('{model_name}/{row_id}', [APIController::class, 'updateResource']);
     Route::delete('{model_name}/{row_id}', [APIController::class, 'deleteResource']);
+});
+
+Route::get('admin/upsertModel/{model}/{id?}', function($model, $id = null){
+    return view('pier::upsert-model', [
+        "model" => $model,
+        "id" => $id,
+    ]);
 });

@@ -5,12 +5,17 @@ namespace Jestrux\Pier\View\Components;
 use Illuminate\View\Component;
 use Jestrux\Pier\PierMigration;
 
-class Data extends Component{
+class DataGrid extends Component {
     public $model;
-    public $rowId;
+    public $imageField;
+    public $metaField;
+    public $titleField;
+    public $descriptionField;
     public $filters;
     public $data;
     public $instanceId;
+    public $lean;
+    public $showActions;
 
     function modifiedFilters($filters){
         return $filters->keys()->reduce(function($agg, $key) use($filters){
@@ -32,26 +37,36 @@ class Data extends Component{
         return $newFilters;
     }
 
-    public function __construct($model, $rowId = null, $filters = []){
+    public function __construct(
+        $model, $filters = [], 
+        $imageField = "image", 
+        $metaField = null, 
+        $titleField = "title", 
+        $descriptionField = "description",
+        $lean = false,
+        $showActions = true
+    ){
         $this->model = $model;
+        $this->imageField = $imageField;
+        $this->metaField = $metaField;
+        $this->titleField = $titleField;
+        $this->descriptionField = $descriptionField;
+        $this->lean = (bool) $lean;
+        $this->showActions = (bool) $showActions;
         $this->filters = $filters;
 
         if(count($filters) > 0)
             $this->filters = $this->modifiedFilters(collect($filters));
 
-        if($rowId == null)
-            $this->data = PierMigration::browse($this->model, $this->filtersWithAnd($this->filters));
-        else
-            $this->data = PierMigration::detail($this->model, $rowId, $this->filtersWithAnd($this->filters));
+        $this->data = PierMigration::browse($this->model, $this->filtersWithAnd($this->filters));
 
         $bytes = random_bytes(6);
         $this->instanceId = bin2hex($bytes);
     }
 
     public function render(){
-        return view('pier::components.data', [
-            "data" => $this->data,
-            "instanceId" => $this->instanceId,
+        return view('pier::components.data-grid', [
+            "data" => $this->data
         ]);
     }
 }

@@ -25,7 +25,7 @@
                     return [key, value];
                 }));
                 
-                const res = await fetch("/pier/data-refetch", {
+                const res = await fetch("/data-refetch", {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json'
