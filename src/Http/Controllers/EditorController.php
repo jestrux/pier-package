@@ -15,6 +15,11 @@ class EditorController extends Controller
         $res = PierMigration::record($model, $fields, $displayField);
         return response()->json($res);
     }
+
+    public function migrate($model){
+        $res = PierMigration::migrate_model($model);
+        return response()->json($res);
+    }
     
     public function list(){
         $res = PierMigration::all();

@@ -694,6 +694,59 @@ class PierMigration extends Model{
         return $pierModel->fresh();
     }
 
+    static function migrate_model($model){
+        $table_name = Str::snake($model);
+        $fields = self::model_fields($model);
+
+        $multi_reference_fields = $fields->filter(function($field){
+            return $field->type == 'multi-reference';
+        });
+
+        $fields = $fields->filter(function($field){
+            return $field->type != 'multi-reference';
+        });
+        
+        Schema::create($table_name, function (Blueprint $table) use($fields){
+            $table->uuid("_id");
+            
+            foreach($fields as $field) {
+                $field = (array) $field;
+                $label = $field['label'];
+                $type = $field['type'];
+                $nullable = !$field['required'];
+                $meta = isset($field['meta']) ? (array)$field['meta'] : null;
+
+                self::field_type_map($table, $label, $type, $nullable, $meta);
+            };
+            
+            $table->timestamps();
+            $table->primary("_id");
+        });
+
+        $multi_reference_fields->each(function($field) use($table_name){
+            $field = (array) $field;
+            $reference_table_name = Str::snake($field['label']);
+
+            Schema::create($table_name . '_' . $reference_table_name, function (Blueprint $table) use($field, $table_name, $reference_table_name){
+                $table->uuid("_id");
+                $table->uuid($table_name.'_id');
+                $table->uuid($reference_table_name.'_id');
+
+                $table->foreign($table_name.'_id')
+                    ->references('_id')
+                    ->on($table_name)
+                    ->onDelete('cascade');
+
+                $table->foreign($reference_table_name.'_id')
+                    ->references('_id')
+                    ->on(Str::snake($field['meta']['model']))
+                    ->onDelete('cascade');
+            });
+        });
+        
+        return self::describe($model);
+    }
+
     static private function field_generator($field, $_id = null){
         $faker = Faker::create();
         $label = $field->label;
