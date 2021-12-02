@@ -56,7 +56,6 @@
                 let body = {
                     model: "{{$model}}",
                     template: "{{$template}}",
-                    redirectTo: "{{$redirectTo}}",
                     imageField: "{{$imageField}}",
                     metaField: "{{$metaField}}",
                     titleField: "{{$titleField}}",
@@ -71,7 +70,9 @@
                     return value !== null && value !== undefined && value.length;
                 }));
 
+                // These variables cause an error if user hasn't defined them
                 body.lean = "{{$lean}}";
+                body.redirectTo = "{{$redirectTo}}";
                 body.showActions = "{{$showActions}}";
                 
                 const res = await fetch("/data-grid-refetch", {
