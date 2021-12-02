@@ -38,7 +38,7 @@
                     </p>
                 @elseif(isset($item->{$descriptionField}) && $item->{$descriptionField} != null)
                     <p class="opacity-80 font-light">
-                        {{ $item->{$descriptionField} }}
+                        {{ mb_strimwidth($item->{$descriptionField}, 0, 100, '...') }}
                     </p>
                 @endisset
             </div>
