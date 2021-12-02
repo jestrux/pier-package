@@ -18,7 +18,7 @@
                     <span class="mr-1">Add {{$model}}</span>
                 </a>
 
-                @if (!$showSearch)
+                @if ($showSearch)
                     <x-pier-search-bar
                         class="border border-gray-300 w-72 px-5 py-2"
                         placeholder="Type to search..."
@@ -112,7 +112,8 @@
         }));
     });
 </script>
+@endif
 
-@include('pier::delete-entry')
-
+@if (!$lean && $showActions)
+    @include('pier::delete-entry')
 @endif

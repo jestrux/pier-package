@@ -60,9 +60,9 @@ class DataGrid extends Component {
         $this->metaField = $metaField;
         $this->titleField = $titleField;
         $this->descriptionField = $descriptionField;
-        $this->lean = (bool) $lean;
-        $this->showActions = (bool) $showActions;
-        $this->showSearch = (bool) $showSearch;
+        $this->lean = filter_var($lean, FILTER_VALIDATE_BOOLEAN);
+        $this->showActions = filter_var($showActions, FILTER_VALIDATE_BOOLEAN);
+        $this->showSearch = filter_var($showSearch, FILTER_VALIDATE_BOOLEAN);
         $this->filters = $filters;
 
         if(count($filters) > 0)
