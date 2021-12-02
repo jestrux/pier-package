@@ -18,6 +18,7 @@ class DataGrid extends Component {
     public $instanceId;
     public $lean;
     public $showActions;
+    public $showSearch;
 
     function modifiedFilters($filters){
         return $filters->keys()->reduce(function($agg, $key) use($filters){
@@ -49,7 +50,8 @@ class DataGrid extends Component {
         $titleField = "title", 
         $descriptionField = "description",
         $lean = false,
-        $showActions = true
+        $showActions = true,
+        $showSearch = true
     ){
         $this->model = $model;
         $this->template = $template;
@@ -60,6 +62,7 @@ class DataGrid extends Component {
         $this->descriptionField = $descriptionField;
         $this->lean = (bool) $lean;
         $this->showActions = (bool) $showActions;
+        $this->showSearch = (bool) $showSearch;
         $this->filters = $filters;
 
         if(count($filters) > 0)
