@@ -514,14 +514,10 @@ class PierMigration extends Model{
                 }
                 
                 if(count($face_images) > 0){
-                    $faceResponse = Http::withoutVerifying()
-                        ->withHeaders([
-                            "X-API-KEY" => "bdb5f9a87e61a8af46a91c3037a733"
-                        ])
-                        ->get('https://uifaces.co/api?limit=30');
-                    $faces = collect($faceResponse->json())->map(function($img){
-                        return $img['photo'];
-                    })->toArray();
+                    $imageResponse = Http::withoutVerifying()->get('https://api.unsplash.com/collections/3678902/photos?per_page=30&order_by=latest&client_id=17ef130962858e4304efe9512cf023387ee5d36f0585e4346f0f70b2f9729964');
+                    $images = collect($imageResponse->json())->map(function($img){
+                        return $img['urls']['thumb'];
+                    })->shuffle()->toArray();
                 }
             // } catch (\Throwable $th) {}
         }

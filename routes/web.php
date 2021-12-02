@@ -43,12 +43,13 @@ Route::post('/data-grid-refetch', function (Request $request) {
     $props = $request->all();
     $model = $request->input("model");
     $filters = $request->input("filters");
+    $template = $request->input("template");
 
     $data = PierMigration::browse($model, $filters);
 
     $props['data'] = $data;
 
-    return view("pier::data-grid-list", $props);
+    return view("pier::data-grid-list.$template", $props);
 });
 
 Route::prefix('model')->group(function () {

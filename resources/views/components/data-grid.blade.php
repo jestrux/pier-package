@@ -28,7 +28,7 @@
         <div id="pierComponent{{$instanceId}}"
             pier-data-component="{{$instanceId}}" 
         >
-            @include('pier::data-grid-list')
+            @include("pier::data-grid-list.$template")
         </div>
     </div>
 </div>
@@ -55,6 +55,7 @@
 
                 let body = {
                     model: "{{$model}}",
+                    template: "{{$template}}",
                     imageField: "{{$imageField}}",
                     metaField: "{{$metaField}}",
                     titleField: "{{$titleField}}",
