@@ -78,8 +78,13 @@ Route::prefix('api')->group(function () {
 });
 
 Route::get('admin/upsertModel/{model}/{id?}', function($model, $id = null){
-    return view('pier::upsert-model', [
+    $data = [
         "model" => $model,
         "id" => $id,
-    ]);
+    ];
+
+    if(isset($_GET['redirectTo']))
+        $data["redirectTo"] = $_GET['redirectTo'];
+    
+    return view('pier::upsert-model', $data);
 });

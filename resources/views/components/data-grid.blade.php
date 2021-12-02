@@ -13,7 +13,7 @@
     <div class="container max-w-6xl mx-auto">
         @if (!$lean)    
             <div class="mb-5 flex items-center justify-between">
-                <a href="{{url('/admin/upsertModel/' . $model)}}" type="button" class="inline-flex items-center focus:outline-none px-3 py-1 leading-none mr-4 border-2 border-black uppercase text-xs tracking-wide font-semibold bg-transparent text-black rounded-full">
+                <a href="{{url('/admin/upsertModel/' . $model)}}{{!is_null($redirectTo) ? '?redirectTo=' . $redirectTo : ''}}" type="button" class="inline-flex items-center focus:outline-none px-3 py-1 leading-none mr-4 border-2 border-black uppercase text-xs tracking-wide font-semibold bg-transparent text-black rounded-full">
                     <svg class="w-5 mr-1 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     <span class="mr-1">Add {{$model}}</span>
                 </a>
@@ -56,6 +56,7 @@
                 let body = {
                     model: "{{$model}}",
                     template: "{{$template}}",
+                    redirectTo: "{{$redirectTo}}",
                     imageField: "{{$imageField}}",
                     metaField: "{{$metaField}}",
                     titleField: "{{$titleField}}",

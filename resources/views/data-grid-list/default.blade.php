@@ -50,7 +50,7 @@
                     >
                         Delete
                     </button>
-                    <a href="{{url('/admin/upsertModel/' .$model. '/' . $item->_id)}}" class="focus:outline-none px-6 leading-none py-2 mr-4 border-2 border-black uppercase text-xs tracking-wide font-semibold bg-black text-white rounded-full">
+                    <a href="{{url('/admin/upsertModel/' .$model. '/' . $item->_id)}}{{!is_null($redirectTo) ? '?redirectTo=' . $redirectTo : ''}}" class="focus:outline-none px-6 leading-none py-2 mr-4 border-2 border-black uppercase text-xs tracking-wide font-semibold bg-black text-white rounded-full">
                         Edit
                     </a>
                 </div>
