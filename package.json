@@ -1,0 +1,47 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "watch": "npm run development -- --watch",
+        "watch-poll": "npm run watch -- --watch-poll",
+        "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "prod": "npm run production",
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    },
+    "devDependencies": {
+        "@babel/plugin-syntax-jsx": "^7.8.3",
+        "@vue/babel-helper-vue-jsx-merge-props": "^1.0.0",
+        "@vue/babel-plugin-transform-vue-jsx": "^1.1.2",
+        "axios": "^0.19",
+        "cross-env": "^7.0",
+        "laravel-mix": "^5.0.1",
+        "resolve-url-loader": "^2.3.1",
+        "sass": "^1.20.1",
+        "sass-loader": "^8.0.0",
+        "vue": "^2.5.17",
+        "vue-template-compiler": "^2.6.10"
+    },
+    "dependencies": {
+        "@chakra-ui/vue": "^0.5.5",
+        "@trevoreyre/autocomplete-vue": "^2.2.0",
+        "EventEmitter": "^1.0.0",
+        "autosize": "^4.0.2",
+        "crypto-js": "^4.0.0",
+        "date-fns": "^2.14.0",
+        "emotion": "^10.0.27",
+        "popper.js": "^1.16.1",
+        "tailwindcss": "^1.4.6",
+        "unsplash-js": "^6.0.0",
+        "visibilityjs": "^2.0.2",
+        "vue-material-design-icons": "^4.6.0",
+        "vue-router": "^3.1.6",
+        "vue-star-rating": "^1.6.1",
+        "vue-tel-input": "^4.4.0",
+        "vue-toast-notification": "^0.4.0",
+        "vue2-datepicker": "^3.6.1",
+        "vuejs-paginate": "^2.1.0",
+        "vuesax": "^3.11.15",
+        "vuex": "3.4.0"
+    }
+}

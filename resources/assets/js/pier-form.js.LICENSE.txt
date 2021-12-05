@@ -1,5 +1,5 @@
 /*!
-	autosize 4.0.2
+	autosize 4.0.4
 	license: MIT
 	http://www.jacklmoore.com/autosize
 */
@@ -12,8 +12,8 @@
  */
 
 /*!
- * Vue.js v2.6.11
- * (c) 2014-2019 Evan You
+ * Vue.js v2.6.14
+ * (c) 2014-2021 Evan You
  * Released under the MIT License.
  */
 
@@ -23,7 +23,7 @@
  * @license MIT
  */
 
-/*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
 /** @preserve
 	 * Counter block mode compatible with  Dr Brian Gladman fileenc.c
