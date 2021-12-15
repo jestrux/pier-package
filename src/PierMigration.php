@@ -181,7 +181,66 @@ class PierMigration extends Model{
         $model_fields = collect(json_decode($db_model->fields));
 
         $table_name = Str::snake($model);
-        $results = DB::table($table_name)->orderByDesc('updated_at');
+        $results = DB::table($table_name);
+        $paginated = false;
+
+        function do_pluck($results, $params, $paginated, $items_per_page = null){
+            if(isset($params['pluck'])){
+                $pluck = $params['pluck'];
+                if(strlen($pluck) > 0){
+                    $pluck_props = explode(',', $pluck);
+                    if(count($pluck_props) > 1){
+                        if(!$paginated)
+                            $results = $results->select(...$pluck_props)->get();
+                        else{
+                            $results = $results->select(...$pluck_props);
+                            $results = $results->paginate($items_per_page);
+                            // $results = $results->paginate($items_per_page);
+                            $results = [
+                                "per_page" => $results->perPage(),
+                                "current_page" => $results->currentPage(),
+                                "last_page" => $results->lastPage(),
+                                "total_rows" => $results->total(),
+                                "has_more_pages" => $results->hasMorePages(),
+                                "data" => $results->items()
+                            ];
+                        }
+                    }
+                    else{
+                        if(!$paginated)
+                            $results = $results->get()->pluck($pluck);
+                        else{
+                            $results = $results->paginate($items_per_page);
+                            $results = [
+                                "per_page" => $results->perPage(),
+                                "current_page" => $results->currentPage(),
+                                "last_page" => $results->lastPage(),
+                                "total_rows" => $results->total(),
+                                "has_more_pages" => $results->hasMorePages(),
+                                "data" => collect($results->items())->pluck($pluck),
+                            ];
+                        }
+                    }
+                }
+            }
+            else {
+                if(!$paginated)
+                    $results = $results->get();
+                else{
+                    $results = $results->paginate($items_per_page);
+                    $results = [
+                        "per_page" => $results->perPage(),
+                        "current_page" => $results->currentPage(),
+                        "last_page" => $results->lastPage(),
+                        "total_rows" => $results->total(),
+                        "has_more_pages" => $results->hasMorePages(),
+                        "data" => $results->items(),
+                    ];
+                }
+            }
+
+            return $results;
+        }
 
         if(!is_null($params) && count($params) > 0){
             $param_keys = array_keys($params);
@@ -221,6 +280,35 @@ class PierMigration extends Model{
                 }
             }
 
+            $can_order_by = in_array("orderBy", $param_keys);
+            $ordered = false;
+            if($can_order_by){
+                $order_by_param = $params['orderBy'];
+                if(strlen($order_by_param) > 0){
+                    $order_by_props = explode(',',$order_by_param);
+                    $order_by = $order_by_props[0];
+                    $order_direction = "desc";
+                    
+                    if(strlen($order_by) > 0){
+                        $model_field_names = $model_fields->map(function($model){
+                            return $model->label;
+                        });
+
+                        if($model_field_names->contains($order_by)){
+                            if(count($order_by_props) > 1 && strlen($order_by_props[1]) > 0)
+                                $order_direction = $order_by_props[1];
+                            
+                            $results = $results->orderBy($order_by, $order_direction);
+
+                            $ordered = true;
+                        }
+                    }
+                }
+            }
+
+            if(!$ordered)
+                $results = $results->orderByDesc('updated_at');
+            
             $search = in_array("q", $param_keys);
             if($search){
                 $search_query = $params['q'];
@@ -231,14 +319,14 @@ class PierMigration extends Model{
 
             $paginate = in_array("page", $param_keys);
             if($paginate){
+                $paginated = true;
                 $items_per_page = in_array("perPage", $param_keys) ? $params['perPage'] : 25;
-                $results = $results->paginate($items_per_page);
+                $results = do_pluck($results, $params, true, $items_per_page);
             }
-            else
-                $results = $results->get();
         }
-        else
-            $results = $results->get();
+        
+        if(!$paginated)
+            $results = do_pluck($results, $params, false);
 
         $status_fields = $model_fields->filter(function($field){
             return $field->type == 'status';
@@ -294,12 +382,6 @@ class PierMigration extends Model{
                         $result->{$field->label} = [];
                 }
             }
-        }
-
-        if(isset($params['pluck'])){
-            $pluck = $params['pluck'];
-            if(strlen($pluck) > 0)
-                $results = $results->pluck($pluck);
         }
 
         if(isset($params['limit'])){
