@@ -9,6 +9,8 @@ class Data extends Component{
     public $model;
     public $rowId;
     public $filters;
+    public $orderBy;
+    public $groupBy;
     public $data;
     public $instanceId;
 
@@ -32,18 +34,25 @@ class Data extends Component{
         return $newFilters;
     }
 
-    public function __construct($model, $rowId = null, $filters = []){
+    public function __construct($model, $rowId = null, $filters = [], $orderBy = "", $groupBy = ""){
         $this->model = $model;
         $this->filters = $filters;
+        $this->orderBy = $orderBy;
+        $this->groupBy = $groupBy;
 
         if(count($filters) > 0)
             $this->filters = $this->modifiedFilters(collect($filters));
 
-        if($rowId == null)
-            $this->data = PierMigration::browse($this->model, $this->filtersWithAnd($this->filters));
-        else
-            $this->data = PierMigration::detail($this->model, $rowId, $this->filtersWithAnd($this->filters));
+        $params = $this->filtersWithAnd($this->filters);
+        $params["orderBy"] = $this->orderBy;
+        $params["groupBy"] = $this->groupBy;
 
+        if($rowId == null)
+            $this->data = PierMigration::browse($this->model, $params);
+        else
+            $this->data = PierMigration::detail($this->model, $rowId, $params);
+
+        // dd($this->data);
         $bytes = random_bytes(6);
         $this->instanceId = bin2hex($bytes);
     }

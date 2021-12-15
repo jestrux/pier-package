@@ -284,6 +284,7 @@ class PierMigration extends Model{
             $ordered = false;
             if($can_order_by){
                 $order_by_param = $params['orderBy'];
+                
                 if(strlen($order_by_param) > 0){
                     $order_by_props = explode(',',$order_by_param);
                     $order_by = $order_by_props[0];
@@ -324,9 +325,20 @@ class PierMigration extends Model{
                 $results = do_pluck($results, $params, true, $items_per_page);
             }
         }
-        
-        if(!$paginated)
+
+        if(!$paginated){
             $results = do_pluck($results, $params, false);
+            if(isset($param_keys)){
+                $can_group_by = in_array("groupBy", $param_keys);
+                $grouped = false;
+                if($can_group_by){
+                    $group_by = $params['groupBy'];
+                    if(strlen($group_by) > 0){
+                        $results = collect($results)->groupBy($group_by);
+                    }
+                }
+            }
+        }
 
         $status_fields = $model_fields->filter(function($field){
             return $field->type == 'status';
