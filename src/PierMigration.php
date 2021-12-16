@@ -175,6 +175,64 @@ class PierMigration extends Model{
         ];
     }
 
+    static function do_pluck($results, $params, $paginated, $items_per_page = null){
+        if(isset($params['pluck'])){
+            $pluck = $params['pluck'];
+            if(strlen($pluck) > 0){
+                $pluck_props = explode(',', $pluck);
+                if(count($pluck_props) > 1){
+                    if(!$paginated)
+                        $results = $results->select(...$pluck_props)->get();
+                    else{
+                        $results = $results->select(...$pluck_props);
+                        $results = $results->paginate($items_per_page);
+                        // $results = $results->paginate($items_per_page);
+                        $results = [
+                            "per_page" => $results->perPage(),
+                            "current_page" => $results->currentPage(),
+                            "last_page" => $results->lastPage(),
+                            "total_rows" => $results->total(),
+                            "has_more_pages" => $results->hasMorePages(),
+                            "data" => $results->items()
+                        ];
+                    }
+                }
+                else{
+                    if(!$paginated)
+                        $results = $results->get()->pluck($pluck);
+                    else{
+                        $results = $results->paginate($items_per_page);
+                        $results = [
+                            "per_page" => $results->perPage(),
+                            "current_page" => $results->currentPage(),
+                            "last_page" => $results->lastPage(),
+                            "total_rows" => $results->total(),
+                            "has_more_pages" => $results->hasMorePages(),
+                            "data" => collect($results->items())->pluck($pluck),
+                        ];
+                    }
+                }
+            }
+        }
+        else {
+            if(!$paginated)
+                $results = $results->get();
+            else{
+                $results = $results->paginate($items_per_page);
+                $results = [
+                    "per_page" => $results->perPage(),
+                    "current_page" => $results->currentPage(),
+                    "last_page" => $results->lastPage(),
+                    "total_rows" => $results->total(),
+                    "has_more_pages" => $results->hasMorePages(),
+                    "data" => $results->items(),
+                ];
+            }
+        }
+
+        return $results;
+    }
+
     static function browse($model, $params = null){
         $db_model = self::describe($model);
         $display_field = $db_model->display_field;
@@ -183,64 +241,6 @@ class PierMigration extends Model{
         $table_name = Str::snake($model);
         $results = DB::table($table_name);
         $paginated = false;
-
-        function do_pluck($results, $params, $paginated, $items_per_page = null){
-            if(isset($params['pluck'])){
-                $pluck = $params['pluck'];
-                if(strlen($pluck) > 0){
-                    $pluck_props = explode(',', $pluck);
-                    if(count($pluck_props) > 1){
-                        if(!$paginated)
-                            $results = $results->select(...$pluck_props)->get();
-                        else{
-                            $results = $results->select(...$pluck_props);
-                            $results = $results->paginate($items_per_page);
-                            // $results = $results->paginate($items_per_page);
-                            $results = [
-                                "per_page" => $results->perPage(),
-                                "current_page" => $results->currentPage(),
-                                "last_page" => $results->lastPage(),
-                                "total_rows" => $results->total(),
-                                "has_more_pages" => $results->hasMorePages(),
-                                "data" => $results->items()
-                            ];
-                        }
-                    }
-                    else{
-                        if(!$paginated)
-                            $results = $results->get()->pluck($pluck);
-                        else{
-                            $results = $results->paginate($items_per_page);
-                            $results = [
-                                "per_page" => $results->perPage(),
-                                "current_page" => $results->currentPage(),
-                                "last_page" => $results->lastPage(),
-                                "total_rows" => $results->total(),
-                                "has_more_pages" => $results->hasMorePages(),
-                                "data" => collect($results->items())->pluck($pluck),
-                            ];
-                        }
-                    }
-                }
-            }
-            else {
-                if(!$paginated)
-                    $results = $results->get();
-                else{
-                    $results = $results->paginate($items_per_page);
-                    $results = [
-                        "per_page" => $results->perPage(),
-                        "current_page" => $results->currentPage(),
-                        "last_page" => $results->lastPage(),
-                        "total_rows" => $results->total(),
-                        "has_more_pages" => $results->hasMorePages(),
-                        "data" => $results->items(),
-                    ];
-                }
-            }
-
-            return $results;
-        }
 
         if(!is_null($params) && count($params) > 0){
             $param_keys = array_keys($params);
@@ -322,12 +322,12 @@ class PierMigration extends Model{
             if($paginate){
                 $paginated = true;
                 $items_per_page = in_array("perPage", $param_keys) ? $params['perPage'] : 25;
-                $results = do_pluck($results, $params, true, $items_per_page);
+                $results = self::do_pluck($results, $params, true, $items_per_page);
             }
         }
 
         if(!$paginated){
-            $results = do_pluck($results, $params, false);
+            $results = self::do_pluck($results, $params, false);
             if(isset($param_keys)){
                 $can_group_by = in_array("groupBy", $param_keys);
                 $grouped = false;
