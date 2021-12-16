@@ -4,11 +4,23 @@ import { xAmzDate, dateYMD } from "./Date";
 import { throwError } from './ErrorThrower';
 import axios from 'axios';
 
+// const baseConfig = {
+//     bucketName: process.env.MIX_S3_BUCKET,
+//     region: process.env.MIX_S3_REGION,
+//     accessKeyId: process.env.MIX_S3_ACCESS_KEY_ID,
+//     secretAccessKey: process.env.MIX_S3_SECRET_ACCESS_KEY,
+// };
+
+// MIX_S3_BUCKET=ipf-website
+// MIX_S3_REGION=eu-west-3
+// MIX_S3_ACCESS_KEY_ID=AKIA3RMFZURLR4GYTYFW
+// MIX_S3_SECRET_ACCESS_KEY=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
+
 const baseConfig = {
-    bucketName: process.env.MIX_S3_BUCKET,
-    region: process.env.MIX_S3_REGION,
-    accessKeyId: process.env.MIX_S3_ACCESS_KEY_ID,
-    secretAccessKey: process.env.MIX_S3_SECRET_ACCESS_KEY,
+    bucketName: 'ipf-website',
+    region: 'eu-west-3',
+    accessKeyId: 'AKIA3RMFZURLR4GYTYFW',
+    secretAccessKey: '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',
 };
 
 class S3FileUpload {
