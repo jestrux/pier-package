@@ -92,9 +92,14 @@ class PierMigration extends Model{
             $field['meta'] = $meta;
 
             if($field['type'] == 'reference'){
-                $reference = self::browse($meta['model'])->random(1)->first();
-                $field['default'] = "default" .$reference->_id;
-                $field['required'] = true;
+                $references = self::browse($meta['model']);
+                if(!$references->isEmpty()){
+                    $reference = $references->random(1)->first();
+                    $field['default'] = "default" .$reference->_id;
+                    $field['required'] = true;
+                }
+                else
+                    $field['required'] = false;
             }
 
             self::field_type_map($table, $field);
@@ -358,54 +363,62 @@ class PierMigration extends Model{
         $reference_fields = $model_fields->filter(function($field){
             return $field->type == 'reference';
         });
-        
-        if($reference_fields->count() > 0){
-            foreach ($reference_fields as $field) {
-                $referenced_table = Str::snake($field->meta->model);
 
-                foreach ($results as $result) {
-                    $result->{$field->label} = DB::table($referenced_table)->where(
-                        "_id", '=', $result->{$field->label}
-                    )->first();
-                }
-            }
-        }
+        $has_been_paginated = array_key_exists("data", $results);
+        $result_data = $has_been_paginated ? $results["data"] : $results;
 
-        $multi_reference_fields = $model_fields->filter(function($field){
-            return $field->type == 'multi-reference';
-        });
-        
-        if($multi_reference_fields->count() > 0){
-            foreach ($multi_reference_fields as $field) {
-                $referenced_table = Str::snake($field->label);
-
-                foreach ($results as $result) {
-                    $reference_ids = DB::table($table_name . '_' . $referenced_table)->where(
-                        $table_name."_id", '=', $result->_id
-                    )->pluck($referenced_table.'_id');
-
-                    if($reference_ids->count() > 0){
-                        $result->{$field->label} = DB::table(Str::snake($field->meta->model))->whereIn(
-                            '_id',
-                            $reference_ids
-                        )->get();
+        if(count($result_data) > 0){
+            if($reference_fields->count() > 0){
+                foreach ($reference_fields as $field) {
+                    $referenced_table = Str::snake($field->meta->model);
+    
+                    foreach ($result_data as $result) {
+                        $result->{$field->label} = DB::table($referenced_table)->where(
+                            "_id", '=', $result->{$field->label}
+                        )->first();
                     }
-                    else
-                        $result->{$field->label} = [];
                 }
             }
-        }
-
-        if(isset($params['limit'])){
-            $limit = $params['limit'];
-            if($limit == 1){
-                if($results->count() == 0)
-                    return null;
-                    
-                return $results->first();
+    
+            $multi_reference_fields = $model_fields->filter(function($field){
+                return $field->type == 'multi-reference';
+            });
+            
+            if($multi_reference_fields->count() > 0){
+                foreach ($multi_reference_fields as $field) {
+                    $referenced_table = Str::snake($field->label);
+    
+                    foreach ($result_data as $result) {
+                        $reference_ids = DB::table($table_name . '_' . $referenced_table)->where(
+                            $table_name."_id", '=', $result->_id
+                        )->pluck($referenced_table.'_id');
+    
+                        if($reference_ids->count() > 0){
+                            $result->{$field->label} = DB::table(Str::snake($field->meta->model))->whereIn(
+                                '_id',
+                                $reference_ids
+                            )->get();
+                        }
+                        else
+                            $result->{$field->label} = [];
+                    }
+                }
             }
-            $results = $results->take($limit);
+    
+            if(isset($params['limit'])){
+                $limit = $params['limit'];
+                if($limit == 1){
+                    if($result_data->count() == 0)
+                        return null;
+                        
+                    return $result_data->first();
+                }
+                $result_data = $result_data->take($limit);
+            }
         }
+        
+        if($has_been_paginated) $results['data'] = $result_data;
+        else $results = $result_data;
         
         return $results;
     }
