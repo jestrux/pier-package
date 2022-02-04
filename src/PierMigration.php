@@ -300,7 +300,7 @@ class PierMigration extends Model{
                             return $model->label;
                         });
 
-                        if($model_field_names->contains($order_by) || collect(["created_at", "updated_at", "_id"]).contains($order_by)){
+                        if($model_field_names->contains($order_by) || collect(["created_at", "updated_at", "_id"])->contains($order_by)){
                             if(count($order_by_props) > 1 && strlen($order_by_props[1]) > 0)
                                 $order_direction = $order_by_props[1];
                             
@@ -312,8 +312,8 @@ class PierMigration extends Model{
                 }
             }
 
-            if(!$ordered)
-                $results = $results->orderByDesc('updated_at');
+            // if(!$ordered)
+            //     $results = $results->orderByDesc('updated_at');
             
             $search = in_array("q", $param_keys);
             if($search){
