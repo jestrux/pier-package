@@ -584,7 +584,7 @@ class PierMigration extends Model{
             }
         }
 
-        return DB::table($table_name)->where('_id', $row_id)->get();
+        return DB::table($table_name)->where('_id', $row_id)->first();
     }
     
     static function populate($model, $item_count = 25){
