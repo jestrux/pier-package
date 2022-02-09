@@ -10,7 +10,6 @@ Headless CMS and API generator for Laravel projects.
 # How to Use
 
 ## Install Package
-`composer require jestrux/pier`
 
 Add these lines to your `composer.json` file
 
