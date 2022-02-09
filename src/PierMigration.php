@@ -181,6 +181,7 @@ class PierMigration extends Model{
     }
 
     static function do_pluck($results, $params, $paginated, $items_per_page = null){
+        $pluck_props = [];
         if(isset($params['pluck'])){
             $pluck = $params['pluck'];
             if(strlen($pluck) > 0){
@@ -235,7 +236,7 @@ class PierMigration extends Model{
             }
         }
 
-        return $results;
+        return [$results, $pluck_props];
     }
 
     static function browse($model, $params = null){
@@ -327,12 +328,12 @@ class PierMigration extends Model{
             if($paginate){
                 $paginated = true;
                 $items_per_page = in_array("perPage", $param_keys) ? $params['perPage'] : 25;
-                $results = self::do_pluck($results, $params, true, $items_per_page);
+                [$results,$pluck_props] = self::do_pluck($results, $params, true, $items_per_page);
             }
         }
 
         if(!$paginated){
-            $results = self::do_pluck($results, $params, false);
+            [$results, $pluck_props] = self::do_pluck($results, $params, false);
             if(isset($param_keys)){
                 $can_group_by = in_array("groupBy", $param_keys);
                 $grouped = false;
@@ -365,17 +366,23 @@ class PierMigration extends Model{
         });
 
         $has_been_paginated = array_key_exists("data", $results);
-        $result_data = $has_been_paginated ? $results["data"] : $results;
+        $result_data = $has_been_paginated ? collect($results["data"]) : $results;
 
         if(count($result_data) > 0){
             if($reference_fields->count() > 0){
+                // return in_array('typesy', $result_data->keys()->toArray());
+
                 foreach ($reference_fields as $field) {
                     $referenced_table = Str::snake($field->meta->model);
     
                     foreach ($result_data as $result) {
-                        $result->{$field->label} = DB::table($referenced_table)->where(
-                            "_id", '=', $result->{$field->label}
-                        )->first();
+                        try {
+                            $result->{$field->label} = DB::table($referenced_table)->where(
+                                "_id", '=', $result->{$field->label}
+                            )->first();
+                        } catch (\Throwable $th) {
+                            //throw $th;
+                        }
                     }
                 }
             }
@@ -387,20 +394,24 @@ class PierMigration extends Model{
             if($multi_reference_fields->count() > 0){
                 foreach ($multi_reference_fields as $field) {
                     $referenced_table = Str::snake($field->label);
+                    
+                    try {
+                        foreach ($result_data as $result) {
+                            $reference_ids = DB::table($table_name . '_' . $referenced_table)->where(
+                                $table_name."_id", '=', $result->_id
+                            )->pluck($referenced_table.'_id');
     
-                    foreach ($result_data as $result) {
-                        $reference_ids = DB::table($table_name . '_' . $referenced_table)->where(
-                            $table_name."_id", '=', $result->_id
-                        )->pluck($referenced_table.'_id');
-    
-                        if($reference_ids->count() > 0){
-                            $result->{$field->label} = DB::table(Str::snake($field->meta->model))->whereIn(
-                                '_id',
-                                $reference_ids
-                            )->get();
+                            if($reference_ids->count() > 0){
+                                $result->{$field->label} = DB::table(Str::snake($field->meta->model))->whereIn(
+                                    '_id',
+                                    $reference_ids
+                                )->get();
+                            }
+                            else
+                                $result->{$field->label} = [];
                         }
-                        else
-                            $result->{$field->label} = [];
+                    } catch (\Throwable $th) {
+                        //throw $th;
                     }
                 }
             }
