@@ -415,8 +415,16 @@ class PierMigration extends Model{
                     }
                 }
             }
+            
+            if(isset($params['unique'])){
+                $result_data = $params['unique'] == "true" 
+                    ? $result_data->unique()
+                    : $result_data->unique($params['unique']);
+                    
+                $result_data = $result_data->values();
+            }
     
-            if(isset($params['limit'])){
+            if(isset($params['limit']) && !$paginated){
                 $limit = $params['limit'];
                 if($limit == 1){
                     if($result_data->count() == 0)
@@ -427,7 +435,7 @@ class PierMigration extends Model{
                 $result_data = $result_data->take($limit);
             }
         }
-        
+
         if($has_been_paginated) $results['data'] = $result_data;
         else $results = $result_data;
         
