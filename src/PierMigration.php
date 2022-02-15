@@ -423,17 +423,17 @@ class PierMigration extends Model{
                     
                 $result_data = $result_data->values();
             }
-    
-            if(isset($params['limit']) && !$paginated){
-                $limit = $params['limit'];
-                if($limit == 1){
-                    if($result_data->count() == 0)
-                        return null;
-                        
-                    return $result_data->first();
-                }
-                $result_data = $result_data->take($limit);
+        }
+
+        if(isset($params['limit']) && !$paginated){
+            $limit = $params['limit'];
+            if($limit == 1){
+                if($result_data->count() == 0)
+                    return null;
+                    
+                return $result_data->first();
             }
+            $result_data = $result_data->take($limit);
         }
 
         if($has_been_paginated) $results['data'] = $result_data;
@@ -522,6 +522,8 @@ class PierMigration extends Model{
 
             if($field->type === 'password')
                 $entry[$field->label] = Hash::make($value);
+            else if($field->type === 'location' && is_array($value))
+                $entry[$field->label] = json_encode($value);
             else
                 $entry[$field->label] = $value;
         }
@@ -580,6 +582,8 @@ class PierMigration extends Model{
 
             if($field->type === 'password')
                 $entry[$field->label] = Hash::make($value);
+            else if($field->type === 'location' && is_array($value))
+                $entry[$field->label] = json_encode($value);
             else
                 $entry[$field->label] = $value;
         }
