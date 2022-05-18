@@ -11,6 +11,9 @@ class Data extends Component{
     public $filters;
     public $orderBy;
     public $groupBy;
+    public $limit;
+    public $pluck;
+    public $q;
     public $data;
     public $instanceId;
 
@@ -34,7 +37,7 @@ class Data extends Component{
         return $newFilters;
     }
 
-    public function __construct($model, $rowId = null, $filters = [], $orderBy = "", $groupBy = ""){
+    public function __construct($model, $rowId = null, $filters = [], $orderBy = "", $groupBy = "", $limit = null, $pluck = null, $q = null){
         $this->model = $model;
         $this->filters = $filters;
         $this->orderBy = $orderBy;
@@ -47,12 +50,18 @@ class Data extends Component{
         $params["orderBy"] = $this->orderBy;
         $params["groupBy"] = $this->groupBy;
 
+        if($limit != null) $params["limit"] = $limit;
+
+        if($pluck != null) $params["pluck"] = $pluck;
+
+        if($q != null) $params["q"] = $q;
+
         if($rowId == null)
             $this->data = PierMigration::browse($this->model, $params);
         else
             $this->data = PierMigration::detail($this->model, $rowId, $params);
 
-        // dd($this->data);
+        // dd($params);
         $bytes = random_bytes(6);
         $this->instanceId = bin2hex($bytes);
     }
