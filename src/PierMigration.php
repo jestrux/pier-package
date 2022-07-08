@@ -346,29 +346,31 @@ class PierMigration extends Model{
             }
         }
 
-        $status_fields = $model_fields->filter(function($field){
-            return $field->type == 'status';
-        });
-        
-        if($status_fields->count() > 0){
-            foreach ($status_fields as $field) {
-                $statuses = $field->meta->availableStatuses;
-                
-                foreach ($results as $result) {
-                    $resultValue = $result->{$field->label};
-                    $result->{$field->label . 'Meta'} = collect($statuses)->where("name", "=", $resultValue)->first();
-                }
-            }
-        }
-
         $reference_fields = $model_fields->filter(function($field){
             return $field->type == 'reference';
         });
 
-        $has_been_paginated = array_key_exists("data", $results);
+        $has_been_paginated = is_array($results) ? array_key_exists("data", $results) : false;
         $result_data = $has_been_paginated ? collect($results["data"]) : $results;
 
         if(count($result_data) > 0){
+            $status_fields = $model_fields->filter(function($field){
+                return $field->type == 'status';
+            });
+    
+            if($status_fields->count() > 0){
+                foreach ($status_fields as $field) {
+                    $statuses = $field->meta->availableStatuses;
+                    
+                    foreach ($result_data as $result) {
+                        // dd($result);
+    
+                        $resultValue = $result->{$field->label};
+                        $result->{$field->label . 'Meta'} = collect($statuses)->where("name", "=", $resultValue)->first();
+                    }
+                }
+            }
+
             if($reference_fields->count() > 0){
                 // return in_array('typesy', $result_data->keys()->toArray());
 
