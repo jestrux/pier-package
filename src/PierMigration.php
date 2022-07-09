@@ -247,6 +247,7 @@ class PierMigration extends Model{
         $table_name = Str::snake($model);
         $results = DB::table($table_name);
         $paginated = false;
+        $param_keys = [];
 
         if(!is_null($params) && count($params) > 0){
             $param_keys = array_keys($params);
@@ -354,6 +355,10 @@ class PierMigration extends Model{
         $result_data = $has_been_paginated ? collect($results["data"]) : $results;
 
         if(count($result_data) > 0){
+            if(in_array("randomize", $param_keys)){
+                $result_data = $result_data->shuffle();
+            }
+
             $status_fields = $model_fields->filter(function($field){
                 return $field->type == 'status';
             });
@@ -363,8 +368,8 @@ class PierMigration extends Model{
                     $statuses = $field->meta->availableStatuses;
                     
                     foreach ($result_data as $result) {
-                        // dd($result);
-    
+                        if(gettype($result) != "object" || !isset($result->{$field->label})) continue;
+
                         $resultValue = $result->{$field->label};
                         $result->{$field->label . 'Meta'} = collect($statuses)->where("name", "=", $resultValue)->first();
                     }

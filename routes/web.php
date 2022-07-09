@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Jestrux\Pier\Http\Controllers\APIController;
 use Jestrux\Pier\Http\Controllers\CMSController;
 use Jestrux\Pier\Http\Controllers\EditorController;
+use Jestrux\Pier\Http\Controllers\HelperController;
 use Jestrux\Pier\PierMigration;
 
 // Route::get('/', [APIController::class, 'index']);
@@ -13,6 +14,7 @@ Route::view('/editor', 'pier::editor');
 
 Route::get('/cms', [CMSController::class, 'index'])->name('cms');
 Route::post('/upload_file', [CMSController::class, 'upload_file'])->name('upload_file');
+Route::get('/pier-helper', [HelperController::class, 'index']);
 Route::get('/link_preview', [CMSController::class, 'link_preview']);
 
 Route::post('/data-refetch', function (Request $request) {
@@ -21,7 +23,7 @@ Route::post('/data-refetch', function (Request $request) {
     $view = $request->input("view");
     $filters = $request->input("filters");
 
-    if($rowId == null)
+    if ($rowId == null)
         $data = PierMigration::browse($model, $filters);
     else
         $data = PierMigration::detail($model, $rowId, $filters);
@@ -29,11 +31,11 @@ Route::post('/data-refetch', function (Request $request) {
     $filename = hash('sha1', $view);
 
     $file_location = storage_path('framework/views/');
-    $filepath = storage_path('framework/views/'.$filename.'.blade.php');
+    $filepath = storage_path('framework/views/' . $filename . '.blade.php');
 
     if (!file_exists($filepath))
         file_put_contents($filepath, $view);
-        
+
     view()->addLocation($file_location);
 
     return view($filename, ["data" => $data]);
@@ -77,14 +79,14 @@ Route::prefix('api')->group(function () {
     Route::delete('{model_name}/{row_id}', [APIController::class, 'deleteResource']);
 });
 
-Route::get('admin/upsertModel/{model}/{id?}', function($model, $id = null){
+Route::get('admin/upsertModel/{model}/{id?}', function ($model, $id = null) {
     $data = [
         "model" => $model,
         "id" => $id,
     ];
 
-    if(isset($_GET['redirectTo']))
+    if (isset($_GET['redirectTo']))
         $data["redirectTo"] = $_GET['redirectTo'];
-    
+
     return view('pier::upsert-model', $data);
 });
