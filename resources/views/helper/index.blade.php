@@ -356,10 +356,9 @@
                         const model = this.models.find(({
                             _id
                         }) => _id === modelId);
-                        model.fields = JSON.parse(model.fields);
 
                         this.pluck = [];
-                        this.selectedModel = model;
+                        this.selectedModel = {...model, fields: JSON.parse(model.fields)};
                     });
 
                     this.$watch('apiUrl', () => {
