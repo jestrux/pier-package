@@ -17,6 +17,12 @@ Route::post('/upload_file', [CMSController::class, 'upload_file'])->name('upload
 Route::get('/pier-helper', [HelperController::class, 'index']);
 Route::get('/link_preview', [CMSController::class, 'link_preview']);
 
+Route::prefix('pier-helper')->group(function () {
+    Route::get('/', [HelperController::class, 'index']);
+    Route::get('/data-grid', [HelperController::class, 'data_grid']);
+    Route::get('/data-grid-render/{model_name}', [HelperController::class, 'data_grid_render']);
+});
+
 Route::post('/data-refetch', function (Request $request) {
     $rowId = $request->input("rowId");
     $model = $request->input("model");

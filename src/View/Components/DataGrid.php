@@ -7,6 +7,7 @@ use Jestrux\Pier\PierMigration;
 
 class DataGrid extends Component {
     public $model;
+    public $noCss;
     public $template;
     public $redirectTo;
     public $imageField;
@@ -42,6 +43,7 @@ class DataGrid extends Component {
 
     public function __construct(
         $model, 
+        $noCss = false,
         $template = "default",
         $redirectTo = null,
         $filters = [], 
@@ -54,6 +56,7 @@ class DataGrid extends Component {
         $showSearch = true
     ){
         $this->model = $model;
+        $this->noCss = $noCss;
         $this->template = $template;
         $this->redirectTo = $redirectTo;
         $this->imageField = $imageField;

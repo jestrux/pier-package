@@ -1,4 +1,6 @@
+@if (!$noCss)
 <link href="{{asset('pier/css/data-grid.css')}}" rel="stylesheet" />
+@endif
 
 <style>
     .group:hover .group-hover\:block{
