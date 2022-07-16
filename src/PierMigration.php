@@ -333,6 +333,10 @@ class PierMigration extends Model{
             }
         }
 
+        $reference_fields = $model_fields->filter(function($field){
+            return $field->type == 'reference';
+        });
+
         if(!$paginated){
             [$results, $pluck_props] = self::do_pluck($results, $params, false);
             if(isset($param_keys)){
@@ -342,14 +346,30 @@ class PierMigration extends Model{
                     $group_by = $params['groupBy'];
                     if(strlen($group_by) > 0){
                         $results = collect($results)->groupBy($group_by);
+                        $grouped_by_reference_field = $reference_fields->firstWhere('label', $group_by);
+
+                        if($grouped_by_reference_field != null) {
+                            $groups = DB::table(Str::snake($grouped_by_reference_field->meta->model))->whereIn(
+                                '_id',
+                                $results->keys()
+                            )->get();
+
+                            $results = $results->reduce(function($agg, $value, $key) use ($groups, $group_by, $grouped_by_reference_field) {
+                                $group = $groups->where('_id', $key)->first();
+                                $value->map(function($value) use($group, $group_by) {
+                                    $value->{$group_by} = $group;
+                                });
+                                $newKey = $group->{$grouped_by_reference_field->meta->mainField};
+                                $agg[$newKey] = $value;
+                                return $agg;
+                            },[]);
+                        }
+
+                        $results = collect($results);
                     }
                 }
             }
         }
-
-        $reference_fields = $model_fields->filter(function($field){
-            return $field->type == 'reference';
-        });
 
         $has_been_paginated = is_array($results) ? array_key_exists("data", $results) : false;
         $result_data = $has_been_paginated ? collect($results["data"]) : $results;
