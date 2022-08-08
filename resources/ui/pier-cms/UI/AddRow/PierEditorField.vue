@@ -80,6 +80,7 @@
         v-else-if="field.type == 'reference'"
         :label="field.label.replace(/_/g, ' ')"
         :reference-model="field.meta.model"
+        :reference-model-main-field="field.meta.mainField"
         :meta="field.meta"
         v-model="val"
       />
@@ -88,6 +89,7 @@
         v-else-if="field.type == 'multi-reference'"
         :label="field.label.replace(/_/g, ' ')"
         :reference-model="field.meta.model"
+        :reference-model-main-field="field.meta.mainField"
         v-model="val"
       />
       
