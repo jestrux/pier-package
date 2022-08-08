@@ -17,11 +17,11 @@
 
     <div id="navItems" class="ml-8 space-x-3 flex h-16">
         <a href="{{ url('pier-helper') }}" class="px-2 flex items-center border-b-2 border-blue-500">Pier API</a>
-        <a href="#" class="px-2 flex items-center border-b-2 border-transparent">Pier Data</a>
+        {{-- <a href="#" class="px-2 flex items-center border-b-2 border-transparent">Pier Data</a> --}}
         <a href="{{ url('pier-helper/data-grid') }}" class="px-2 flex items-center border-b-2 border-transparent">Pier
             Data Grid</a>
-        <a href="#" class="px-2 flex items-center border-b-2 border-transparent">Pier CMS</a>
-        <a href="#" class="px-2 flex items-center border-b-2 border-transparent">Pier Form</a>
+        {{-- <a href="#" class="px-2 flex items-center border-b-2 border-transparent">Pier CMS</a> --}}
+        {{-- <a href="#" class="px-2 flex items-center border-b-2 border-transparent">Pier Form</a> --}}
     </div>
 </div>
 

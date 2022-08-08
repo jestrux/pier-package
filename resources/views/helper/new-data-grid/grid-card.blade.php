@@ -2,7 +2,7 @@
     <div class="h-full py-3 px-4 relative rounded overflow-hidden w-full bg-white shadow border border-gray-200">
         @if (isset($item->{$imageField}) && $item->{$imageField} != null)
             <div class="-mx-1 relative">
-                <img src="{{ $item->{$imageField} }}" class="h-40 mb-3 w-full object-cover" alt="" />
+                <img src="{{ $item->{$imageField} }}" class="h-40 mb-3 w-full object-cover object-top" alt="" />
             </div>
         @endif
 

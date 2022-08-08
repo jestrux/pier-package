@@ -180,6 +180,16 @@ class PierMigration extends Model{
         ];
     }
 
+    static function model_detail($model, $row_id){
+        $db_model = self::describe($model);
+        $data = self::detail($model, $row_id);
+
+        return [
+            "model" => $db_model,
+            "data" => $data,
+        ];
+    }
+
     static function do_pluck($results, $params, $paginated, $items_per_page = null){
         $pluck_props = [];
         if(isset($params['pluck'])){
@@ -187,8 +197,11 @@ class PierMigration extends Model{
             if(strlen($pluck) > 0){
                 $pluck_props = explode(',', $pluck);
                 if(count($pluck_props) > 1){
-                    if(!$paginated)
-                        $results = $results->select(...$pluck_props)->get();
+                    if(!$paginated) {
+                        $results = $results->map(function ($result) use ($pluck_props) {
+                            return collect($result)->only($pluck_props);
+                        });
+                    }
                     else{
                         $results = $results->select(...$pluck_props);
                         $results = $results->paginate($items_per_page);
@@ -205,7 +218,7 @@ class PierMigration extends Model{
                 }
                 else{
                     if(!$paginated)
-                        $results = $results->get()->pluck($pluck);
+                        $results = $results->pluck($pluck);
                     else{
                         $results = $results->paginate($items_per_page);
                         $results = [
@@ -222,7 +235,7 @@ class PierMigration extends Model{
         }
         else {
             if(!$paginated)
-                $results = $results->get();
+                $results = $results;
             else{
                 $results = $results->paginate($items_per_page);
                 $results = [
@@ -239,7 +252,235 @@ class PierMigration extends Model{
         return [$results, $pluck_props];
     }
 
+    static function eager_load($data, $model, $params){
+        $db_model = self::describe($model);
+        $fields = collect(json_decode($db_model->fields));
+        $table_name = Str::snake($model);
+
+        $status_fields = $fields->filter(function($field){
+            return $field->type == 'status';
+        });
+
+        $reference_fields = $fields->filter(function($field){
+            return $field->type == 'reference';
+        });
+
+        $multi_reference_fields = $fields->filter(function($field){
+            return $field->type == 'multi-reference';
+        });
+
+        if(count($data) > 0){
+            if($status_fields->count() > 0){
+                foreach ($status_fields as $field) {
+                    $statuses = $field->meta->availableStatuses;
+                    
+                    foreach ($data as $result) {
+                        if(gettype($result) != "object" || !isset($result->{$field->label})) continue;
+
+                        $resultValue = $result->{$field->label};
+                        $result->{$field->label . 'Meta'} = collect($statuses)->where("name", "=", $resultValue)->first();
+                    }
+                }
+            }
+
+            if($reference_fields->count() > 0){
+                foreach ($reference_fields as $field) {
+                    $referenced_table = Str::snake($field->meta->model);
+    
+                    foreach ($data as $result) {
+                        try {
+                            $result->{$field->label} = DB::table($referenced_table)->where(
+                                "_id", '=', $result->{$field->label}
+                            )->first();
+                        } catch (\Throwable $th) {
+                            //throw $th;
+                        }
+                    }
+                }
+            }
+            
+            if($multi_reference_fields->count() > 0){
+                foreach ($multi_reference_fields as $field) {
+                    $referenced_table = Str::snake($field->label);
+                    
+                    try {
+                        foreach ($data as $result) {
+                            $reference_ids = DB::table($table_name . '_' . $referenced_table)->where(
+                                $table_name."_id", '=', $result->_id
+                            )->pluck($referenced_table.'_id');
+    
+                            if($reference_ids->count() > 0){
+                                $result->{$field->label} = DB::table(Str::snake($field->meta->model))->whereIn(
+                                    '_id',
+                                    $reference_ids
+                                )->get();
+                            }
+                            else
+                                $result->{$field->label} = [];
+                        }
+                    } catch (\Throwable $th) {
+                        //throw $th;
+                    }
+                }
+            }
+        }
+
+        [$data, $pluck_props] = self::do_pluck($data, $params, false);
+
+        if(isset($params['randomize'])){
+            $data = $data->shuffle();
+        }
+
+        if(isset($params['unique'])){
+            $data = $params['unique'] == "true" 
+                ? $data->unique()
+                : $data->unique($params['unique']);
+                
+            $data = $data->values();
+        }
+
+        if(isset($params['limit'])){
+            $limit = $params['limit'];
+            if($limit == 1){
+                if($data->count() == 0)
+                    return null;
+                    
+                return $data->first();
+            }
+            $data = $data->take($limit);
+        }
+
+        return $data;
+    }
+
     static function browse($model, $params = null){
+        if(!is_null($params) && count($params) > 0){
+            if(in_array("page", array_keys($params))){
+                return self::paginated_browse($model, $params);
+            }
+        }
+
+        $db_model = self::describe($model);
+        $display_field = $db_model->display_field;
+        $model_fields = collect(json_decode($db_model->fields));
+
+        $table_name = Str::snake($model);
+        $results = DB::table($table_name);
+        $param_keys = [];
+
+        if(!is_null($params) && count($params) > 0){
+            $param_keys = array_keys($params);
+
+            $where_params = collect($param_keys)->filter(function($key){
+                return strpos($key, "where") === 0 
+                    || strpos($key, "orWhere") === 0
+                    || strpos($key, "andWhere") === 0;
+            });
+
+            if($where_params->count() > 0){
+                foreach ($where_params as $index => $param) {
+                    $table_column = strtolower(str_replace(" ", "_", self::pascal_to_sentence(str_replace(["where", "andWhere", "orWhere", "isGreaterThan", "isGreaterThanOrEqual", "isLessThan", "isLessThanOrEqual"], "", $param))));
+                    $copmarators = ["isGreaterThanOrEqual", "isLessThanOrEqual", "isLessThan", "isGreaterThan"];
+                    $table_column = strtolower(str_ireplace(" ", "_", self::pascal_to_sentence(str_ireplace(array_merge(["andWhere", "orWhere", "where"], $copmarators), "", $param))));
+                    $symbol = collect($copmarators)->first(function ($value, $key) use ($param) {
+                        return strpos(strtolower($param), strtolower($value));
+                    });
+
+                    if(is_null($symbol))
+                        $symbol = "Equals";
+                    
+                    $symbolMap = [
+                        "isGreaterThan" => ">",
+                        "isGreaterThanOrEqual" => ">=", 
+                        "isLessThan" => "<", 
+                        "isLessThanOrEqual" => "<=",
+                        "Equals" => "=",
+                    ];
+
+                    $copmarator = $symbolMap[$symbol];
+
+                    if($index == 0 || strpos($param, "andWhere") === 0)
+                        $results = $results->where($table_column, $copmarator, $params[$param]);
+                    else
+                        $results = $results->orWhere($table_column, $copmarator, $params[$param]);
+                }
+            }
+
+            $can_order_by = in_array("orderBy", $param_keys);
+            if($can_order_by){
+                $order_by_param = $params['orderBy'];
+                
+                if(strlen($order_by_param) > 0){
+                    $order_by_props = explode(',',$order_by_param);
+                    $order_by = $order_by_props[0];
+                    $order_direction = "desc";
+                    
+                    if(strlen($order_by) > 0){
+                        $model_field_names = $model_fields->map(function($model){
+                            return $model->label;
+                        });
+
+                        if($model_field_names->contains($order_by) || collect(["created_at", "updated_at", "_id"])->contains($order_by)){
+                            if(count($order_by_props) > 1 && strlen($order_by_props[1]) > 0)
+                                $order_direction = $order_by_props[1];
+                            
+                            $results = $results->orderBy($order_by, $order_direction);
+
+                            $ordered = true;
+                        }
+                    }
+                }
+            }
+            
+            $search = in_array("q", $param_keys);
+            if($search){
+                $search_query = $params['q'];
+
+                if(strlen($search_query) > 0)
+                    $results = $results->where($display_field,'like',"%{$search_query}%");
+            }
+        }
+
+        $reference_fields = $model_fields->filter(function($field){
+            return $field->type == 'reference';
+        });
+
+        $results = $results->get();
+
+        if(isset($params['groupBy']) && strlen($params['groupBy']) > 0){
+            // [$results, $pluck_props] = self::do_pluck($results, $params, false);
+            $group_by = $params['groupBy'];
+            $results = collect($results)->groupBy($group_by);
+            $grouped_by_reference_field = $reference_fields->firstWhere('label', $group_by);
+            $groups = null;
+
+            if($grouped_by_reference_field != null) {
+                $groups = DB::table(Str::snake($grouped_by_reference_field->meta->model))->whereIn(
+                    '_id',
+                    $results->keys()
+                )->get();
+            }
+
+            $results = $results->reduce(function($agg, $value, $key) use ($groups, $grouped_by_reference_field, $params, $model) {
+                if($grouped_by_reference_field != null) {
+                    $group = $groups->where('_id', $key)->first();
+                    $key = $group->{$grouped_by_reference_field->meta->mainField};
+                }
+
+                $agg[$key] = self::eager_load($value, $model, $params);
+                return $agg;
+            },[]);
+
+            // $results = self::eager_load(collect($results), $model, $params);
+        }
+        else if(count($results) > 0){
+            $results = self::eager_load($results, $model, $params);
+        }
+        
+        return $results;
+    }
+
+    static function paginated_browse($model, $params = null){
         $db_model = self::describe($model);
         $display_field = $db_model->display_field;
         $model_fields = collect(json_decode($db_model->fields));
@@ -469,7 +710,7 @@ class PierMigration extends Model{
         return $results;
     }
 
-    static function detail($model, $row_id, $params = null){
+    static function detail($model, $row_id){
         $db_model = self::describe($model);
         $model_fields = collect(json_decode($db_model->fields));
 

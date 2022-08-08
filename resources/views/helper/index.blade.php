@@ -11,7 +11,7 @@
                         <div class="px-4">
                             <h3 class="mb-1 text-lg leading-none font-medium">URL</h3>
                             <div class="relative">
-                                <input type="text" :value="apiUrl"
+                                <input type="text" :value="cleanAPIUrl"
                                     class="w-full text-xl rounded border-2 border-gray-300 pointer-events-none" />
                                 <button
                                     class="absolute inset-y-0.5 right-0.5 bg-gray-200 px-3 flex items-center justify-center text-sm leading-none">

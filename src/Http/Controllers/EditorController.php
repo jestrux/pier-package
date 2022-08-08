@@ -72,8 +72,14 @@ class EditorController extends Controller
         return response()->json($res);
     }
 
-    public function browse($model){
-        $res = PierMigration::browse($model);
-        return response()->json($res);
+    public function browse($model, $rowId = null, Request $request){
+        if(!is_null($rowId)){
+            $res = PierMigration::model_detail($model, $rowId, $request->input());
+            return response()->json($res);
+        }
+        else{
+            $res = PierMigration::browse_model($model, $request->input());
+            return response()->json($res);
+        }
     }
 }

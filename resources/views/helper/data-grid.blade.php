@@ -62,7 +62,15 @@
 
                 <hr class="-mx-4" />
 
-                <div class="pt-5 pb-7 -mb-4 max-h-[600px] overflow-y-auto" x-html="dataGridContent"></div>
+                <div class="mt-4">
+                    <a-switch x-model="dataGridShowPreview" label="Show preview" />
+                </div>
+
+                <div x-show="!dataGridShowPreview" class="pt- overflow-x-auto">
+                    <pre class="max-h-[630px] overflow-y-auto"><code class="language-javascript" x-text="dataGridCode"></code></pre>
+                </div>
+
+                <div x-show="dataGridShowPreview" class="pt-4 pb-7 -mb-4 max-h-[600px] overflow-y-auto" x-html="dataGridContent"></div>
             </div>
         </div>
     </div>

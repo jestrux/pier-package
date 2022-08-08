@@ -70,10 +70,11 @@ Route::prefix('model')->group(function () {
     Route::get('{model_name}/describe', [EditorController::class, 'describe']);
     Route::get('{model_name}/fields', [EditorController::class, 'fields']);
     Route::get('{model_name}/settings', [EditorController::class, 'settings']);
+    Route::get('{model_name}', [EditorController::class, 'describe']);
     Route::patch('{model_name}', [EditorController::class, 'update']);
     Route::patch('{model_name}/addField', [EditorController::class, 'add_field']);
     Route::patch('{model_name}/settings', [EditorController::class, 'update_settings']);
-    Route::get('{model_name}/browse', [EditorController::class, 'browse']);
+    Route::get('{model_name}/browse/{row_id?}', [EditorController::class, 'browse']);
 });
 
 Route::prefix('api')->group(function () {

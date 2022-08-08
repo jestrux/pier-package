@@ -11,9 +11,9 @@
                         <img src="{{ $item->{$imageField} }}" class="absolute inset-0 h-full w-full object-cover" alt="" />
                     </div>
                 @endisset
-        
+
                 @isset($meta)
-                    <small class="block mb-1 opacity-50 text-sm">
+                    <small class="block mb-1 z-10 text-sm">
                         {!! eval('?>'.Blade::compileString($meta)) !!}
                     </small>
                 @elseif(isset($metaField) && isset($item->{$metaField}) && $item->{$metaField} != null)
@@ -21,7 +21,7 @@
                         {{ $item->{$metaField} }}
                     </small>
                 @endisset
-        
+
                 <h5 class="text-lg font-medium">
                     @isset($title)
                         {!! eval('?>'.Blade::compileString($title)) !!}
@@ -31,7 +31,7 @@
                         ...
                     @endisset
                 </h5>
-        
+
                 @isset($description)
                     <p class="opacity-80 font-light">
                         {!! eval('?>'.Blade::compileString($description)) !!}
@@ -42,7 +42,7 @@
                     </p>
                 @endisset
             </div>
-        
+
             @if (!$lean && $showActions)
                 <div class="absolute hidden group-hover:flex hover:flex items-center mt-2.5">
                     <button type="button" class="focus:outline-none px-3 leading-none py-2 mr-2 border-2 border-black uppercase text-xs tracking-wide font-semibold bg-transparent text-black rounded-full"

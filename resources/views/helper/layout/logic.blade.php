@@ -4,6 +4,7 @@
 <script src="https://unpkg.com/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
 <script src="//unpkg.com/alpinejs" defer></script>
 
+@verbatim
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data("pierHelper", function() {
@@ -22,12 +23,35 @@
                 randomize: this.$persist(false),
                 apiResponse: null,
                 dataGridContent: "",
+                dataGridShowPreview: false,
                 dataGridFieldMap: this.$persist({
                     image: "image",
                     meta: "meta",
                     title: "title",
                     descriptipon: "descriptipon",
                 }),
+                reset() {
+                    Object.keys(localStorage).map(key => {
+                        if (key.indexOf('_x_') != -1) localStorage.removeItem(key);
+                    });
+
+                    this.pluck = [],
+                        this.searchQuery = "",
+                        this.groupBy = "",
+                        this.orderBy = "",
+                        this.orderByAscend = false,
+                        this.currentPage = null,
+                        this.perPage = null,
+                        this.limit = "",
+                        this.randomize = false,
+                        this.dataGridContent = "",
+                        this.dataGridFieldMap = {
+                            image: "image",
+                            meta: "meta",
+                            title: "title",
+                            descriptipon: "descriptipon",
+                        }
+                },
                 togglePagination(e) {
                     if (e.target.value) {
                         this.currentPage = 1;
@@ -36,6 +60,30 @@
                         this.currentPage = null;
                         this.perPage = null
                     }
+                },
+                decodeEntities(str = "gda") {
+                    // if (str && typeof str === 'string') return "";
+
+                    // this prevents any overhead from creating the object each time
+                    var element = document.createElement('div');
+
+                    // strip script/html tags
+                    str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+                    str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+                    element.innerHTML = str;
+                    // str = element.textContent;
+
+                    console.log(str);
+                    return str;
+                },
+                get dataGridCode() {
+                    return `<x-pier-data-grid
+    model="${this.selectedModel.name}"
+    image-field="${this.dataGridFieldMap.image}"
+    meta-field="${this.dataGridFieldMap.meta}"
+    title-field="${this.dataGridFieldMap.title}"
+    description-field="${this.dataGridFieldMap.description}"
+/>`
                 },
                 get paginationPages() {
                     return Array(this.apiResponse?.last_page || 1).fill("").map((_, i) => i);
@@ -46,22 +94,28 @@
                 set selectedModelId(modelId) {
                     if (!modelId?.length) return;
 
+                    if (!this.initialized) {
+                        this.initialized = true;
+                    } else {
+                        this.reset();
+                    }
+
                     this.selectedModel = this.models.find(({
                         _id
                     }) => _id === modelId);
+                },
+                get cleanAPIUrl() {
+                    const pageUrl = window.location.href;
+                    const url = new URL(pageUrl.substring(0, pageUrl.indexOf("/pier-helper")) + this
+                        .apiUrl);
+                    const excemptParams = ["imageField", "metaField", "titleField",
+                        "descriptionField"
+                    ];
+                    excemptParams.forEach(param => {
+                        url.searchParams.delete(param);
+                    });
 
-                    if (this.initialized) {
-                        this.pluck = [];
-                        this.searchQuery = ""; 
-                        this.dataGridFieldMap = {
-                            image: "image",
-                            meta: "meta",
-                            title: "title",
-                            descriptipon: "descriptipon",
-                        }
-                    } else {
-                        this.initialized = true;
-                    }
+                    return url.toString();
                 },
                 get apiUrl() {
                     let params = Object.entries({
@@ -187,3 +241,4 @@
 
     customElements.define('a-switch', MyElement);
 </script>
+@endverbatim
