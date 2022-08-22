@@ -6,7 +6,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-	<title>Youlead CMS</title>
+	<title>{{ config('app.name' ?? 'Pier')}} CMS </title>
 
 	<link rel="stylesheet" href="{{asset('pier/css/cms.css')}}" />
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
