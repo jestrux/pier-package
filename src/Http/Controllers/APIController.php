@@ -16,7 +16,7 @@ class APIController extends Controller
         ]);
     }
     
-    public function resource($model, $rowId = null, Request $request){
+    public function resource($model, Request $request, $rowId = null){
         if(!is_null($rowId)){
             $res = PierMigration::detail($model, $rowId, $request->input());
             return response()->json($res);
