@@ -10,7 +10,7 @@
                     :key="model._id">
                     <router-link :to="`/${model.name}`"
                         :class="{'active': selectedModelName.replace('%20', ' ') === model.name}">
-                        {{ model.name }}
+                        {{ model.plural_name }}
                     </router-link>
                 </li>
             </ul>
