@@ -17,7 +17,7 @@ class CreatePierTable extends Migration
             $table->uuid('_id');
             $table->string('name');
             $table->string('display_field');
-            $table->string('display_name');
+            $table->string('plural_name');
             $table->longText('fields');
             $table->longText('settings');
             $table->timestamps();
