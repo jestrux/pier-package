@@ -474,3 +474,8 @@ form .input-group input:focus{
 .pure-table-horizontal tbody > tr:last-child > td {
     border-bottom-width: 0;
 }
+
+#qlEditorWrapper .ql-container,
+#qlEditorWrapper .ql-editor{
+    height: auto !important;
+}

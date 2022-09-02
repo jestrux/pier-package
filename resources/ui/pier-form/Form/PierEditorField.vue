@@ -26,6 +26,11 @@
         -moz-appearance: none;
         appearance: none;
     } */
+
+    #qlEditorWrapper .quill-container,
+    #qlEditorWrapper .ql-editor{
+      height: auto !important;
+    }
 </style>
 
 <template>
@@ -136,11 +141,18 @@
       />
 
       <textarea 
-        v-else-if="field.type === 'long text'" 
+        v-else-if="field.type === 'long text' && !field.meta.wysiwyg" 
         ref="longTextInput" 
         rows="1" 
         v-model="val" 
       />
+
+      <div id="qlEditorWrapper" v-else-if="field.type === 'long text' && field.meta.wysiwyg">
+        <vue-editor
+          :editorToolbar="wysiwygToolbar"
+          v-model="val" 
+        />
+      </div>
 
       <input
         v-else-if="field.type === 'number'"
@@ -177,6 +189,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { VueEditor } from "vue2-editor";
 import VueStarRating from "vue-star-rating";
 import autosize from "autosize";
 import BcImageField from "./components/ImageField";
@@ -225,7 +238,11 @@ export default {
   data() {
     return {
       UNSPLASH_CLIENT_ID,
-      val: ""
+      val: "",
+      wysiwygToolbar: [
+        ["bold", "italic", "underline"],
+        [{ list: "ordered" }, { list: "bullet" }],
+      ]
     };
   },
   computed: {
@@ -243,6 +260,7 @@ export default {
     }
   },
   components: {
+    VueEditor,
     VueStarRating,
     BcImageField,
     FileField,
