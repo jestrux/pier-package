@@ -3,7 +3,7 @@
         <aside class="flex-shrink-0">
             <div class="long-header bg-blue-100 text-blue-800 tracking-wider">
                 <!-- <img class="mb-2" style="height:50px; margin-left: -8px" src="img/logo.png" alt=""> -->
-                {{process.env.MIX_S3_BUCKET}}
+                Pier CMS
             </div>
             <ul>
                 <li v-for="model in models"
@@ -24,13 +24,12 @@
 
 <script>
 import { mapState } from 'vuex';
-console.log('variable is: ',process.env.MIX_S3_BUCKET)
-console.log('no mix is: ',process.env.S3_BUCKET)
 export default {
     name: 'PierCMSWrapper',
     mounted(){
         if(this.$route.path === "/"){
             const modelName = window.models[0].name;
+            const pluralName = window.models[0].plural_name;
             this.$store.dispatch('setSelectedModel', modelName);
             this.$router.replace("/" + modelName);
         }

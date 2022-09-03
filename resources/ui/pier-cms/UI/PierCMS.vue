@@ -19,7 +19,7 @@
   <div class="h-screen flex-1 flex flex-col relative">
     <header id="mainNav">
       <span id="pageTitle" class="mr-3">
-        {{ modelName }}
+        {{ plularName }}
       </span>
 
       <router-link :to="`/${modelName}/list/add`" class="rounded-btn mt-0 ml-3 flex items-center font-bold tracking-widest border bg-blue-700 text-white border-blue-700">
