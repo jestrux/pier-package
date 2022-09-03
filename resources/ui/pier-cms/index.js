@@ -1,5 +1,7 @@
 import './bootstrap';
 
+console.log('new app name: ',process.env.MIX_APP_NAME);
+
 import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-default.css';
 import store from './store';
