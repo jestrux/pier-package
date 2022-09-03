@@ -84,7 +84,7 @@
   import ModelRecordList from './List';
 
   Popper.Defaults.modifiers.computeStyle.gpuAcceleration = false;
-
+  
   export default {
     name: 'PierCMS',
     props: {

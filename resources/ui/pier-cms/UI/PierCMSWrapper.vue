@@ -3,7 +3,7 @@
         <aside class="flex-shrink-0">
             <div class="long-header bg-blue-100 text-blue-800 tracking-wider">
                 <!-- <img class="mb-2" style="height:50px; margin-left: -8px" src="img/logo.png" alt=""> -->
-                Pier CMS
+               {{ appName ? appName : "Pier CMS"}}
             </div>
             <ul>
                 <li v-for="model in models"
@@ -30,6 +30,8 @@ export default {
         if(this.$route.path === "/"){
             const modelName = window.models[0].name;
             const pluralName = window.models[0].plural_name;
+            const appName = "{{ Config::get('app.name') }}";
+            console.log('app name :', appName);
             this.$store.dispatch('setSelectedModel', modelName);
             this.$router.replace("/" + modelName);
         }
