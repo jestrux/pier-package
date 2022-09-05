@@ -184,7 +184,11 @@ export default {
                 
                 case 'string':
                 case 'long text':
-                    return <span>{trimmedValue}</span>;
+                    return h('div', {
+                        domProps: {
+                            innerHTML: [trimmedValue]
+                        }
+                        });
                 
                 default:
                     return <span>{value}</span>   

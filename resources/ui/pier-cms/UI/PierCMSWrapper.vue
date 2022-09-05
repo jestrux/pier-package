@@ -1,6 +1,6 @@
 <template>
     <div id="container">
-        <aside class="flex-shrink-0">
+        <aside class="flex-shrink-0 overflow-y-auto">
             <div class="long-header bg-blue-100 text-blue-800 tracking-wider">
                 <!-- <img class="mb-2" style="height:50px; margin-left: -8px" src="img/logo.png" alt=""> -->
                {{ appName ? appName : "Pier CMS"}}

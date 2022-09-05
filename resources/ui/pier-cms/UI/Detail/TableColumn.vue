@@ -12,7 +12,7 @@
     .pier-col-image.youtube{
         height: 45px;
     }
-
+     
     .pier-col-image.face{
         width: 50px;
         min-width: 50px;
@@ -142,7 +142,11 @@ export default {
                 
                 case 'string':
                 case 'long text':
-                    return <span>{value}</span>;
+                    return h('span', {
+                        domProps: {
+                            innerHTML: [value]
+                        }
+                    });
                 
                 default:
                     return <span>{value}</span>   

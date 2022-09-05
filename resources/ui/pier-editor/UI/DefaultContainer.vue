@@ -6,7 +6,7 @@
 <template>
   <c-dark-mode>
     <div id="PierApp" class="h-screen bg-dark-200 flex text-white">
-      <aside class="h-full bg-dark-300" style="width: 23%; min-width: 300px">
+      <aside class="h-full bg-dark-300 overflow-y-auto" style="width: 23%; min-width: 300px">
         <div class="border-b border-gray-600 border-opacity-25 px-6 py-3">
           <div class="flex items-center justify-between mb-3">
             <c-text fontSize="3xl">
