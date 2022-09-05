@@ -479,3 +479,7 @@ form .input-group input:focus{
 #qlEditorWrapper .ql-editor{
     height: auto !important;
 }
+
+ul, ol {
+    list-style: revert;
+}
