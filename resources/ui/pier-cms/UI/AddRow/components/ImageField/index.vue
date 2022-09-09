@@ -158,7 +158,9 @@ export default {
             default: ""
         },
     },
+    inject: ['PierCMSConfig'],
     mounted(){
+        console.log("s3Config: ", this.PierCMSConfig.s3);
         this.source = this.imageUploadUrl && this.imageUploadUrl.length ? 0 : 1;
 
         this.$nextTick(() => {

@@ -83,6 +83,22 @@
     <div id="pierCMS">
 		
 	</div>
+
+	<script>
+		window.addEventListener("PierCMS:loaded", () => {
+			PierCMS("#pierCMS", {
+				"appName": "{{env('APP_NAME')}}",
+				"s3": {
+					bucketName: "{{env('MIX_S3_BUCKET')}}",
+					region: "{{env('MIX_S3_REGION')}}",
+					accessKeyId: "{{env('MIX_S3_ACCESS_KEY_ID')}}",
+					secretAccessKey: "{{env('MIX_S3_SECRET_ACCESS_KEY')}}",
+				},
+			})
+		});
+	</script>
+
+	<script src="{{ asset('pier/js/pier-cms.js') }}" defer></script>
 	
 	<script>
 		function openModal(id){
@@ -94,7 +110,5 @@
 			modal.classList.remove('open');
 		}
 	</script>
-	
-	<script src="{{ asset('pier/js/pier-cms.js') }}" defer></script>
 </body>
 </html>

@@ -10,9 +10,31 @@ import Loader from './UI/components/Loader';
 Vue.use(VueToast);
 Vue.component('Loader', Loader);
 
-new Vue({
-  el: '#pierCMS',
-  router,
-  store,
-  render: (h) => h('router-view')
-}).$mount();
+const defaultConfig ={};
+
+new CustomEvent('animalfound', {
+  detail: {
+    name: 'cat'
+  }
+})
+
+window.PierCMS = (el = "#pierCMS", config) => {
+  const PierCMSConfig = {
+    ...defaultConfig,
+    ...config
+  }
+
+  new Vue({
+    el: el,
+    router,
+    store,
+    provide(){
+      return {
+        PierCMSConfig,
+      }
+    },
+    render: (h) => h('router-view')
+  }).$mount();
+}
+
+window.dispatchEvent(new CustomEvent('PierCMS:loaded'));
