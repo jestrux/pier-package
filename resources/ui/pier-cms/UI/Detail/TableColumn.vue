@@ -140,9 +140,8 @@ export default {
                         <img src={getMapLocation(value, 1080, 720)} />
                     );
                 
-                case 'string':
                 case 'long text':
-                    return <span>{value}</span>;
+                    return <span domPropsInnerHTML={value}></span>;
                 
                 default:
                     return <span>{value}</span>   
