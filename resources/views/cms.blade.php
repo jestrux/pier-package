@@ -18,6 +18,10 @@
     </script>
     
     <script>
+		$models = $models->map(function($model) {
+            $model->plural_name = "Walter";
+            return $model;
+        });
 		window.models = {!! json_encode($models->all()) !!}
 		const token = "{{csrf_token()}}";
 		function uploadFile(file, folder = "", percentCallback) {
