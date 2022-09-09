@@ -79,7 +79,15 @@ export default [
   {
     label: 'File',
     value: 'file',
-    placeholder: 'E.g. attachment'
+    placeholder: 'E.g. attachment',
+    options: {
+      type: {
+        label: "File type",
+        type: "radio",
+        choices: ["mp3", "pdf", "other"],
+        defaultValue: "other"
+      }
+    }
   },
   {
     label: 'Link',
