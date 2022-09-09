@@ -151,6 +151,7 @@
       uploadUrl: String,
       location: String,
     },
+    inject: ['PierCMSConfig'],
     data: function() {
       return{
         uploading: false,
@@ -166,19 +167,19 @@
       setup(){
         const self = this;
 
-        const { em } = new FileDrag(this.$el, this.uploadUrl);
+        const { em } = new FileDrag(this.$el, this.uploadUrl, this.PierCMSConfig.s3);
 
-        em.once('loaded', function(file, src) {
+        em.on('loaded', function(file, src) {
           self.src = src;
           self.uploading = true;
         });
         
-        em.once('progressed', function(progress) {
+        em.on('progressed', function(progress) {
           // console.log("Progress changed: ", progress);
           self.progress = progress;
         });
         
-        em.once('complete', function(status, payload) {
+        em.on('complete', function(status, payload) {
           self.uploading = false;
           console.log(status, payload);
           // console.log("Completed successfully: ", status, payload);

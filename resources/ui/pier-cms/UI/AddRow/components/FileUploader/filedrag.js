@@ -3,9 +3,10 @@ import EM from 'EventEmitter';
 import S3FileUpload from '../../../../Utils/S3';
 // export let em;
 // var upload_path = "";
-function FileDrag(el, url) {
+function FileDrag(el, url, s3Config) {
     this.em = new EM();
     this.upload_path = url;
+    this.s3Config = s3Config;
 
     el.addEventListener("dragover", (e) => this.FileDragHover(e), false);
     el.addEventListener("dragleave", (e) => this.FileDragHover(e), false);
@@ -54,6 +55,7 @@ FileDrag.prototype.UploadFile = function(file){
     // if (xhr.upload && file.type == "image/jpeg") {
     if(this.upload_path == "s3"){
         S3FileUpload.uploadFile(file, {
+            ...(this.s3Config || {}),
             onProgress: (percent) => {
                 this.em.emit("progressed", percent);
             }

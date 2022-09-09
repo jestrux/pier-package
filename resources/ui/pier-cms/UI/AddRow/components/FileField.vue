@@ -110,11 +110,8 @@ export default {
             type: String,
             default: "File"
         },
-        uploadUrl: {
-            type: String,
-            default: ""
-        }
     },
+    inject: ['PierCMSConfig'],
     mounted(){
         this.source = this.uploadUrl && this.uploadUrl.length ? 0 : 1;
         this.src = this.url && this.url.length ? this.url : null;
@@ -123,6 +120,14 @@ export default {
         return {
             src: null
         }
+    },
+    computed: { 
+        uploadUrl() {
+            const s3ConfigSet = this.PierCMSConfig.s3 && Object.values(this.PierCMSConfig.s3).filter(v => v && v.length).length == 4;
+            if(s3ConfigSet) return "s3";
+
+            return this.PierCMSConfig.fileUploadUrl;
+        },
     },
     watch: {
         src: {

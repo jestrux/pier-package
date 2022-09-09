@@ -89,6 +89,7 @@
 			PierCMS("#pierCMS", {
 				"appName": "{{env('APP_NAME')}}",
 				"unsplashClientId": "{{env('PIER_UNSPLASH_CLIENT_ID')}}",
+				"fileUploadUrl": "{{env('PIER_UPLOAD_DIR') != null && strlen(env('PIER_UPLOAD_DIR')) > 0 ? url('api/'.env('PIER_UPLOAD_DIR').'/upload_file') : null }}",
 				"s3": {
 					bucketName: "{{env('PIER_S3_BUCKET')}}",
 					region: "{{env('PIER_S3_REGION')}}",

@@ -49,7 +49,6 @@
         :url="val"
         :is-dp="field.meta.face"
       />
-      <!-- :image-upload-url="selectedModelName ? `api/${selectedModelName}/upload_file` : ''" -->
       
       <FileField
         v-else-if="field.type == 'file'"
@@ -57,7 +56,6 @@
         v-model="val"
         :url="val"
       />
-      <!-- :upload-url="selectedModelName ? `api/${selectedModelName}/upload_file` : ''" -->
 
       <SwitchField
         v-else-if="field.type == 'boolean'"

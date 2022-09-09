@@ -149,14 +149,9 @@ export default {
             default: "Image"
         },
         isDp: Boolean,
-        imageUploadUrl: {
-            type: String,
-            default: ""
-        },
     },
     inject: ['PierCMSConfig'],
     mounted(){
-        console.log("s3Config: ", this.PierCMSConfig.s3);
         this.source = this.imageUploadUrl && this.imageUploadUrl.length ? 0 : 1;
 
         this.$nextTick(() => {
@@ -173,7 +168,13 @@ export default {
     computed: { 
         unsplashClientId() {
             return this.PierCMSConfig.unsplashClientId;
-        }
+        },
+        imageUploadUrl() {
+            const s3ConfigSet = this.PierCMSConfig.s3 && Object.values(this.PierCMSConfig.s3).filter(v => v && v.length).length == 4;
+            if(s3ConfigSet) return "s3";
+
+            return this.PierCMSConfig.fileUploadUrl;
+        },
     },
     watch: {
         src: {
