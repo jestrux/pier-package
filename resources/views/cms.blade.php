@@ -88,11 +88,12 @@
 		window.addEventListener("PierCMS:loaded", () => {
 			PierCMS("#pierCMS", {
 				"appName": "{{env('APP_NAME')}}",
+				"unsplashClientId": "{{env('PIER_UNSPLASH_CLIENT_ID')}}",
 				"s3": {
-					bucketName: "{{env('MIX_S3_BUCKET')}}",
-					region: "{{env('MIX_S3_REGION')}}",
-					accessKeyId: "{{env('MIX_S3_ACCESS_KEY_ID')}}",
-					secretAccessKey: "{{env('MIX_S3_SECRET_ACCESS_KEY')}}",
+					bucketName: "{{env('PIER_S3_BUCKET')}}",
+					region: "{{env('PIER_S3_REGION')}}",
+					accessKeyId: "{{env('PIER_S3_ACCESS_KEY_ID')}}",
+					secretAccessKey: "{{env('PIER_S3_SECRET_ACCESS_KEY')}}",
 				},
 			})
 		});

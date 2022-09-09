@@ -48,8 +48,6 @@
         v-model="val"
         :url="val"
         :is-dp="field.meta.face"
-        image-upload-url="s3"
-        :unsplash-client-id="UNSPLASH_CLIENT_ID"
       />
       <!-- :image-upload-url="selectedModelName ? `api/${selectedModelName}/upload_file` : ''" -->
       
@@ -58,7 +56,6 @@
         :label="field.label"
         v-model="val"
         :url="val"
-        upload-url="s3"
       />
       <!-- :upload-url="selectedModelName ? `api/${selectedModelName}/upload_file` : ''" -->
 

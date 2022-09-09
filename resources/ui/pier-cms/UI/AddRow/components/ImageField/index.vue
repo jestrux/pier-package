@@ -153,10 +153,6 @@ export default {
             type: String,
             default: ""
         },
-        unsplashClientId: {
-            type: String,
-            default: ""
-        },
     },
     inject: ['PierCMSConfig'],
     mounted(){
@@ -172,6 +168,11 @@ export default {
             enteringLink: false,
             src: null,
             source: 2
+        }
+    },
+    computed: { 
+        unsplashClientId() {
+            return this.PierCMSConfig.unsplashClientId;
         }
     },
     watch: {
