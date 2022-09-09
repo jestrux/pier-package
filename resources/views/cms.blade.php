@@ -11,6 +11,13 @@
 	<link rel="stylesheet" href="{{asset('pier/css/cms.css')}}" />
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 
+	@php
+		$models = $models->map(function($model) {
+            $model->plural_name = "Walter";
+            return $model;
+        });
+	@endphp
+
     <script>
 		@if(config('pier.prefix') != null)
         	window.pierPrefix = "{{config('pier.prefix')}}";
@@ -18,10 +25,6 @@
     </script>
     
     <script>
-		$models = $models->map(function($model) {
-            $model->plural_name = "Walter";
-            return $model;
-        });
 		window.models = {!! json_encode($models->all()) !!}
 		const token = "{{csrf_token()}}";
 		function uploadFile(file, folder = "", percentCallback) {
