@@ -13,7 +13,7 @@
 
 	@php
 		$models = $models->map(function($model) {
-            $model->plural_name = "Walter";
+            $model->plural_name = Str::plural($model->name);
             return $model;
         });
 	@endphp
