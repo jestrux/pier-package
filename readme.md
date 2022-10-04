@@ -4,8 +4,7 @@ Headless CMS and API generator for Laravel projects.
 
 # Demo of how Pier works
 
-- https://www.youtube.com/watch?v=8OreK3jySt8
-
+- https://vimeo.com/manage/videos/737768985
 
 # How to Use
 
@@ -70,30 +69,6 @@ Set the value of the prefix field under `config/pier.php` to your liking
 ### Add middleware
 
 Set the value of the middleware field under `config/pier.php` to your liking
-
-# High level plan
-
-- [x] Create a generic API system following API standards
-- [x] Create a very easy way for a user(developer) to set up models
-- [x] Create a generic CMS solution with option for user to customize based on needs
-- [x] Create laravel component for accessing data with search and filter
-- [x] Create laravel component for embeding pier form
-- [ ] Create easy to use and interactive docs and make them easily discoverable(in context of the editor and cms pages)
-- [ ] Create a mobile app with the basic model generation features so a user can update the models on the go
-- [ ] Create a url generator for complex endpoints and option to copy the generated URL or create a shortened version
-
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-## Credits
-
-- [jestrux](https://github.com/jestrux)
-- [All Contributors](https://github.com/jestrux/pier/contributors)
-
-## Security
-
-If you discover any security-related issues, please email wakyj07@gmail.com instead of using the issue tracker.
 
 ## License
 
