@@ -353,6 +353,18 @@ class PierMigration extends Model{
         return $data;
     }
 
+    static function get_param($paramKey, $allow_no_value = false){
+        $params = $_GET;
+
+        $param_set = isset($params[$paramKey]);
+
+        if($param_set && (!$allow_no_value || strlen($params[$paramKey]) > 0)) {
+            return null;
+        }
+
+        return !$param_set ? true : $params[$paramKey];
+    }
+
     static function browse($model, $params = null){
         if(!is_null($params) && count($params) > 0){
             if(in_array("page", array_keys($params))){
@@ -474,6 +486,8 @@ class PierMigration extends Model{
             // $results = self::eager_load(collect($results), $model, $params);
         }
         else if(count($results) > 0){
+            if(self::get_param('flat') == null) return $results;
+
             $results = self::eager_load($results, $model, $params);
         }
         
