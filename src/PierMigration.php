@@ -995,7 +995,7 @@ class PierMigration extends Model{
 
         foreach ($references as $reference_id) {
             $entry = [
-                "_id" => Uuid::v4(),
+                "_id" => Str::uuid(),
                 $table_name.'_id' => $row_id,
                 $reference_table.'_id' => $reference_id
             ];
@@ -1011,7 +1011,7 @@ class PierMigration extends Model{
 
     static function populateRow($index, $fields, $images, $faces, $videos){
         $pierModel = [];
-        $_id = Uuid::v4();
+        $_id = Str::uuid();
         $pierModel['_id'] = $_id;
         $pierModel['created_at'] = now();
         $pierModel['updated_at'] = now();
@@ -1053,7 +1053,7 @@ class PierMigration extends Model{
         $model_name = self::pascal_to_sentence($model);
 
         $modelEntry = [
-            "_id" => Uuid::v4(),
+            "_id" => Str::uuid(),
             "name" => $model_name, 
             "display_field" => $display_field, 
             "fields" => $fields->toJson(),
