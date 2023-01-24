@@ -377,7 +377,7 @@ class PierMigration extends Model{
 
         $db_model = self::describe($model);
         $display_field = $db_model->display_field;
-        $model_fields = collect(json_decode($db_model->fields));
+        $model_fields = self::model_fields($model);
 
         $table_name = Str::snake($model);
         $results = DB::table($table_name);
@@ -500,7 +500,7 @@ class PierMigration extends Model{
     static function paginated_browse($model, $params = null){
         $db_model = self::describe($model);
         $display_field = $db_model->display_field;
-        $model_fields = collect(json_decode($db_model->fields));
+        $model_fields = self::model_fields($model);
 
         $table_name = Str::snake($model);
         $results = DB::table($table_name);
@@ -729,7 +729,7 @@ class PierMigration extends Model{
 
     static function detail($model, $row_id){
         $db_model = self::describe($model);
-        $model_fields = collect(json_decode($db_model->fields));
+        $model_fields = self::model_fields($model);
 
         $table_name = Str::snake($model);
         $result = DB::table($table_name)->where("_id", '=', $row_id)->first();
