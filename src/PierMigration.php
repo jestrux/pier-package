@@ -60,10 +60,7 @@ class PierMigration extends Model{
     
     static function model_fields($model){
         $db_model = self::describe($model);
-        $fields = $db_model->fields;
-        if (!is_array($fields)) $fields = json_decode($fields);
-
-        return collect($fields);
+        return collect(json_decode($db_model->fields));
     }
     
     static function settings($model){
