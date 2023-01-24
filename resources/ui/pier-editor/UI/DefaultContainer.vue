@@ -84,6 +84,7 @@ import {
   CCircularProgress, CCircularProgressLabel
 } from '@chakra-ui/vue';
 import { mapState, mapGetters } from 'vuex';
+import { BASE_URL } from '../services/API/setup';
 
 export default {
   name: "DefaultContainer",
@@ -104,21 +105,15 @@ export default {
   methods: {
     async logout() {},
     exportDb(){
-      const blob = new Blob([JSON.stringify(this.models)], { type: "text/json" });
-      const link = document.createElement("a");
-
-      link.download = "pier-db.json";
-      link.href = window.URL.createObjectURL(blob);
-      link.dataset.downloadurl = ["text/json", link.download, link.href].join(":");
-
-      const evt = new MouseEvent("click", {
-        view: window,
-        bubbles: true,
-        cancelable: true,
-      });
-
-      link.dispatchEvent(evt);
-      link.remove();
+      fetch(BASE_URL + "/admin/pier-export-data")
+        .then((response) => response.blob())
+        .then((blob) => {
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "pier-db.json";
+            link.click();
+        })
+        .catch(console.error);
     }
   },
   components: {

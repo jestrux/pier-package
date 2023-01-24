@@ -87,14 +87,25 @@ Route::prefix('api')->group(function () {
     Route::delete('{model_name}/{row_id}', [APIController::class, 'deleteResource']);
 });
 
-Route::get('admin/upsertModel/{model}/{id?}', function ($model, $id = null) {
-    $data = [
-        "model" => $model,
-        "id" => $id,
-    ];
+Route::group(['prefix' => 'admin'], function () {
+    Route::get('/pier-export-data',  function () {
+        $_GET['flat'] = true; // manually disable eager loading
 
-    if (isset($_GET['redirectTo']))
-        $data["redirectTo"] = $_GET['redirectTo'];
+        return PierMigration::all()->map(function ($model) {
+            $model['data'] = PierMigration::browse($model['name']);
+            return $model;
+        });
+    })->name('pier-export-data');
 
-    return view('pier::upsert-model', $data);
+    Route::get('/upsertModel/{model}/{id?}', function ($model, $id = null) {
+        $data = [
+            "model" => $model,
+            "id" => $id,
+        ];
+
+        if (isset($_GET['redirectTo']))
+            $data["redirectTo"] = $_GET['redirectTo'];
+
+        return view('pier::upsert-model', $data);
+    });
 });

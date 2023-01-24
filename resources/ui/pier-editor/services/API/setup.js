@@ -1,6 +1,6 @@
 // import axios from 'axios';
 
-const BASE_URL = process.env.VUE_APP_BASE_URL || '';
+export const BASE_URL = process.env.VUE_APP_BASE_URL || '';
 
 export const mock = (returnError = false) => {
   return new Promise((resolve, reject) => {
