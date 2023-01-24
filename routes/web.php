@@ -63,6 +63,7 @@ Route::post('/data-grid-refetch', function (Request $request) {
 Route::prefix('model')->group(function () {
     Route::post('/', [EditorController::class, 'create']);
     Route::get('/', [EditorController::class, 'list']);
+    Route::get('/dropAll', [EditorController::class, 'drop_all']);
     Route::get('{model_name}/truncate', [EditorController::class, 'truncate']);
     Route::get('{model_name}/drop', [EditorController::class, 'drop']);
     Route::post('{model_name}/migrate', [EditorController::class, 'migrate']);

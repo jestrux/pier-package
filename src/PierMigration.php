@@ -60,7 +60,10 @@ class PierMigration extends Model{
     
     static function model_fields($model){
         $db_model = self::describe($model);
-        return collect(json_decode($db_model->fields));
+        $fields = $db_model->fields;
+        if (!is_array($fields)) $fields = json_decode($fields);
+
+        return collect($fields);
     }
     
     static function settings($model){
@@ -782,7 +785,7 @@ class PierMigration extends Model{
     static function insertRow($model, $data){
         $fields = self::model_fields($model);
         $table_name = Str::snake($model);
-        $_id = Uuid::v4();
+        $_id = is_null($data['_id']) ? Str::uuid() : $data['_id'];
         $entry = [];
 
         $regular_fields = $fields->filter(function($field){
@@ -1045,7 +1048,7 @@ class PierMigration extends Model{
         return $pierModel;
     }
 
-    static function record($model, $fields, $display_field){
+    static function record($model, $fields, $display_field, $data = null){
         $table_name = Str::snake($model);
         $model_name = self::pascal_to_sentence($model);
 
@@ -1097,6 +1100,12 @@ class PierMigration extends Model{
                     ->onDelete('cascade');
             });
         });
+
+        if (!is_null($data)) {
+            foreach ($data as $entry) {
+                self::insertRow($model, $entry);
+            }
+        }
         
         // re-retrieve the instance to get all of the fields in the table.
         return $pierModel->fresh();

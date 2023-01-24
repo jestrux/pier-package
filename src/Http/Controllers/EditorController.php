@@ -5,6 +5,7 @@ namespace Jestrux\Pier\Http\Controllers;
 use Jestrux\Pier\PierMigration;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class EditorController extends Controller
 {
@@ -12,7 +13,8 @@ class EditorController extends Controller
         $model = $request->input('name');
         $fields = collect($request->input('fields'));
         $displayField = $request->input('displayField');
-        $res = PierMigration::record($model, $fields, $displayField);
+        $data = $request->input('data');
+        $res = PierMigration::record($model, $fields, $displayField, $data);
         return response()->json($res);
     }
 
@@ -35,6 +37,20 @@ class EditorController extends Controller
     public function truncate($model){
         $res = PierMigration::truncate($model);
         return response()->json($res);
+    }
+
+    public function drop_all(){
+        $models = PierMigration::all()->map(function ($model) {
+            return $model['name'];
+        });
+
+        Schema::disableForeignKeyConstraints();
+        foreach ($models as $model) {
+            PierMigration::drop($model);
+        }
+        Schema::enableForeignKeyConstraints();
+
+        return response()->json(true);
     }
 
     public function drop($model){
