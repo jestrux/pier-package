@@ -482,11 +482,12 @@ class PierMigration extends Model{
                     $key = $group->{$grouped_by_reference_field->meta->mainField};
                 }
 
-                $agg[$key] = self::eager_load($value, $model, $params);
+                $agg[$key] = self::get_param('flat') == null 
+                    ? $value 
+                    : self::eager_load($value, $model, $params);
+                    
                 return $agg;
             },[]);
-
-            // $results = self::eager_load(collect($results), $model, $params);
         }
         else if(count($results) > 0){
             if(self::get_param('flat') == null) return $results;
