@@ -1,30 +1,29 @@
-<div id="pierComponent{{$instanceId}}"
-     pier-data-component="{{$instanceId}}" 
-     x-data="pierComponent{{$instanceId}}" 
-     x-init="init()"
->
-    {!! eval('?>'.Blade::compileString($slot)) !!}
+<div id="pierComponent{{ $instanceId }}" pier-data-component="{{ $instanceId }}" x-data="pierComponent{{ $instanceId }}"
+    x-init="init()" {{ $attributes }}>
+    {!! eval('?>' . Blade::compileString($slot)) !!}
 </div>
 
 <script>
     document.addEventListener('alpine:init', () => {
-        Alpine.data("pierComponent{{$instanceId}}", () => ({
-            ref: "pierComponent{{$instanceId}}",
+        Alpine.data("pierComponent{{ $instanceId }}", () => ({
+            ref: "pierComponent{{ $instanceId }}",
             filters: {!! collect($filters)->toJson() !!},
-            async updatePierComponentContent(){
+            async updatePierComponentContent() {
                 const parentEl = this.$el;
                 const activeEl = document.activeElement;
                 const activeElementIsWithinBounds = parentEl.contains(activeEl);
-                
-                const model = "{{$model}}";
-                const view = encodeURIComponent(`{{$slot}}`);
+
+                const model = "{{ $model }}";
+                const view = encodeURIComponent(`{{ $slot }}`);
                 // exclude filters with empty, null or undefined values
-                let filters = Object.fromEntries(Object.entries(this.filters).filter(([key, value]) => value !== null && value !== undefined && value.length ));
+                let filters = Object.fromEntries(Object.entries(this.filters).filter(([key,
+                    value
+                ]) => value !== null && value !== undefined && value.length));
                 filters = Object.fromEntries(Object.entries(filters).map(([key, value], i) => {
                     key = i == 0 ? key : key.replace("where", "andWhere");
                     return [key, value];
                 }));
-                
+
                 const res = await fetch("/data-refetch", {
                     method: "POST",
                     headers: {
@@ -38,22 +37,25 @@
                 });
 
                 const newContent = await res.text();
-                document.querySelector("#pierComponent{{$instanceId}}").innerHTML = newContent;
+                document.querySelector("#pierComponent{{ $instanceId }}").innerHTML =
+                    newContent;
 
-                if(activeElementIsWithinBounds){
+                if (activeElementIsWithinBounds) {
                     const activeElPierRef = activeEl.getAttribute("pier-ref");
                     setTimeout(() => {
-                        if(activeElPierRef && activeElPierRef.length){
+                        if (activeElPierRef && activeElPierRef.length) {
                             this.$nextTick(() => {
-                                const newActiveElementInstance = this.$el.querySelector(`[pier-ref="${activeElPierRef}"]`);
-                                if(newActiveElementInstance)
+                                const newActiveElementInstance = this.$el
+                                    .querySelector(
+                                        `[pier-ref="${activeElPierRef}"]`);
+                                if (newActiveElementInstance)
                                     newActiveElementInstance.focus();
                             });
                         }
                     }, 100);
                 }
             },
-            init(){
+            init() {
                 this.$watch('filters', _ => {
                     this.updatePierComponentContent();
                 });
