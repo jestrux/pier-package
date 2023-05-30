@@ -12,9 +12,6 @@
             "email": "wakyj07@gmail.com"
         }
     ],
-    "require": {
-        "illuminate/support": "self.version"
-    },
     "autoload": {
         "psr-4": {
             "Jestrux\\Pier\\": "./src"
