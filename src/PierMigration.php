@@ -783,7 +783,7 @@ class PierMigration extends Model{
     static function insertRow($model, $data){
         $fields = self::model_fields($model);
         $table_name = Str::snake($model);
-        $_id = is_null($data['_id']) ? Str::uuid() : $data['_id'];
+        $_id = !isset($data) || !isset($data['_id']) || is_null($data['_id']) ? Str::uuid() : $data['_id'];
         $entry = [];
 
         $regular_fields = $fields->filter(function($field){
