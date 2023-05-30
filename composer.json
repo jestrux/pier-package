@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "illuminate/support": "^7.0|^8.0"
+        "illuminate/support": "self.version"
     },
     "autoload": {
         "psr-4": {
