@@ -47,6 +47,7 @@ Add the following to your .env file and set the correct values...
 
 ```
 PIER_UPLOAD_DIR=pierFiles
+PIER_FORM_REDIRECT_URL=
 PIER_UNSPLASH_CLIENT_ID=
 PIER_S3_BUCKET=
 PIER_S3_REGION=
