@@ -4,27 +4,8 @@ import { xAmzDate, dateYMD } from "./Date";
 import { throwError } from './ErrorThrower';
 import axios from 'axios';
 
-// const baseConfig = {
-//     bucketName: process.env.MIX_S3_BUCKET,
-//     region: process.env.MIX_S3_REGION,
-//     accessKeyId: process.env.MIX_S3_ACCESS_KEY_ID,
-//     secretAccessKey: process.env.MIX_S3_SECRET_ACCESS_KEY,
-// };
-
-const baseConfig = {
-    bucketName: 'ipf-website',
-    region: 'eu-west-3',
-    accessKeyId: 'AKIA3RMFZURLR4GYTYFW',
-    secretAccessKey: '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',
-};
-
 class S3FileUpload {
-    static async uploadFile(file, overridenConfig) {
-        const config = {
-            ...baseConfig,
-            ...overridenConfig
-        };
-
+    static async uploadFile(file, config = {}) {
         // Error Thrower :x:
         throwError(config, file);
 

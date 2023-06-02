@@ -46,11 +46,12 @@ You will now find the pier asset files under `/public/pier`
 Add the following to your .env file and set the correct values...
 
 ```
-MIX_UNSPLASH_CLIENT_ID=
-MIX_S3_BUCKET=
-MIX_S3_REGION=
-MIX_S3_ACCESS_KEY_ID=
-MIX_S3_SECRET_ACCESS_KEY=
+PIER_UPLOAD_DIR=pierFiles
+PIER_UNSPLASH_CLIENT_ID=
+PIER_S3_BUCKET=
+PIER_S3_REGION=
+PIER_S3_ACCESS_KEY_ID=
+PIER_S3_SECRET_ACCESS_KEY=
 ```
 
 # Customize
