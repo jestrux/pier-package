@@ -14,7 +14,7 @@
 </style>
 <template>
     <div class="flex -mr-2">
-        <label v-for="(choice, index) in meta.availableStatuses" :key="index" 
+        <label v-for="(choice, index) in choices" :key="index" 
             class="status-label rounded px-4 py-2 uppercase text-sm tracking-wider cursor-pointer mr-2 mb-2 border-2 hover:bg-gray-100"
             :style="{
                 'background': choice.selected ? choice.color : '',
@@ -39,27 +39,28 @@ export default {
         required: String | Boolean
     },
     mounted() {
-        console.log("Status value: ", this.value);
-        
         if(this.value)
             this.val = this.value;
     },
     data() {
         return {
-            val: ""
+            val: "",
+            dontUpdate: false
         }
     },
     computed: {
         choices() {
-            return this.meta.availableStatuses.map(choice => {
-                return {
-                    ...choice,
-                    selected: this.val == choice.name
-                }
-            })
+            return this.meta.availableStatuses.map((choice) => ({
+                ...choice,
+                selected: this.val?.toString().toLowerCase() == choice.name?.toString().toLowerCase()
+            }))
         }
     },
     watch: {
+        value: function(newValue){
+            this.dontUpdate = true;
+            this.val = newValue;
+        },
         val: function(newValue){
             this.$emit('input', newValue);
         }

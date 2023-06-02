@@ -66,8 +66,7 @@
         :required="field.required"
       />
       
-      <StatusField
-        v-else-if="field.type == 'status'"
+      <StatusField v-else-if="field.type == 'status'"
         :label="field.label.replace(/_/g, ' ')"
         :meta="field.meta"
         v-model="val"
