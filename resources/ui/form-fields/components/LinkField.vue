@@ -133,7 +133,7 @@ export default {
     },
     data() {
         return {
-            val: false,
+            val: "",
             dontUpdate: false,
             previewReady: false,
             error: null
