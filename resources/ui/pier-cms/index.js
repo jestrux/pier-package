@@ -5,7 +5,7 @@ import 'vue-toast-notification/dist/theme-default.css';
 
 import store from './store';
 import router from './router';
-import Loader from './UI/components/Loader';
+import Loader from '../components/Loader';
 
 Vue.use(VueToast);
 Vue.component('Loader', Loader);

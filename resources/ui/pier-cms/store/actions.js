@@ -1,6 +1,6 @@
 import { handleNetworkError, showSuccessToast, toPascalCase } from '../../Utils';
 import { fetchModelRecords, insertRecord, deleteRecord, populateModel, updateRecord } from '../../API';
-import router from '../../router';
+import router from '../router';
 
 export const setModels = ({ commit }, models) => {
     commit('SET_MODELS', models);

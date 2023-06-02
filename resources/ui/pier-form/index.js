@@ -4,7 +4,7 @@ import VueToast from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-default.css";
 
 import Form from "./Form";
-import Loader from "./Form/components/Loader";
+import Loader from "../components/Loader";
 
 Vue.use(VueToast);
 Vue.component("Loader", Loader);
