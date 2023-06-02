@@ -3,10 +3,13 @@
         font-size: .875rem !important;
         flex: none;
         width: auto;
+        position: relative;
     }
 
     .status-label input{
-        display: none;
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
     }
 </style>
 <template>
@@ -21,7 +24,7 @@
             :for="`${label}Status${choice.name}`">
             {{ choice.name }}
 
-            <input :id="`${label}Status${choice.name}`" type="radio" :name="label" v-model="val" :value="choice.name" />
+            <input :id="`${label}Status${choice.name}`" type="radio" :name="label" v-model="val" :value="choice.name" :required="required" />
         </label>
     </div>
 </template>
@@ -32,7 +35,8 @@ export default {
     props: {
         label: String,
         meta: Object,
-        value: String
+        value: String,
+        required: String | Boolean
     },
     mounted() {
         if(this.value)

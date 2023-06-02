@@ -48,6 +48,7 @@
         v-model="val"
         :url="val"
         :is-dp="field.meta.face"
+        :required="field.required"
       />
       
       <FileField
@@ -55,12 +56,14 @@
         :label="field.label"
         v-model="val"
         :url="val"
+        :required="field.required"
       />
 
       <SwitchField
         v-else-if="field.type == 'boolean'"
         :label="field.label.replace(/_/g, ' ')"
         v-model="val"
+        :required="field.required"
       />
       
       <StatusField
@@ -68,12 +71,14 @@
         :label="field.label.replace(/_/g, ' ')"
         :meta="field.meta"
         v-model="val"
+        :required="field.required"
       />
       
       <DateField
         v-else-if="field.type == 'date'"
         :field="field"
         v-model="val"
+        :required="field.required"
       />
       
       <ReferenceField
@@ -83,6 +88,7 @@
         :reference-model-main-field="field.meta.mainField"
         :meta="field.meta"
         v-model="val"
+        :required="field.required"
       />
       
       <MultiReferenceField
@@ -91,6 +97,7 @@
         :reference-model="field.meta.model"
         :reference-model-main-field="field.meta.mainField"
         v-model="val"
+        :required="field.required"
       />
       
       <LinkField
@@ -98,6 +105,7 @@
         :label="field.label.replace(/_/g, ' ')"
         show-preview
         v-model="val"
+        :required="field.required"
       />
       
       <bc-youtube-field
@@ -105,6 +113,7 @@
         :label="field.label"
         v-model="val"
         :url="val"
+        :required="field.required"
       />
 
       <vue-star-rating
@@ -114,18 +123,21 @@
         :max-rating="parseInt(field.meta.outOf)"
         :star-size="28"
         v-model="val"
+        :required="field.required"
       />
 
       <PasswordField
         v-else-if="field.type == 'password'"
         :field="field"
         v-model="val"
+        :required="field.required"
       />
 
       <PhoneField
         v-else-if="field.type == 'phone'"
         :label="field.label"
         v-model="val"
+        :required="field.required"
       />
 
       <LocationField
@@ -133,6 +145,7 @@
         :label="field.label"
         v-model="val"
         :meta="field.meta"
+        :required="field.required"
       />
 
       <textarea 
@@ -140,12 +153,14 @@
         ref="longTextInput" 
         rows="1" 
         v-model="val" 
+        :required="field.required"
       />
 
       <div id="qlEditorWrapper" v-else-if="field.type === 'long text' && field.meta.wysiwyg">
         <vue-editor
           :editorToolbar="wysiwygToolbar"
           v-model="val" 
+          :required="field.required"
         />
       </div>
 
