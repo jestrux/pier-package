@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 export function getYouTubeVideoIdFromUrl(url) {
     url = url.split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
     const youtubeRegex = /(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/;

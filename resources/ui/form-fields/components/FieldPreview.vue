@@ -74,8 +74,6 @@ function getYoutubeVideoIdFromurl(url){
     return match[2];
 }
 
-import { getLinkPreview } from "../API";
-
 export default {
 
     name: "FieldPreview",
@@ -84,6 +82,7 @@ export default {
         url: String,
         isDp: Boolean
     },
+    inject: ['API'],
     data(){
         return {
             youtubeTitle: "Youtube video",
@@ -144,7 +143,7 @@ export default {
             try {
                 this.linkDetails = null;
 
-                const { cover, images, title, description } = await getLinkPreview(this.url);
+                const { cover, images, title, description } = await this.API.getLinkPreview(this.url);
                 if((!title || !title.length) && (!description && !description.length))
                     return;
 

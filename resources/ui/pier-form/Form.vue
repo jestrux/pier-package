@@ -41,9 +41,10 @@
 </template>
 
 <script>
-import { insertRecord, updateRecord } from './API';
-import PierEditorField from "./PierEditorField";
-import { handleNetworkError, showSuccessToast } from './Utils';
+import PierEditorField from "../form-fields/PierEditorField.vue";
+import { handleNetworkError, showSuccessToast } from '../Utils';
+import * as API from "../API";
+const { insertRecord, updateRecord } = API;
 
 export default {
   name: "PierForm",
@@ -61,6 +62,11 @@ export default {
     };
   },
   inject: ["model", "values"],
+  provide() {
+      return {
+          API
+      };
+  },
   computed: {
     // ...mapState(["savingRecord", "model.name"]),
     // ...mapGetters(["model"]),

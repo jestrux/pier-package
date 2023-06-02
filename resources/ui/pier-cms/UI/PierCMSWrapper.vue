@@ -24,9 +24,16 @@
 
 <script>
 import { mapState } from 'vuex';
+import * as API from "../../API";
+
 export default {
     name: 'PierCMSWrapper',
     inject: ['PierCMSConfig'],
+    provide() {
+        return {
+            API
+        };
+    },
     mounted(){
         if(this.$route.path === "/"){
             const modelName = window.models[0].name;

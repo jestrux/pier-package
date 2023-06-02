@@ -44,7 +44,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import PierEditorField from "./PierEditorField";
+import PierEditorField from "../../form-fields/PierEditorField.vue";
 
 export default {
   name: "PierCMSAddRow",

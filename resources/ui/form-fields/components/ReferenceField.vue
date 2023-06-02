@@ -27,7 +27,6 @@
 <script>
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
-import { searchModel } from '../API';
 
 export default {
     name: "ReferenceField",
@@ -37,6 +36,7 @@ export default {
         label: String,
         value: Object|String
     },
+    inject: ['API'],
     mounted() {
         if(this.value)
             this.val = this.value;
@@ -53,7 +53,7 @@ export default {
 
             return new Promise(async (resolve, reject) => {
                 try {
-                    const results = await searchModel(this.referenceModel, input);
+                    const results = await this.API.searchModel(this.referenceModel, input);
                     resolve(results);
                 } catch (error) {
                     reject("Failed to search for field.");

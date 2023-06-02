@@ -59,7 +59,6 @@
 <script>
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
-import { searchModel } from '../../../API';
 import { mapState } from 'vuex';
 
 export default {
@@ -70,6 +69,7 @@ export default {
         label: String,
         value: Array | String
     },
+    inject: ['API'],
     mounted() {
         if(this.value && !this.references.length)
             this.references = this.value;
@@ -87,7 +87,7 @@ export default {
 
             return new Promise(async (resolve, reject) => {
                 try {
-                    let results = await searchModel(this.referenceModel, input);
+                    let results = await this.API.searchModel(this.referenceModel, input);
                     const selectedItems = this.references.map(({_id}) => _id);
                     results = results.filter(({_id}) => !selectedItems.includes(_id));
                     resolve(results);

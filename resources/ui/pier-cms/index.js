@@ -12,12 +12,6 @@ Vue.component('Loader', Loader);
 
 const defaultConfig ={};
 
-new CustomEvent('animalfound', {
-  detail: {
-    name: 'cat'
-  }
-})
-
 window.PierCMS = (el = "#pierCMS", config) => {
   const PierCMSConfig = {
     ...defaultConfig,
