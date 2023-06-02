@@ -1,6 +1,6 @@
 import axios from "axios";
 import EM from "EventEmitter";
-import S3FileUpload from "../../Utils/S3";
+import S3FileUpload from "../../../Utils/S3";
 // export let em;
 // var upload_path = "";
 function FileDrag(el, url, s3Config) {

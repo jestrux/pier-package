@@ -83,7 +83,6 @@
 
 <script>
   import Paginate from 'vuejs-paginate';
-  import { populateModel } from "../../../API";
   import { mapState } from 'vuex';
 
   export default {

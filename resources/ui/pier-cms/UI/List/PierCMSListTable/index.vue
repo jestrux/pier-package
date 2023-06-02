@@ -138,7 +138,6 @@
 
 <script>
   import Paginate from 'vuejs-paginate';
-  import { populateModel } from "../../../API";
   import TableRow from "./TableRow";
   import DropArea from "./DropArea";
   import { mapState } from 'vuex';

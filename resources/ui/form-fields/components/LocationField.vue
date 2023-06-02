@@ -30,7 +30,7 @@
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
 import FieldPreview from "../components/FieldPreview";
-import { getMapLocation } from '../../../Utils';
+import { getMapLocation } from '../../Utils';
 
 async function getLocation(location, countries = ""){
     let countryFilter = "";

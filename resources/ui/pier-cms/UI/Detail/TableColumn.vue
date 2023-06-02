@@ -24,7 +24,7 @@
 
 import formatDate from 'date-fns/format';
 import parseDate from 'date-fns/parse';
-import { getMapLocation, getYouTubeVideoIdFromUrl } from "../../Utils";
+import { getMapLocation, getYouTubeVideoIdFromUrl } from "../../../Utils";
 export default {
     name: "TableColumn",
     props: [ 'field', 'value' ],

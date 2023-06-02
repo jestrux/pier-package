@@ -31,8 +31,6 @@
 </template>
 
 <script>
-  import { fetchModelRecords } from "../../API";
-  import { toPascalCase } from "../../Utils";
   import PierCMSListTable from "./PierCMSListTable";
   import PierCMSListCard from "./PierCMSListCard";
 
