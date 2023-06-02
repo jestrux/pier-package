@@ -1,5 +1,6 @@
-<link rel="stylesheet" href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css" />
+{{-- <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css" /> --}}
 <link rel="stylesheet" href="{{asset('pier/css/cms.css')}}" />
+<script src="https://cdn.tailwindcss.com"></script>
 
 <style>
     .text-blue-800,
