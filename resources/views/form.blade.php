@@ -23,7 +23,7 @@
     <div class="py-12 bg-gray-200">
         <div class="container mx-auto">
             <div class="mx-auto" style="width: 560px">
-                <x-pier-form model="Station" rowId="0c59b963-78b3-43cc-8149-321e981cc7ed" :redirectTo="url('/home')" />
+                <x-pier-form :redirectTo="url('/')" />
             </div>
         </div>
     </div>

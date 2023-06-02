@@ -35,8 +35,7 @@
 </style>
 
 @php
-    $modelPlural = $model . 's';
-    $backUrl = url('/admin/' . strtolower($modelPlural));
+    $backUrl = env('PIER_FORM_REDIRECT_URL') ?? url('/admin/' . strtolower($model . 's'));
 
     if(isset($redirectTo))
         $backUrl = url($redirectTo);
