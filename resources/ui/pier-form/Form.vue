@@ -38,7 +38,7 @@
         {{
           savingRecord
             ? `SAVING ${model.name.toUpperCase()}...`
-            : "SAVE CHANGES"
+            : "SUBMIT"
         }}
       </button>
     </div>
@@ -100,10 +100,15 @@ export default {
         this.savingRecord = false;
 
         showSuccessToast(`${this.modelName} created`);
-        if (window.pierRedirectTo && window.pierRedirectTo.length)
+        if(typeof window.onPierFormSuccess == "function")
+          window.onPierFormSuccess();
+        else if (window.pierRedirectTo && window.pierRedirectTo.length)
           window.location.href = pierRedirectTo;
       } catch (error) {
-        handleNetworkError(error, `Error creating ${this.modelName}:`);
+        if(typeof window.onPierFormError == "function")
+          window.onPierFormError(error, `Error creating ${this.modelName}:`);
+        else
+          handleNetworkError(error, `Error creating ${this.modelName}:`);
         this.savingRecord = false;
       }
     },
