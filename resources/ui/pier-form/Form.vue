@@ -1,17 +1,22 @@
 <template>
   <form action="#" method="POST" @submit.prevent="saveRow">
-    <div :key="reloadFields">
+    <div :key="reloadFields" class="grid grid-cols-12 gap-5">
       <template v-if="model">
-        <PierEditorField
-          v-for="field in model.fields"
+        <div
           :key="field.label"
-          :field="field"
-          v-model="record[field.label]"
-        />
+          v-for="field in model.fields"
+          :class="{
+            'col-span-12': !field.width,
+            'col-span-6': field.width == 'half',
+            'col-span-4': field.width == 'third',
+          }"
+        >
+          <PierEditorField :field="field" v-model="record[field.label]" />
+        </div>
       </template>
     </div>
 
-    <div class="mt-6 flex justify-end">
+    <div class="mt-5 flex justify-end">
       <!-- <button
         class="p-2 text-sm mr-3"
         :class="{
@@ -42,7 +47,7 @@
 
 <script>
 import PierEditorField from "../form-fields/PierEditorField.vue";
-import { handleNetworkError, showSuccessToast } from '../Utils';
+import { handleNetworkError, showSuccessToast } from "../Utils";
 import * as API from "../API";
 const { insertRecord, updateRecord } = API;
 
@@ -63,15 +68,15 @@ export default {
   },
   inject: ["model", "values"],
   provide() {
-      return {
-          API
-      };
+    return {
+      API,
+    };
   },
   computed: {
     // ...mapState(["savingRecord", "model.name"]),
     // ...mapGetters(["model"]),
-    modelName(){
-      if(this.model) return this.model.name;
+    modelName() {
+      if (this.model) return this.model.name;
 
       return "";
     },
@@ -95,7 +100,7 @@ export default {
         this.savingRecord = false;
 
         showSuccessToast(`${this.modelName} created`);
-        if(window.pierRedirectTo && window.pierRedirectTo.length)
+        if (window.pierRedirectTo && window.pierRedirectTo.length)
           window.location.href = pierRedirectTo;
       } catch (error) {
         handleNetworkError(error, `Error creating ${this.modelName}:`);
@@ -110,7 +115,7 @@ export default {
         this.savingRecord = false;
 
         showSuccessToast(`${this.modelName} updated`);
-        if(window.pierRedirectTo && window.pierRedirectTo.length)
+        if (window.pierRedirectTo && window.pierRedirectTo.length)
           window.location.href = pierRedirectTo;
       } catch (error) {
         handleNetworkError(error, `Error creating ${this.modelName}:`);

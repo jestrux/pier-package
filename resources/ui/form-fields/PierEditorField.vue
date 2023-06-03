@@ -34,7 +34,7 @@
 </style>
 
 <template>
-  <div class="input-group">
+  <div class="input-group" style="margin: 0">
     <template v-if="field">
       <label
         v-if="!hideLabel"

@@ -8,16 +8,21 @@
       <form action="#" method="POST"
         @submit.prevent="saveRow"
       >
-        <div :key="reloadFields" class="modal-body overflow-y-auto"
+        <div :key="reloadFields" class="modal-body overflow-y-auto grid grid-cols-12 gap-5"
           style="padding-top: 10px; padding-bottom: 17px; max-height: 480px;"
         >
           <template v-if="selectedModel">
-            <PierEditorField
-              v-for="field in selectedModel.fields"
+            <div
               :key="field.label"
-              :field="field"
-              v-model="record[field.label]"
-            />
+              v-for="field in selectedModel.fields"
+              :class="{
+                'col-span-12': !field.width,
+                'col-span-6': field.width == 'half',
+                'col-span-4': field.width == 'third',
+              }"
+            >
+              <PierEditorField :field="field" v-model="record[field.label]" />
+            </div>
           </template>
         </div>
 
