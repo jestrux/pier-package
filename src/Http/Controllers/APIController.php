@@ -5,6 +5,7 @@ namespace Jestrux\Pier\Http\Controllers;
 use Jestrux\Pier\PierMigration;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class APIController extends Controller
@@ -53,11 +54,11 @@ class APIController extends Controller
         $imageNameExt = $file->getClientOriginalName();
         $imageName = pathinfo($imageNameExt,PATHINFO_FILENAME);
         $imageNameStore = $imageName . '_' . time() . '.' . pathinfo($imageNameExt, PATHINFO_EXTENSION);
-        $path = $file->storeAs("public/$folder_name/", $imageNameStore);
+        $path = $file->storeAs($folder_name ?? "", $imageNameStore);
 
         return response()->json([
-            "success" => true, 
-            "path" => asset(str_replace("public", "storage", $path))
+            "success" => true,
+            "path" => Storage::url($path),
         ]);
     }
 }
