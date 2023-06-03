@@ -7,6 +7,13 @@ function FileDrag(el, url, s3Config) {
 	this.em = new EM();
 	this.upload_path = url;
 	this.s3Config = s3Config;
+	const input = el.querySelector("input");
+
+	if (input) {
+		input.addEventListener("change", (e) => {
+			this.FileSelectHandler(e);
+		});
+	}
 
 	el.addEventListener("dragover", (e) => this.FileDragHover(e), false);
 	el.addEventListener("dragleave", (e) => this.FileDragHover(e), false);

@@ -124,7 +124,15 @@
   <div id="fileUploader">
     <img :src="src" alt="" width="100%" v-if="src">
 
-    <div id="fileDrop" v-else></div>
+    <div style="position:relative">
+      <div id="fileDrop"></div>
+      <div style="position:absolute; botton: 3rem; left: 50%; transform: translateX(-50%); bottom: 1rem;">
+        <label  style="cursor: pointer; position:relative; font-size: 0.9rem; line-height: 1; color: #3775f2; padding: 0.35rem 0.55rem;">
+          or select file
+          <input type="file" style="display:none">
+        </label>
+      </div>
+    </div>
 
     <div id="loader" v-if="uploading">
       <span></span>
