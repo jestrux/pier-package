@@ -18,13 +18,13 @@
 <template>
   <div class="h-screen flex-1 flex flex-col relative">
     <header id="mainNav">
-      <span id="pageTitle" class="mr-3">
+      <span id="pageTitle" class="mr-2 font-bold">
         {{ modelName }}
       </span>
 
-      <router-link :to="`/${modelName}/list/add`" class="rounded-btn mt-0 ml-3 flex items-center font-bold tracking-widest border bg-blue-700 text-white border-blue-700">
-        <svg style="margin-bottom: 0.15rem;" class="mr-1" fill="currentColor" height="20" width="20" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-        New {{ modelName }}
+      <router-link :to="`/${modelName}/list/add`" class="border border-current flex font-semibold gap-1 items-center rounded-full text-primary text-sm leading-none hover:bg-neutral-200/50" style="padding: 0.4rem 1rem;">
+        <svg class="-ml-1" height="18px" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        <span class="lowercase first-letter:uppercase inline-block">New entry</span>
       </router-link>
 
       <span class="flex-1"></span>

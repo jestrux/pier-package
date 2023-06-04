@@ -9,7 +9,14 @@
 	<title>{{ config('app.name' ?? 'Pier')}} CMS </title>
 
 	<link rel="stylesheet" href="{{asset('pier/css/cms.css')}}" />
-    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    {{-- <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet"> --}}
+	<script src="https://cdn.tailwindcss.com"></script>
+
+	<style>
+		:root {
+			--primary-color: {{ env('APP_COLOR') ?? '#2c5282' }};
+		}
+	</style>
 
 	@php
 		$models = $models->map(function($model) {
@@ -23,7 +30,6 @@
         	window.pierPrefix = "{{config('pier.prefix')}}";
 		@endif
     </script>
-    
     <script>
 		window.models = {!! json_encode($models->all()) !!}
 		const token = "{{csrf_token()}}";
@@ -80,14 +86,18 @@
 	</script>
 </head>
 <body>
-    <div id="pierCMS">
-		
-	</div>
+    <div id="pierCMS"></div>
 
 	<script>
+		@php
+			$appLogo = env('APP_LOGO') ?? null;
+			if (!is_null($appLogo)) $appLogo = asset($appLogo);
+		@endphp
+		
 		window.addEventListener("PierCMS:loaded", () => {
 			PierCMS("#pierCMS", {
 				"appName": "{{env('APP_NAME')}}",
+				"appLogo": "{{$appLogo}}",
 				"unsplashClientId": "{{env('PIER_UNSPLASH_CLIENT_ID')}}",
 				"fileUploadUrl": "{{env('PIER_UPLOAD_DIR') != null && strlen(env('PIER_UPLOAD_DIR')) > 0 ? url('api/'.env('PIER_UPLOAD_DIR').'/upload_file') : null }}",
 				"s3": {
@@ -101,7 +111,6 @@
 	</script>
 
 	<script src="{{ asset('pier/js/pier-cms.js') }}" defer></script>
-	
 	<script>
 		function openModal(id){
 			var modal = document.getElementById(id);

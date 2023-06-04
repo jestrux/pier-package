@@ -7,7 +7,7 @@
     <div v-if="val" class="flex items-center px-2 rounded bg-gray-200 bg-opacity-25 border border-gray-300" style="height: 40px">
         <span class="ml-2 text-sm">{{val.name}}</span>
 
-        <button type="button" class="ml-auto h-full flex items-center text-blue-900 text-xs uppercase px-1 border-none bg-transparent" 
+        <button type="button" class="ml-auto h-full flex items-center text-primary text-xs uppercase px-1 border-none bg-transparent" 
             @click="val = null">
             Change
         </button>

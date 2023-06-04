@@ -49,12 +49,12 @@
         This model doesn't contain any records yet.
       </p>
 
-      <button class="mb-2 mr-2 rounded-btn border border-blue-800 capitalize text-blue-800 text-base mt-0 ml-3"
+      <button class="mb-2 mr-2 rounded-btn border border-current capitalize text-primary text-base mt-0 ml-3"
         @click="populateRecords(30)">
         Populate <span class="font-bold">30</span> sample records
       </button>
 
-      <button class="mb-2 rounded-btn border border-blue-800 capitalize text-blue-800 text-base mt-0 ml-3"
+      <button class="mb-2 rounded-btn border border-current capitalize text-primary text-base mt-0 ml-3"
         @click="populateRecords(50)">
         Populate <span class="font-bold">50</span> sample records
       </button>

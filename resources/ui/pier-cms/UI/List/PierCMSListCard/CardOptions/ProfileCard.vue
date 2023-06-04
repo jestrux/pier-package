@@ -47,7 +47,7 @@
             </a>
         </div>
 
-        <span v-if="!noStatus" class="rounded-full px-3 py-1 bg-blue-200 text-blue-900 font-bold uppercase text-sm tracking-wider">
+        <span v-if="!noStatus" class="rounded-full px-3 py-1 bg-blue-200 text-primary font-bold uppercase text-sm tracking-wider">
             {{ status }}
         </span>
     </div>

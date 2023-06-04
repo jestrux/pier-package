@@ -100,7 +100,7 @@
                 </button>
             </div>
 
-            <button class="text-blue-800 font-semibold" type="button" v-if="src !== null"
+            <button class="text-primary font-semibold" type="button" v-if="src !== null"
                 @click="src = null">Change
             </button>
         </label>

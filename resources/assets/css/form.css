@@ -1,0 +1,116 @@
+.summary-card {
+    background: #fff;
+    margin: 10px;
+    min-width: calc(33.333% - 20px);
+    box-shadow: 0 0 12px rgba(0, 0, 0, .1);
+    text-align: center
+}
+
+.summary-card .card-content {
+    padding: 30px 20px 20px
+}
+
+.summary-card .card-title {
+    display: block;
+    font-size: 1.5em
+}
+
+.summary-card .card-count {
+    display: block;
+    font-size: 3em;
+    font-weight: 700;
+    margin-bottom: 10px
+}
+
+.summary-card .card-link {
+    display: block;
+    border-top: 1px solid #ddd;
+    color: #000;
+    padding: 12px 12px 20px
+}
+
+.input-group input,
+.input-group textarea,
+.input-group select {
+    font-size: 20px;
+    width: 100%
+}
+
+form .input-group + .input-group{
+	margin-top: 30px;
+}
+
+form .input-group label,
+form .input-group select,
+form .input-group textarea,
+form .input-group input{
+	display: block;
+	width: 100%;
+}
+
+form .input-group label{
+	font-size: 1.15em;
+	color: #444;
+}
+
+form .input-group select, 
+form .input-group textarea,
+form .input-group input{
+	margin-top: 0.2em;
+	background-color: transparent;
+	font-size: 18px;
+	padding: 0.3em 0.6em;
+	border: 1px solid #bbb;
+    border: none;
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+	min-width: 220px;
+    outline: none;
+    border-radius: 2px;
+	transition: all 0.35s ease-in-out;
+}
+
+form .input-group select,
+form .input-group input{
+    height: 40px;
+}
+
+form .input-group textarea:focus,
+form .input-group select:focus,
+form .input-group input:focus{
+	border-bottom: 1px solid #333;
+}
+
+#qlEditorWrapper .ql-container,
+#qlEditorWrapper .ql-editor{
+    height: auto !important;
+}
+
+.text-primary,
+.text-blue-900{
+    color: var(--primary-color, #2c5282) !important;
+}
+
+.bg-primary{
+    background: var(--primary-color, #2c5282) !important;
+}
+
+.input-group {
+    margin: 20px 0;
+}
+
+.input-group label {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 0.35rem !important;
+}
+
+.input-group select, .input-group textarea, .input-group input {
+    margin-top: 0.2rem;
+    background-color: white;
+    font-size: 1.1rem;
+    padding: 0.65rem 0.8rem;
+}
+
+form > .mt-6{
+    margin-top: -0.1rem !important;
+}

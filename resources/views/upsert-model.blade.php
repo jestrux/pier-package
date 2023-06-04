@@ -1,38 +1,6 @@
 {{-- <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css" /> --}}
-<link rel="stylesheet" href="{{asset('pier/css/cms.css')}}" />
+<link rel="stylesheet" href="{{asset('pier/css/form.css')}}" />
 <script src="https://cdn.tailwindcss.com"></script>
-
-<style>
-    .text-blue-800,
-    .text-blue-900{
-        color: #333 !important;
-    }
-
-    .bg-blue-800{
-        background: #333 !important;
-    }
-
-    .input-group {
-        margin: 20px 0;
-    }
-
-    .input-group label {
-        font-size: 1rem;
-        color: #444;
-        margin-bottom: 0.35rem !important;
-    }
-
-    .input-group select, .input-group textarea, .input-group input {
-        margin-top: 0.2rem;
-        background-color: white;
-        font-size: 1.1rem;
-        padding: 0.65rem 0.8rem;
-    }
-
-    form > .mt-6{
-        margin-top: -0.1rem !important;
-    }
-</style>
 
 @php
     $backUrl = env('PIER_FORM_REDIRECT_URL') ?? url('/admin/' . strtolower($model . 's'));

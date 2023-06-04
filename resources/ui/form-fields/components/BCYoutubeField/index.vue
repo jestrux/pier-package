@@ -18,7 +18,7 @@
             </span>
             &nbsp;
 
-            <button class="text-blue-800 font-semibold inline-flex items-center uppercase" 
+            <button class="text-primary font-semibold inline-flex items-center uppercase" 
                 type="button" v-if="src !== null"
                 @click="src = null">Change
             </button>

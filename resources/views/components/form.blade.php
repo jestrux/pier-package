@@ -1,3 +1,9 @@
+<style>
+    :root {
+        --primary-color: {{ env('APP_COLOR') ?? '#2c5282' }};
+    }
+</style>
+
 <div id="pierForm"></div>
 
 <script>

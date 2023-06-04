@@ -35,7 +35,7 @@
             CANCEL
           </button>
 
-          <button class="text-sm bg-blue-800 text-white py-2 px-4 rounded"
+          <button class="text-sm bg-primary text-white py-2 px-4 rounded"
             :class="{'pointer-events-none opacity-50' : savingRecord || uploadingFile}"
             type="submit"
           >

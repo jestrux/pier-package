@@ -7,7 +7,7 @@
                 'justify-end': val === 1,
             }"
             style="width: 42px; padding: 1px; padding-bottom: 1px; border: 1px solid #ddd"
-            :style="{background: val === 1 ? '#2c5282' : '#eee'}"
+            :style="{background: val === 1 ? 'var(--primary-color, #2c5282)' : '#eee'}"
         >
             <span class="block rounded-full bg-white"
                 style="width: 18px; height: 18px; border: 1px solid #ddd"

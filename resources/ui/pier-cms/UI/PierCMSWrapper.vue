@@ -1,9 +1,11 @@
 <template>
     <div id="container">
         <aside class="flex-shrink-0">
-            <div class="long-header bg-blue-100 text-blue-800 tracking-wider">
-                <!-- <img class="mb-2" style="height:50px; margin-left: -8px" src="img/logo.png" alt=""> -->
-                {{PierCMSConfig.appName || "Pier CMS"}}
+            <div class="long-header">
+                <div v-if="PierCMSConfig.appLogo" class="w-16 h-16 p-2 bg-white rounded-full overflow-hidden flex items-center justify-center">
+                    <img class="w-full max-h-full" :src="PierCMSConfig.appLogo" alt="" />
+                </div>
+                {{PierCMSConfig.appName ? PierCMSConfig.appName + " " : ""}}CMS
             </div>
             <ul>
                 <li v-for="model in models"
