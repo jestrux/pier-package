@@ -56,8 +56,9 @@ export default {
         function renderColumn(value, type, meta){
             let trimmedValue = "";
             if(value && value.substring){
-                trimmedValue += value.substring(0, 20).trim();
-                trimmedValue += value.length > 20 ? '...' : '';
+                const valueWithoutTags = value.replace(/(<([^>]+)>)/gi, "")
+                trimmedValue += valueWithoutTags.substring(0, 20).trim();
+                trimmedValue += valueWithoutTags.length > 20 ? '...' : '';
             }
             
             switch (type) {
@@ -127,18 +128,18 @@ export default {
                 case 'status':{
                     const statusColor = meta.availableStatuses.find(({name}) => name === value).color;
 
-                    return (
-                        <div class="inline-flex items-center">
-                            <span class="rounded-full w-3 h-3 mr-4" style={{background: statusColor}} />
+                    // return (
+                    //     <div class="inline-flex items-center gap-2">
+                    //         <span class="rounded-full w-2 h-2" style={{background: statusColor}} />
                             
-                            <span class="block lowercase text-gray-600 text-base text-left tracking-wider" style="width: 125px;">
-                                { value }
-                            </span>
-                        </div>
-                    );
+                    //         <span class="lowercase text-neutral-600 text-sm leading-none">
+                    //             { value }
+                    //         </span>
+                    //     </div>
+                    // );
                     
                     return (
-                        <span class="rounded-full px-3 py-1 text-white uppercase text-sm tracking-wider"
+                        <span class="rounded-full px-2 py-1.5 text-white text-xs leading-none font-medium"
                             style={{background: statusColor}}>
                             { value }
                         </span>

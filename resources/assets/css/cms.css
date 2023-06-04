@@ -227,7 +227,8 @@ aside .long-header > div:has(img) {
 }
 
 aside ul {
-    margin: 20px 0 0;
+    margin-top: 10px;
+    margin-bottom: 20px;
     padding: 0;
 }
 
