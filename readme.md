@@ -46,7 +46,6 @@ You will now find the pier asset files under `/public/pier`
 Add the following to your .env file and set the correct values...
 
 ```
-PIER_UPLOAD_DIR=pierFiles
 PIER_FORM_REDIRECT_URL=
 PIER_UNSPLASH_CLIENT_ID=
 PIER_S3_BUCKET=
@@ -55,9 +54,43 @@ PIER_S3_ACCESS_KEY_ID=
 PIER_S3_SECRET_ACCESS_KEY=
 ```
 
+## Storing uploads locally
+If you plan to upload files to your asset files instead of S3, add the following field to `.env`
+
+```
+PIER_UPLOAD_DIR=pierFiles
+```
+
+Add port number to APP_URL in `.env` includes port number if you're using localhost
+
+```diff
+--APP_URL=http://localhost
+++APP_URL=http://localhost:8000
+```
+
+Also update the local disk under `config.filesystems.php` as follows:
+
+```diff
+--'root' => storage_path('app'),
+++'root' => public_path('img/uploads'),
+++'url' => env('APP_URL') . '/img/uploads',
+```
+
 # Customize
 
-Before you can customize configs, you need to first publish the package's config file that includes some defaults for us. To publish that, run the following command.
+## CMS
+To change the theme color, app name and app logo in the CMS, update the following:
+
+```
+APP_NAME="My App"
+APP_COLOR="#1F571A"
+APP_LOGO=img/logo.png
+```
+
+**Note:** Similar to the sample above, the `APP_LOGO` should be a path in your public folder, Pier will automatically wrap it with `asset()`
+
+## Pier Configs
+Before you can customize pier configs, you need to first publish the package's config file that includes some defaults for us. To publish that, run the following command.
 
 ### Publish the package config
 `php artisan vendor:publish --tag=pier-config`
