@@ -40,11 +40,11 @@
         v-if="!hideLabel"
         class="capitalize"
         :for="field.label"
-      >{{ field.label.replace(/_/g, ' ') }}</label>
+      >{{ (field.cleanLabel ? field.cleanLabel : field.label).replace(/_/g, ' ') }}</label>
 
       <bc-image-field
         v-if="field.type == 'image'"
-        :label="field.label"
+        :label="field.cleanLabel ? field.cleanLabel : field.label"
         v-model="val"
         :url="val"
         :is-dp="field.meta.face"
@@ -53,7 +53,7 @@
       
       <FileField
         v-else-if="field.type == 'file'"
-        :label="field.label"
+        :label="field.cleanLabel ? field.cleanLabel : field.label"
         v-model="val"
         :url="val"
         :required="field.required"
@@ -109,7 +109,7 @@
       
       <bc-youtube-field
         v-else-if="field.type == 'video'"
-        :label="field.label"
+        :label="field.cleanLabel ? field.cleanLabel : field.label"
         v-model="val"
         :url="val"
         :required="field.required"
@@ -134,14 +134,14 @@
 
       <PhoneField
         v-else-if="field.type == 'phone'"
-        :label="field.label"
+        :label="field.cleanLabel ? field.cleanLabel : field.label"
         v-model="val"
         :required="field.required"
       />
 
       <LocationField
         v-else-if="field.type == 'location'"
-        :label="field.label"
+        :label="field.cleanLabel ? field.cleanLabel : field.label"
         v-model="val"
         :meta="field.meta"
         :required="field.required"

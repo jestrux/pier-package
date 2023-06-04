@@ -6,7 +6,7 @@
         >
           <div :key="field.label" v-if="field.type == 'group'" class="col-span-12 border-b border-neutral-500 mt-4">
             <h3 class="font-bold mb-2 text-xl leading-none">
-              {{field.label}}
+              {{field.cleanLabel ? field.cleanLabel : field.label}}
             </h3>
           </div>
 
