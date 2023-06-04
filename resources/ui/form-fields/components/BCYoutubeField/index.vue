@@ -13,7 +13,7 @@
 <template>
     <div>
         <label style="display:flex" class="justify-between">
-            <span class="capitalize">
+            <span class="inline-block first-letter:uppercase">
                 {{ label.replace(/_/g, ' ') }}
             </span>
             &nbsp;

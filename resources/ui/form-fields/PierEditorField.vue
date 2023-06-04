@@ -38,7 +38,7 @@
     <template v-if="field">
       <label
         v-if="!hideLabel"
-        class="capitalize"
+        class="inline-block first-letter:uppercase"
         :for="field.label"
       >{{ (field.cleanLabel ? field.cleanLabel : field.label).replace(/_/g, ' ') }}</label>
 

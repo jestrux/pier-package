@@ -1,5 +1,5 @@
 <template>
-    <label style="display: flex" class="cursor-pointer justify-start items-center capitalize"
+    <label style="display: flex" class="cursor-pointer justify-start items-center first-letter:uppercase"
         @click="val = val === 0 ? 1 : 0"
     >
         <span class="rounded-full overflow-hidden relative flex items-center"
