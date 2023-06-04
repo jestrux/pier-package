@@ -3,12 +3,16 @@
         margin-top: 0;
         box-shadow: none;
         border: none !important;
-        border-left: 1px solid #ddd !important;
+        border-radius: 0 !important;
+        border-left: 1px solid #C8C8C8 !important;
     }
 
     .PierTelInput{
-        border: none !important;
-        box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3) !important;
+        border: 1px solid #C8C8C8 !important;
+        border-radius: 0.35rem !important;
+        overflow: hidden;
+        /* border: none !important; */
+        /* box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3) !important; */
     }
 </style>
 
