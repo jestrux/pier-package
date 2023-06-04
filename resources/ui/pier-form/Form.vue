@@ -1,19 +1,23 @@
 <template>
   <form action="#" method="POST" @submit.prevent="saveRow">
     <div :key="reloadFields" class="grid grid-cols-12 gap-5">
-      <template v-if="model">
-        <div
-          :key="field.label"
-          v-for="field in model.fields"
-          :class="{
+        <template
+          v-for="field in fields"
+        >
+          <div :key="field.label" v-if="field.type == 'group'" class="col-span-12 border-b border-neutral-500 mt-4">
+            <h3 class="font-bold mb-2 text-xl leading-none">
+              {{field.label}}
+            </h3>
+          </div>
+
+          <div v-else :key="field.label" :class="{
             'col-span-12': !field.width,
             'col-span-6': field.width == 'half',
             'col-span-4': field.width == 'third',
-          }"
-        >
+          }">
           <PierEditorField :field="field" v-model="record[field.label]" />
-        </div>
-      </template>
+          </div>
+        </template>
     </div>
 
     <div class="mt-5 flex justify-end">
@@ -75,6 +79,19 @@ export default {
   computed: {
     // ...mapState(["savingRecord", "model.name"]),
     // ...mapGetters(["model"]),
+    fields() {
+      if (!this.model) return []
+
+      return this.model.fields.reduce((agg, field, index) => {
+        const newGroup = field.group && this.model.fields[index-1]?.group != field.group;
+
+        return [
+          ...agg,
+          ...(newGroup ? [{ type: "group", label: field.group }] : []),
+          field
+        ]
+      }, []);
+    },
     modelName() {
       if (this.model) return this.model.name;
 
