@@ -1,4 +1,4 @@
-import Vue from "vue";
+import './bootstrap';
 
 import VueToast from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-default.css";

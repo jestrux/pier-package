@@ -60,6 +60,8 @@ class EditorController extends Controller
 
     public function describe($model){
         $res = PierMigration::describe($model);
+        $res->fields = collect(json_decode($res->fields));
+        $res->settings = collect(json_decode($res->settings));
         return response()->json($res);
     }
     

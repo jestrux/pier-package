@@ -23,6 +23,10 @@
         min-width: 170px !important;
     }
 
+    .PierMultiReferenceField.add-inline .autocomplete-input {
+        display: none;
+    }
+
     .PierMultiReferenceField .autocomplete-input + ul{
         min-width: 220px;
     }
@@ -34,32 +38,44 @@
     }
 </style>
 <template>
-    <div class="PierMultiReferenceField relative flex items-center flex-wrap">
-        <div v-for="(reference, index) in references" :key="index" 
-            class="reference-item bg-gray-100 inline-flex items-center rounded-full pl-3 py-1 text-base mx-1 my-1 border-2 border-gray-300">
-            {{ referenceModelKey ? reference[referenceModelKey] : "" }}
+    <div>
+        <div v-if="!addReferenceInline" class="PierMultiReferenceField relative flex items-center flex-wrap">
+            <div v-for="(reference, index) in references" :key="index" 
+                class="reference-item bg-gray-100 inline-flex items-center rounded-full pl-3 py-1 text-base mx-1 my-1 border-2 border-gray-300">
+                {{ referenceModelKey ? reference[referenceModelKey] : "" }}
 
-            <button type="button" class="inline-flex items-center justify-center w-6 h-6 bg-gray-400 border rounded-full verflow-hidden ml-2 mr-1"
-                @click="removeReference(index)">
-                <svg class="w-4 h-4" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-            </button>
+                <button type="button" class="inline-flex items-center justify-center w-6 h-6 bg-gray-400 border rounded-full verflow-hidden ml-2 mr-1"
+                    @click="removeReference(index)">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                </button>
+            </div>
+
+            <autocomplete
+                ref="autocomplete"
+                placeholder="Type here to search"
+                :search="search" 
+                :get-result-value="getResultValue"
+                :debounceTime="300"
+                @submit="handleSubmit"
+            />
         </div>
 
-        <autocomplete
-            ref="autocomplete"
-            placeholder="Type here to search"
-            :search="search" 
-            :get-result-value="getResultValue"
-            :debounceTime="300"
-            @submit="handleSubmit"
-        />
+        <div class="flex flex-col gap-1" v-else>
+            <div v-for="(reference, index) in references" :key="index" 
+                class="flex items-center justify-between py-2 text-lg font-bold border-b">
+                {{ referenceModelKey ? reference[referenceModelKey] : "" }}
 
-        <!-- <multiselect v-model="selectedCountries" id="ajax" label="name" track-by="code" placeholder="Type to search" open-direction="bottom" :options="countries" :multiple="true" :searchable="true" :loading="isLoading" :internal-search="false" :clear-on-select="false" :close-on-select="false" :options-limit="300" :limit="3" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" @search-change="asyncFind">
-            <template slot="tag" slot-scope="{ option, remove }"><span class="custom__tag"><span>{{ option.name }}</span><span class="custom__remove" @click="remove(option)">❌</span></span></template>
-            <template slot="clear" slot-scope="props">
-            <div class="multiselect__clear" v-if="selectedCountries.length" @mousedown.prevent.stop="clearAll(props.search)"></div>
-            </template><span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
-        </multiselect> -->
+                <button type="button" class="inline-flex items-center justify-center w-6 h-6 bg-gray-400 border rounded-full verflow-hidden ml-2 mr-1"
+                    @click="removeReference(index)">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                </button>
+            </div>
+
+            <button type="button" @click="addNewReference" class="mt-3 self-start border border-current flex font-semibold gap-1 items-center rounded-full text-primary text-sm leading-none hover:bg-neutral-200/50" style="padding: 0.4rem 1rem;">
+                <svg class="-ml-1" height="18px" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                <span class="lowercase first-letter:uppercase inline-block">New entry</span>
+            </button>
+        </div>
     </div>
 </template>
 
@@ -73,15 +89,16 @@ export default {
     props: {
         referenceModel: String,
         referenceModelMainField: String,
+        addReferenceInline: Boolean,
         label: String,
         value: Array | String
     },
-    inject: ['API'],
+    inject: ['API', 'PierCMSConfig'],
     mounted() {
         if(this.value && !this.references.length)
             this.references = this.value;
 
-        this.$refs.autocomplete.setValue(" ");
+        if(!this.addReferenceInline) this.$refs.autocomplete.setValue(" ");
     },
     data() {
         return {
@@ -91,6 +108,11 @@ export default {
         }
     },
     methods: {
+        async addNewReference() {
+            const newReference = await window.showPierReferenceModalForm(this.referenceModel);
+            console.log("New reference: ", newReference);
+            this.references.push(newReference);
+        },
         search(input) {
             // if (input.length < 1) { return [] }
 

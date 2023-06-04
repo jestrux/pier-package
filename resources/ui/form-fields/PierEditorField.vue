@@ -85,7 +85,7 @@
         :label="field.label.replace(/_/g, ' ')"
         :reference-model="field.meta.model"
         :reference-model-main-field="field.meta.mainField"
-        :meta="field.meta"
+        :add-reference-inline="field.meta.addInline"
         v-model="val"
         :required="field.required"
       />
@@ -95,6 +95,7 @@
         :label="field.label.replace(/_/g, ' ')"
         :reference-model="field.meta.model"
         :reference-model-main-field="field.meta.mainField"
+        :add-reference-inline="field.meta.addInline"
         v-model="val"
         :required="field.required"
       />

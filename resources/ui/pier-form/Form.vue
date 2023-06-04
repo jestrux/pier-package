@@ -63,7 +63,7 @@ export default {
       savingRecord: false,
     };
   },
-  inject: ["model", "values"],
+  inject: ["model", "values", "PierCMSConfig"],
   provide() {
     return {
       API,
@@ -109,14 +109,16 @@ export default {
 
         this.savingRecord = false;
 
-        showSuccessToast(`${this.modelName} created`);
-        if(typeof window.onPierFormSuccess == "function")
-          window.onPierFormSuccess();
-        else if (window.pierRedirectTo && window.pierRedirectTo.length)
-          window.location.href = pierRedirectTo;
+        if(typeof this.PierCMSConfig.onPierFormSuccess == "function")
+          this.PierCMSConfig.onPierFormSuccess(record, this.$el);
+        else {
+          showSuccessToast(`${this.modelName} created`);
+          if (this.PierCMSConfig.pierRedirectTo && this.PierCMSConfig.pierRedirectTo.length)
+            this.PierCMSConfig.location.href = this.PierCMSConfig.pierRedirectTo;
+        }
       } catch (error) {
-        if(typeof window.onPierFormError == "function")
-          window.onPierFormError(error, `Error creating ${this.modelName}:`);
+        if(typeof this.PierCMSConfig.onPierFormError == "function")
+          this.PierCMSConfig.onPierFormError(error, `Error creating ${this.modelName}:`);
         else
           handleNetworkError(error, `Error creating ${this.modelName}:`);
         this.savingRecord = false;
@@ -130,8 +132,8 @@ export default {
         this.savingRecord = false;
 
         showSuccessToast(`${this.modelName} updated`);
-        if (window.pierRedirectTo && window.pierRedirectTo.length)
-          window.location.href = pierRedirectTo;
+        if (this.PierCMSConfig.pierRedirectTo && this.PierCMSConfig.pierRedirectTo.length)
+          window.location.href = this.PierCMSConfig.pierRedirectTo;
       } catch (error) {
         handleNetworkError(error, `Error creating ${this.modelName}:`);
         this.savingRecord = false;

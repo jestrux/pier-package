@@ -139,7 +139,7 @@ export default {
                     // );
                     
                     return (
-                        <span class="rounded-full px-2 py-1.5 text-white text-xs leading-none font-medium"
+                        <span class="inline-block rounded-full px-2 py-1.5 text-white text-xs leading-none font-medium"
                             style={{background: statusColor}}>
                             { value }
                         </span>
