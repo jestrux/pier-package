@@ -10,12 +10,18 @@
             </h3>
           </div>
 
-          <div v-else :key="field.label" :class="{
-            'col-span-12': !field.width,
+          <div v-else :key="field.label" class="grid grid-cols-12" :class="{
+            'col-span-12': !field.width || field.width == 'full',
             'col-span-6': field.width == 'half',
             'col-span-4': field.width == 'third',
           }">
-          <PierEditorField :field="field" v-model="record[field.label]" />
+            <div :class="{
+              'col-span-12': !field.stretch || field.stretch == 'full',
+              'col-span-6': field.stretch == 'half',
+              'col-span-4': field.stretch == 'third',
+            }">
+              <PierEditorField :field="field" v-model="record[field.label]" />
+            </div>
           </div>
         </template>
     </div>
