@@ -5,16 +5,17 @@
 </style>
 <template>
     <div>
-        <div v-if="val" class="flex items-center px-2 rounded bg-gray-200 bg-opacity-25 border border-gray-300" style="height: 40px">
-            <span class="ml-2 text-sm">{{displayValue}}</span>
+        <div :class="{'hidden': !val, 'flex' : val}" class="flex items-center px-2 rounded bg-gray-200 bg-opacity-25 border border-gray-300" style="height: 40px">
+            <span class="ml-1">{{displayValue}}</span>
 
-            <button type="button" class="ml-auto h-full flex items-center text-blue-900 text-xs uppercase px-1 border-none bg-transparent" 
-                @click="val = null">
+            <button type="button" class="ml-auto h-full flex items-center text-primary text-xs uppercase px-1 border-none bg-transparent" 
+                @click="changeValue">
                 Change
             </button>
         </div>
 
-        <autocomplete v-else
+        <autocomplete :class="{'hidden': val}"
+            ref="autocomplete"
             :placeholder="`Type to search for ${label}`"
             :search="search" 
             :get-result-value="getResultValue"
@@ -38,8 +39,8 @@ export default {
     },
     inject: ['API'],
     mounted() {
-        if(this.value)
-            this.val = this.value;
+        if(this.value) this.val = this.value;
+        this.$refs.autocomplete.setValue(" ");
     },
     data() {
         return {
@@ -49,7 +50,7 @@ export default {
     },
     methods: {
         search(input) {
-            if (input.length < 1) { return [] }
+            // if (input.length < 1) { return [] }
 
             return new Promise(async (resolve, reject) => {
                 try {
@@ -61,11 +62,18 @@ export default {
                 }
             });
         },
+        changeValue() {
+            this.val = null;
+            this.$nextTick(() => {
+                this.$refs.autocomplete.$el.querySelector(".autocomplete-input").focus()
+            });
+        },
         getResultValue(result) {
             return result.label;
         },
         handleSubmit(result) {
             this.val = result;
+            this.$refs.autocomplete.setValue(" ");
         }
     },
     computed: {
