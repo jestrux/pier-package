@@ -26,24 +26,11 @@
         </template>
     </div>
 
-    <div class="mt-5 flex justify-end">
-      <!-- <button
-        class="p-2 text-sm mr-3"
+    <div class="my-7 flex justify-end">
+      <button type="submit" class="w-full px-12 py-0 h-12 bg-primary text-white border-primary text-sm uppercase tracking-wide font-bold focus:outline-none rounded-lg hover:opacity-90"
         :class="{
           'pointer-events-none opacity-50': savingRecord || uploadingFile,
         }"
-        type="reset"
-        @click="$router.replace(`/${model.name}`)"
-      >
-        CANCEL
-      </button> -->
-
-      <button
-        class="text-sm bg-primary text-white py-2 px-4 rounded"
-        :class="{
-          'pointer-events-none opacity-50': savingRecord || uploadingFile,
-        }"
-        type="submit"
       >
         {{
           savingRecord
