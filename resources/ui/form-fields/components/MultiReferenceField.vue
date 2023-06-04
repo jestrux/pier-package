@@ -1,4 +1,3 @@
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>
     .PierMultiReferenceField{
         padding: 0.2rem 0.3rem;
