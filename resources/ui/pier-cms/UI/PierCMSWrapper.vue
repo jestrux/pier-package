@@ -2,7 +2,7 @@
     <div id="container">
         <aside class="flex-shrink-0">
             <div class="long-header">
-                <div v-if="PierCMSConfig.appLogo" class="w-16 h-16 p-2 bg-white rounded-full overflow-hidden flex items-center justify-center">
+                <div v-if="PierCMSConfig.appLogo" class="w-16 h-16 p-3.5 bg-white rounded-full overflow-hidden flex items-center justify-center">
                     <img class="w-full max-h-full" :src="PierCMSConfig.appLogo" alt="" />
                 </div>
                 {{PierCMSConfig.appName ? PierCMSConfig.appName + " " : ""}}CMS
