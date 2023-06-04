@@ -98,14 +98,23 @@ Route::group(['prefix' => 'admin'], function () {
     })->name('pier-export-data');
 
     Route::get('/upsertModel/{model}/{id?}', function ($model, $id = null) {
+        $plainForm = $_GET['plain'] ?? false;
+        $plainForm = $plainForm && $plainForm != 'false';
+
         $data = [
-            "model" => $model,
+            "model" => PierMigration::describe($model),
             "id" => $id,
+            "plainForm" => $plainForm,
+            "formId" => $_GET['formId'] ?? null,
+            "values" => null
         ];
+
+        if ($id != null)
+            $data['values'] = PierMigration::detail($model, $id);
 
         if (isset($_GET['redirectTo']))
             $data["redirectTo"] = $_GET['redirectTo'];
 
-        return view('pier::upsert-model', $data);
+        return view('pier::upsert-model.index', $data);
     });
 });

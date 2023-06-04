@@ -21,8 +21,8 @@ window.PierForm = (el = "#pierForm", config) => {
 		el,
 		provide() {
 			return {
-				model: window.pierModel,
-				values: window.pierModelValues,
+				model: config.pierModel,
+				values: config.pierModelValues,
 				PierCMSConfig,
 			};
 		},
