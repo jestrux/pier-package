@@ -2,42 +2,12 @@
   #PierCMSList.card .PierPagination{
     background: transparent;
   }
-
-  .PierPagination li a{
-    display: inline-block;
-    padding: 0.25rem 0.9rem;
-    border: 1px solid transparent;
-    border-radius: 50%;
-    font-weight: bold;
-    outline: none;
-  }
-
-  .PierPagination li.active a{
-    pointer-events: none;
-    background: #9a9c9f;
-    color: #fff;
-  }
-
-  .PierPagination li:not(:first-child):not(:last-child).disabled a{
-    padding: 0.25rem;
-    margin: 0;
-    border: none;
-  }
   
   #PierCMSList.card .PierPagination li:first-child,
   #PierCMSList.card .PierPagination li:last-child{
     flex: 1;
     display: flex;
     margin: 0;
-  }
-  
-  .PierPagination li:first-child a,
-  .PierPagination li:last-child a{
-    border-color: #555;
-  }
-  
-  .PierPagination li:last-child a{
-    margin-left: auto;
   }
 </style>
 <template>

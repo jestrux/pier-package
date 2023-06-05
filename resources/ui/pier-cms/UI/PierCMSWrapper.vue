@@ -18,7 +18,7 @@
             </ul>
         </aside>
 
-        <main class="flex-1 h-screen">
+        <main class="flex-1 h-screen bg-neutral-100">
             <router-view />
         </main>
     </div>

@@ -12,51 +12,9 @@
     text-align: center;
   }
 </style>
-<style>
-  .PierPagination{
-    background: #e0e0e0;
-  }
-
-  .PierPagination li a{
-    display: inline-block;
-    padding: 0.25rem 0.9rem;
-    border: 1px solid transparent;
-    border-radius: 50%;
-    font-weight: bold;
-    outline: none;
-  }
-
-  .PierPagination li.active a{
-    pointer-events: none;
-    background: #9a9c9f;
-    color: #fff;
-  }
-
-  .PierPagination li:not(:first-child):not(:last-child).disabled a{
-    padding: 0.25rem;
-    margin: 0;
-    border: none;
-  }
-  
-  .PierPagination li:first-child,
-  .PierPagination li:last-child{
-    margin: 0 1rem;
-    flex: 1;
-    display: flex;
-  }
-  
-  .PierPagination li:first-child a,
-  .PierPagination li:last-child a{
-    border-color: #555;
-  }
-  
-  .PierPagination li:last-child a{
-    margin-left: auto;
-  }
-</style>
 <template>
-  <div>
-    <table class="pure-table pure-table-striped" 
+  <div class="PierTable">
+    <table class="pure-table bg-white pure-table-striped" 
       style="border-top: none !important; width:100%; min-width: 500px;">
       <thead>
         <tr>
@@ -125,14 +83,29 @@
       </tbody>
     </table>
 
-    <paginate v-if="records && records.length && !populatingRecords && !fetchingRecorsds && recordsPagination"
-      :value="recordsPagination.current_page"
-      :page-count="recordsPagination.last_page"
-      :click-handler="fetchRecords"
-      :prev-text="'Prev'"
-      :next-text="'Next'"
-      container-class="PierPagination py-2 flex items-center" 
-    />
+    <div class="py-5 flex items-center justify-between">
+      <div class="text-sm flex items-center gap-2">
+        Show
+
+        <select class="border p-1 rounded" :value="modelFilters.perPage" @input="setFilter({'perPage': $event.target.value})">
+          <option :value="5">5</option>
+          <option :value="15">15</option>
+          <option :value="25">25</option>
+          <option :value="40">35</option>
+        </select>
+
+        items per page
+      </div>
+      
+      <paginate v-if="records && records.length && !populatingRecords && !fetchingRecorsds && recordsPagination"
+        :value="recordsPagination.current_page"
+        :page-count="recordsPagination.last_page"
+        :click-handler="fetchRecords"
+        :prev-text="'Prev'"
+        :next-text="'Next'"
+        container-class="PierPagination flex items-center" 
+      />
+    </div>
   </div>
 </template>
 
@@ -140,7 +113,7 @@
   import Paginate from 'vuejs-paginate';
   import TableRow from "./TableRow";
   import DropArea from "./DropArea";
-  import { mapState } from 'vuex';
+  import { mapActions, mapState } from 'vuex';
 
   export default {
     name: 'PierCMSListTable',
@@ -156,7 +129,7 @@
       this.fetchRecords();
     },
     computed: {
-      ...mapState(['fetchingRecorsds', 'records', 'recordsPagination', 'populatingRecords'])
+      ...mapState(['modelFilters', 'fetchingRecorsds', 'records', 'recordsPagination', 'populatingRecords']),
     },
     watch: {
       model: function(newValue){
@@ -165,14 +138,15 @@
       },
     },
     methods: {
+      ...mapActions(['setFilter', 'fetchRecords', 'populateRecords']),
       fetchRecords(page = 1){
         if(!this.model.fields)
           return;
         
-        this.$store.dispatch('fetchRecords', page);
+        this.fetchRecords(page);
       },
       populateRecords(itemCount){
-        this.$store.dispatch('populateRecords', itemCount);
+        this.populateRecords(itemCount);
       },
       handleTableDataSelected(files) {
         if(files && files.length){

@@ -10,11 +10,14 @@ export const setSelectedModel = ({ commit }, model) => {
     commit('SET_SELECTED_MODEL', model);
 }
 
-export const setFilter = ({ commit }, filter) => {
-    const key = Object.keys(filter)[0];
-    const value = Object.values(filter)[0];
+export const setFilter = ({ commit, dispatch }, filter) => {
+    const [key, value] = Object.entries(filter)[0];
 
     commit('SET_FILTER', {key, value});
+
+    setTimeout(() => {
+        dispatch('fetchRecords');
+    }, 100);
 }
 
 export const populateRecords = async ({ state, commit, dispatch }, itemCount) => {

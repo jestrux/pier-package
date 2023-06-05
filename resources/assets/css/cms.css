@@ -443,7 +443,10 @@ form .input-group input:focus {
     border-collapse: collapse;
     border-spacing: 0;
     empty-cells: show;
-    border: 1px solid #cbcbcb;
+    border: 1px solid #ddd !important;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
 }
 
 .pure-table caption {
@@ -455,33 +458,34 @@ form .input-group input:focus {
 
 .pure-table td,
 .pure-table th {
-    border-left: 1px solid #cbcbcb; /*  inner column border */
-    border-width: 0 0 0 1px;
+    /* border-left: 1px solid #cbcbcb;
+    border-width: 0 0 0 1px; */
     font-size: inherit;
     margin: 0;
     overflow: visible; /*to make ths where the title is really long work*/
-    padding: 0.5em 1em; /* cell padding */
+    padding: 0.5em 1em;
 }
 
 .pure-table thead {
-    background-color: #e0e0e0;
+    /* background-color: #e0e0e0; */
+    border-bottom: 1px solid #ddd;
     color: #000;
     text-align: left;
     vertical-align: bottom;
     text-transform: capitalize;
 }
 
+.pure-table th {
+    white-space: nowrap;
+    padding: 0.85rem 1rem;
+}
+
 .pure-table td {
-    background-color: transparent;
-}
-
-.pure-table-odd td {
     background-color: #f2f2f2;
 }
 
-/* nth-child selector for modern browsers */
 .pure-table-striped tr:nth-child(2n-1) td {
-    background-color: #f2f2f2;
+    background-color: transparent;
 }
 
 /* BORDERED TABLES */
@@ -506,4 +510,62 @@ form .input-group input:focus {
 #qlEditorWrapper .ql-container,
 #qlEditorWrapper .ql-editor {
     height: auto !important;
+}
+
+.PierPagination {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    /* box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); */
+    overflow: hidden;
+}
+
+.PierPagination li a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    height: 32px;
+    min-width: 40px;
+    font-weight: 500;
+    font-size: 0.8rem;
+    outline: none;
+}
+
+.PierPagination li + *{
+    border-left: 1px solid #ddd;
+}
+
+.PierPagination li.active a {
+    pointer-events: none;
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.PierPagination li.disabled a {
+    opacity: 0.5;
+}
+
+.PierPagination li:not(:first-child):not(:last-child).disabled a {
+    padding: 0.25rem;
+    margin: 0;
+    border: none;
+}
+
+.PierPagination li:first-child,
+.PierPagination li:last-child {
+    display: flex;
+}
+
+.PierPagination li:first-child{
+    display: flex;
+}
+
+.PierPagination li:first-child a,
+.PierPagination li:last-child a {
+    border-color: #ddd;
+}
+
+.PierPagination li:last-child a {
+    margin-left: auto;
 }
