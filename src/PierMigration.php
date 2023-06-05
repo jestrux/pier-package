@@ -252,6 +252,37 @@ class PierMigration extends Model{
         return [$results, $pluck_props];
     }
 
+    static function load_flat_multi_reference($data, $model){
+        $db_model = self::describe($model);
+        $table_name = Str::snake($model);
+
+        $fields = collect(json_decode($db_model->fields));
+
+        $multi_reference_fields = $fields->filter(function($field){
+            return $field->type == 'multi-reference';
+        });
+
+        if($multi_reference_fields->count() > 0){
+            foreach ($multi_reference_fields as $field) {
+                $referenced_table = Str::snake($field->label);
+
+                try {
+                    foreach ($data as $result) {
+                        $reference_ids = DB::table($table_name . '_' . $referenced_table)->where(
+                            $table_name."_id", '=', $result->_id
+                        )->pluck($referenced_table.'_id');
+
+                        $result->{$field->label} = $reference_ids ?? [];
+                    }
+                } catch (\Throwable $th) {
+                    //throw $th;
+                }
+            }
+        }
+
+        return $data;
+    }
+
     static function eager_load($data, $model, $params){
         $db_model = self::describe($model);
         $fields = collect(json_decode($db_model->fields));
@@ -479,17 +510,16 @@ class PierMigration extends Model{
                     $key = $group->{$grouped_by_reference_field->meta->mainField};
                 }
 
-                $agg[$key] = self::get_param('flat') == null 
-                    ? $value 
+                $agg[$key] = self::get_param('flat') == null
+                    ? self::load_flat_multi_reference($value, $model)
                     : self::eager_load($value, $model, $params);
                     
                 return $agg;
             },[]);
         }
         else if(count($results) > 0){
-            if(self::get_param('flat') == null) return $results;
-
-            $results = self::eager_load($results, $model, $params);
+            if(self::get_param('flat') == null) $results = self::load_flat_multi_reference($results, $model);
+            else $results = self::eager_load($results, $model, $params);
         }
         
         return $results;
@@ -726,72 +756,19 @@ class PierMigration extends Model{
     }
 
     static function detail($model, $row_id){
-        $db_model = self::describe($model);
-        $model_fields = self::model_fields($model);
-
         $table_name = Str::snake($model);
         $result = DB::table($table_name)->where("_id", '=', $row_id)->first();
 
         if(!$result)
             return null;
 
-        $status_fields = $model_fields->filter(function($field){
-            return $field->type == 'status';
-        });
+        $results = [$result];
 
-        if($status_fields->count() > 0){
-            foreach ($status_fields as $field) {
-                $statuses = $field->meta->availableStatuses;
+        if(self::get_param('flat') == null) $results = self::load_flat_multi_reference($results, $model);
 
-                if(gettype($result) != "object" || !isset($result->{$field->label})) continue;
+        else $results = self::eager_load($results, $model, null);
 
-                $resultValue = $result->{$field->label};
-                $result->{$field->label . 'Meta'} = collect($statuses)->where("name", "=", $resultValue)->first();
-            }
-        }
-        
-        $reference_fields = $model_fields->filter(function($field){
-            return $field->type == 'reference';
-        });
-
-        if($reference_fields->count() > 0){
-            foreach ($reference_fields as $field) {
-                $referenced_table = Str::snake($field->meta->model);
-
-                $result->{$field->label} = DB::table($referenced_table)->where(
-                    "_id", '=', $result->{$field->label}
-                )->first();
-            }
-        }
-
-        $multi_reference_fields = $model_fields->filter(function($field){
-            return $field->type == 'multi-reference';
-        });
-        
-        if($multi_reference_fields->count() > 0){
-            foreach ($multi_reference_fields as $field) {
-                $referenced_table = Str::snake($field->label);
-
-                try {
-                    $reference_ids = DB::table($table_name . '_' . $referenced_table)->where(
-                        $table_name."_id", '=', $result->_id
-                    )->pluck($referenced_table.'_id');
-
-                    if($reference_ids->count() > 0){
-                        $result->{$field->label} = DB::table(Str::snake($field->meta->model))->whereIn(
-                            '_id',
-                            $reference_ids
-                        )->get();
-                    }
-                    else
-                        $result->{$field->label} = [];
-                } catch (\Throwable $th) {
-                    //throw $th;
-                }
-            }
-        }
-        
-        return $result;
+        return $results[0];
     }
     
     static function deleteEntry($model, $entryId){
