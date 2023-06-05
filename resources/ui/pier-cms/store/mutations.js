@@ -5,6 +5,9 @@ export default {
     SET_SELECTED_MODEL(state, modelName){
         state.selectedModelName = modelName;
     },
+    RESET_FILTERS(state){
+        state.modelFilters = { q: "", perPage: 25 };
+    },
     SET_FILTER(state, {key, value}){
         state.modelFilters[key] = value;
     },

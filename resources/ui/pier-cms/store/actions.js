@@ -10,10 +10,16 @@ export const setSelectedModel = ({ commit }, model) => {
     commit('SET_SELECTED_MODEL', model);
 }
 
-export const setFilter = ({ commit, dispatch }, filter) => {
-    const [key, value] = Object.entries(filter)[0];
+export const resetFilters = ({ commit, dispatch }, filters) => {
+    commit('RESET_FILTERS');
 
-    commit('SET_FILTER', {key, value});
+    setTimeout(() => {
+        dispatch('fetchRecords');
+    }, 100);
+}
+
+export const setFilter = ({ commit, dispatch }, filters) => {
+    Object.entries(filters).forEach(([key, value]) => commit('SET_FILTER', {key, value}));
 
     setTimeout(() => {
         dispatch('fetchRecords');
@@ -42,7 +48,14 @@ export const fetchRecords = async ({ state, getters, commit }, page = 1) => {
     commit('SET_RECORDS', {data: null, pagination: null});
     commit('FETCHING_RECORDS', true);
     try {
-        let {data, ...pagination} = await fetchModelRecords(state.selectedModelName, {page, ...state.modelFilters});
+        let {perPage, q, ...filters } = state.modelFilters;
+        filters = Object.entries(filters).reduce(function(agg, [key, value]){
+            return {
+                ...agg,
+                ...(value == "" ? {} : {[`andWhere${key}`]: value} )
+            }
+        }, {})
+        let {data, ...pagination} = await fetchModelRecords(state.selectedModelName, {page, perPage, q, ...filters});
         commit('FETCHING_RECORDS', false);
         commit('SET_RECORDS', {data, pagination});
     } catch (error) {
