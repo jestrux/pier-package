@@ -735,6 +735,21 @@ class PierMigration extends Model{
         if(!$result)
             return null;
 
+        $status_fields = $model_fields->filter(function($field){
+            return $field->type == 'status';
+        });
+
+        if($status_fields->count() > 0){
+            foreach ($status_fields as $field) {
+                $statuses = $field->meta->availableStatuses;
+
+                if(gettype($result) != "object" || !isset($result->{$field->label})) continue;
+
+                $resultValue = $result->{$field->label};
+                $result->{$field->label . 'Meta'} = collect($statuses)->where("name", "=", $resultValue)->first();
+            }
+        }
+        
         $reference_fields = $model_fields->filter(function($field){
             return $field->type == 'reference';
         });
@@ -757,18 +772,22 @@ class PierMigration extends Model{
             foreach ($multi_reference_fields as $field) {
                 $referenced_table = Str::snake($field->label);
 
-                $reference_ids = DB::table($table_name . '_' . $referenced_table)->where(
-                    $table_name."_id", '=', $result->_id
-                )->pluck($referenced_table.'_id');
+                try {
+                    $reference_ids = DB::table($table_name . '_' . $referenced_table)->where(
+                        $table_name."_id", '=', $result->_id
+                    )->pluck($referenced_table.'_id');
 
-                if($reference_ids->count() > 0){
-                    $result->{$field->label} = DB::table($referenced_table)->whereIn(
-                        '_id',
-                        $reference_ids
-                    )->get();
+                    if($reference_ids->count() > 0){
+                        $result->{$field->label} = DB::table(Str::snake($field->meta->model))->whereIn(
+                            '_id',
+                            $reference_ids
+                        )->get();
+                    }
+                    else
+                        $result->{$field->label} = [];
+                } catch (\Throwable $th) {
+                    //throw $th;
                 }
-                else
-                    $result->{$field->label} = [];
             }
         }
         
