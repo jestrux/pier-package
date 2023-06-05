@@ -302,9 +302,9 @@
                 pierFormId,
                 pierModel,
                 pierModelValues,
-                onPierFormSuccess(data, el) {
-                    console.log("On main form success: ", data, el);
-                }
+                // onPierFormSuccess(data, el) {
+                //     console.log("On main form success: ", data, el);
+                // }
             });
         });
     })()
