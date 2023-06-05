@@ -269,7 +269,7 @@
         }
         let pierModelValues;
 
-        @if ($values != null)
+        @if ($values ?? null != null)
             pierModelValues = {!! collect($values)->toJson() !!};
         @endif
 
