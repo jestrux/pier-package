@@ -481,6 +481,7 @@ form .input-group input:focus {
 }
 
 .pure-table td {
+    white-space: nowrap;
     background-color: #f2f2f2;
 }
 
