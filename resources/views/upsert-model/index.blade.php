@@ -219,6 +219,7 @@
     }
     
     $plainForm = $plainForm ?? false;
+    $successMessage = $successMessage ?? "$model->name created";
     $formId = $formId ?? 'pierForm';
 @endphp
 
@@ -261,7 +262,7 @@
 
 <script>
     (() => {
-        const pierFormId = "{{ $formId ?? 'pierForm' }}";
+        const pierFormId = "{{ $formId }}";
         const pierModel = {
             ...({!! $model !!}),
             fields: {!! $model->fields !!},
@@ -273,6 +274,16 @@
             pierModelValues = {!! collect($values)->toJson() !!};
         @endif
 
+        document.addEventListener("pier-form-success", function({
+            detail: {
+                data,
+                el
+            }
+        }) {
+            el.querySelectorAll("input, textarea").forEach(node => node
+                .value = "");
+        }, false);
+
         window.addEventListener("PierForm:loaded", () => {
             window.loadPierForm = function({
                 pierFormId,
@@ -283,6 +294,7 @@
                 PierForm(`#${pierFormId}`, {
                     pierModel,
                     pierModelValues,
+                    "successMessage": "{{ $successMessage }}",
                     "appName": "{{ env('APP_NAME') }}",
                     "unsplashClientId": "{{ env('PIER_UNSPLASH_CLIENT_ID') }}",
                     "fileUploadUrl": "{{ env('PIER_UPLOAD_DIR') != null && strlen(env('PIER_UPLOAD_DIR')) > 0 ? url('api/' . env('PIER_UPLOAD_DIR') . '/upload_file') : null }}",

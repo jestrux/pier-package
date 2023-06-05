@@ -112,10 +112,18 @@ export default {
         if(typeof this.PierCMSConfig.onPierFormSuccess == "function")
           this.PierCMSConfig.onPierFormSuccess(record, this.$el);
         else {
-          showSuccessToast(`${this.modelName} created`);
+          showSuccessToast(this.PierCMSConfig.successMessage ?? `${this.modelName} created`);
           if (this.PierCMSConfig.pierRedirectTo && this.PierCMSConfig.pierRedirectTo.length)
             this.PierCMSConfig.location.href = this.PierCMSConfig.pierRedirectTo;
         }
+
+        document.dispatchEvent(
+          new CustomEvent("pier-form-success", {
+            detail: {
+              record, el: this.$el
+            },
+          })
+        );
       } catch (error) {
         if(typeof this.PierCMSConfig.onPierFormError == "function")
           this.PierCMSConfig.onPierFormError(error, `Error creating ${this.modelName}:`);
@@ -152,7 +160,6 @@ export default {
         })
       );
 
-      console.log("Data: ", data);
       if (this.values) this.editRecord(data);
       else this.createRecord(data);
     },
