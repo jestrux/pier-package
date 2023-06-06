@@ -4,7 +4,7 @@ namespace Jestrux\Pier\View\Components;
 
 use Illuminate\View\Component;
 
-class Filter extends Component
+class FilterButton extends Component
 {
     public $activeClass;
     public $selected;
@@ -29,6 +29,6 @@ class Filter extends Component
 
     public function render()
     {
-        return view('pier::components.filter');
+        return view('pier::components.filter-button');
     }
 }

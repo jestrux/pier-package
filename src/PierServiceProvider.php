@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Jestrux\Pier\View\Components\Data;
 use Jestrux\Pier\View\Components\DataGrid;
-use Jestrux\Pier\View\Components\Filter;
+use Jestrux\Pier\View\Components\FilterButton;
 use Jestrux\Pier\View\Components\Form;
-use Jestrux\Pier\View\Components\SearchBar;
+use Jestrux\Pier\View\Components\SearchInput;
 
 // use Jestrux\Pier\Pier;
 
@@ -55,9 +55,9 @@ class PierServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadViewComponentsAs('pier', [
             Data::class,
-            Filter::class,
+            FilterButton::class,
             Form::class,
-            SearchBar::class,
+            SearchInput::class,
             DataGrid::class,
         ]);
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'pier');

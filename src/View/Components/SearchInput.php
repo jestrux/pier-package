@@ -4,7 +4,7 @@ namespace Jestrux\Pier\View\Components;
 
 use Illuminate\View\Component;
 
-class SearchBar extends Component
+class SearchInput extends Component
 {
     public $debounce;
 
@@ -15,6 +15,6 @@ class SearchBar extends Component
 
     public function render()
     {
-        return view('pier::components.search-bar');
+        return view('pier::components.search-input');
     }
 }
