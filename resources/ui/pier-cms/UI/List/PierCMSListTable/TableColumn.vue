@@ -234,6 +234,10 @@ export default {
             );
         }
 
+        if(value && type === 'number'){
+            value = value.toLocaleString()
+        }
+
         return (
             <td class={className}>
                 { renderColumn(value, type, meta) }
