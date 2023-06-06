@@ -1,8 +1,3 @@
-<style>
-.autocomplete-input {
-  padding-left: 48px !important;
-}
-</style>
 <template>
   <div>
     <autocomplete
@@ -23,7 +18,7 @@ import "@trevoreyre/autocomplete-vue/dist/style.css";
 export default {
   name: "ModelAutoComplete",
   props: {
-    model: String,
+    modelName: String,
     modelMainField: String,
     value: Object | String,
     placeholder: String,
@@ -43,7 +38,7 @@ export default {
     search(input) {
       return new Promise(async (resolve, reject) => {
         try {
-          const results = await this.API.searchModel(this.model, input);
+          const results = await this.API.searchModel(this.modelName, input);
           resolve(results);
         } catch (error) {
           reject("Failed to search for field.");
@@ -56,7 +51,7 @@ export default {
     },
     handleSubmit(result) {
       this.val = result;
-        this.$refs.autocomplete.setValue(" ");
+      //   this.$refs.autocomplete.setValue(" ");
     },
   },
   watch: {

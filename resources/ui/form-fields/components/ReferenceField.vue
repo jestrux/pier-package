@@ -12,7 +12,7 @@
         <div ref="autocomplete">
             <autocomplete
                 v-if="!val"
-                :model="referenceModel"
+                :modelName="referenceModel"
                 :modelMainField="referenceModelMainField"
                 :placeholder="`Type to search for ${label}`"
                 v-model="val"

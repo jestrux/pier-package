@@ -1,12 +1,11 @@
 <style scoped>
 .popover-custom {
-  width: 325px;
+  width: 340px;
   right: 0 !important;
   left: auto !important;
   background: #fff;
   border: 1px solid #ddd;
-  border-radius: 5px;
-  overflow: hidden;
+  /* border-radius: 5px; */
 }
 
 /* .popover-custom select {
@@ -21,9 +20,34 @@
 } */
 </style>
 
+<style>
+.ModelFilterField .autocomplete-input {
+  margin: 0 !important;
+  padding: 0.35rem 0.4rem !important;
+  height: auto !important;
+  background: transparent;
+  border-radius: 3px !important;
+  min-width: 170px !important;
+}
+
+.ModelFilterField .autocomplete-input + ul {
+  border-top-color: rgba(0,0,0,.12) !important;
+  margin-top: 6px !important;
+  border-radius: 8px !important;
+  min-width: 220px;
+}
+
+.ModelFilterField .autocomplete-input + ul li {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  background-image: none;
+}
+</style>
+
 <script>
 import Popper from "popper.js";
 import { mapActions, mapState } from "vuex";
+import ModelAutoComplete from "../../components/ModelAutoComplete.vue";
 
 Popper.Defaults.modifiers.computeStyle.gpuAcceleration = false;
 
@@ -68,6 +92,9 @@ export default {
   methods: {
     ...mapActions(["setFilter"]),
   },
+  components: {
+    ModelAutoComplete,
+  },
   render(h) {
     const renderFilter = (field) => {
       switch (field.type) {
@@ -105,6 +132,20 @@ export default {
           );
         }
 
+        case "reference": {
+          return (
+            <div key={field._id}>
+              <ModelAutoComplete
+                modelName={field.meta.model}
+                modelMainField={field.meta.mainField}
+                placeholder={`Type to search for ${field.label}`}
+                v-model={this.modelFilters?.[field.label]}
+                onInput={({ _id }) => this.setFilter({ [field.label]: _id })}
+              />
+            </div>
+          );
+        }
+
         default:
           return null;
       }
@@ -112,16 +153,21 @@ export default {
 
     if (!this.model) return;
 
-    const filters = this.model.fields.filter((field) =>
-      ["status", "boolean"].includes(field.type)
-    );
+    const filters = this.model.fields
+      .filter((field) =>
+        ["status", "boolean", "reference"].includes(field.type)
+      )
+      .map((f) => ({ ...f, _id: randomId() }));
 
-    const clearedFilters = filters.reduce((agg, field) => {
-      return {
-        ...agg,
-        [field.label]: "",
-      };
-    }, {});
+    const clearedFilters = [...JSON.parse(JSON.stringify(filters))].reduce(
+      (agg, field) => {
+        return {
+          ...agg,
+          [field.label]: "",
+        };
+      },
+      {}
+    );
 
     return (
       <div class="relative" style={{ display: !filters.length ? "none" : "" }}>
@@ -144,17 +190,21 @@ export default {
         <div
           id="filterDropdown"
           ref="filterDropdown"
-          class="popover-custom shadow-md"
+          class="popover-custom shadow-md rounded-md"
           style={{ display: this.showFilters ? "" : "none" }}
         >
-          <div key={this.filtersKey} class="p-3 flex flex-col gap-3">
+          <div key={this.filtersKey} class="p-3 flex flex-col">
             {filters.map((field) => {
               return (
-                <div class="flex items-center justify-between gap-8">
+                <div class="ModelFilterField flex items-center justify-between gap-3">
                   <span class="inline-block first-letter:uppercase flex-1">
                     {field.label.replace(/_/g, " ")}
                   </span>
-                  <div class="flex-shrink-0" style="width: 120px">
+                  <div
+                    key={field._id}
+                    class="flex-shrink-0"
+                    style="width: 180px"
+                  >
                     {renderFilter(field)}
                   </div>
                 </div>
@@ -162,7 +212,7 @@ export default {
             })}
           </div>
 
-          <div class="h-8 flex items-center px-3 bg-neutral-100">
+          <div class="h-8 flex items-center px-3 bg-neutral-100 rounded-b-md">
             <button
               class="underline text-xs font-semibold"
               onClick={() => {
