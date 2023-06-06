@@ -8,13 +8,9 @@ use Jestrux\Pier\Http\Controllers\EditorController;
 use Jestrux\Pier\Http\Controllers\HelperController;
 use Jestrux\Pier\PierMigration;
 
-// Route::get('/', [APIController::class, 'index']);
-
 Route::view('/editor', 'pier::editor');
-
 Route::get('/cms', [CMSController::class, 'index'])->name('cms');
 Route::post('/upload_file', [CMSController::class, 'upload_file'])->name('upload_file');
-Route::get('/pier-helper', [HelperController::class, 'index']);
 Route::get('/link_preview', [CMSController::class, 'link_preview']);
 
 Route::prefix('pier-helper')->group(function () {
@@ -97,24 +93,5 @@ Route::group(['prefix' => 'admin'], function () {
         });
     })->name('pier-export-data');
 
-    Route::get('/upsertModel/{model}/{id?}', function ($model, $id = null) {
-        $plainForm = $_GET['plain'] ?? false;
-        $plainForm = $plainForm && $plainForm != 'false';
-
-        $data = [
-            "model" => PierMigration::describe($model),
-            "id" => $id,
-            "plainForm" => $plainForm,
-            "formId" => $_GET['formId'] ?? null,
-            "values" => null
-        ];
-
-        if ($id != null)
-            $data['values'] = PierMigration::detail($model, $id);
-
-        if (isset($_GET['redirectTo']))
-            $data["redirectTo"] = $_GET['redirectTo'];
-
-        return view('pier::upsert-model.index', $data);
-    });
+    Route::view('/upsertModel/{model}/{rowId?}', 'pier::upsert-model');
 });

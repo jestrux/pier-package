@@ -10,25 +10,22 @@ class Form extends Component
     public $model;
     public $rowId;
     public $redirectTo;
+    public $successMessage;
     public $values;
 
-    public function __construct($model, $rowId = null, $redirectTo = null)
+    public function __construct($model, $rowId = null)
     {
         $this->model = PierMigration::describe($model);
-        if($rowId != null)
-            $this->values = PierMigration::detail($model, $rowId);
-        else
-            $this->values = null;
-
-        $this->redirectTo = $redirectTo;
+        $this->values = $rowId != null ? null : PierMigration::detail($model, $rowId);
     }
 
     public function render()
     {
         return view('pier::components.form', [
-            "model" => $this->model, 
+            "model" => $this->model,
             "values" => $this->values,
-            "redirectTo" => $this->redirectTo
+            "redirectTo" => $this->redirectTo ?? null,
+            "successMessage" => $this->successMessage ?? null,
         ]);
     }
 }
