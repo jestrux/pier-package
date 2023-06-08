@@ -292,7 +292,7 @@
         <div class="modal__overlay" tabindex="-1" data-micromodal-close>
         </div>
 
-        <div class="pointer-events-none fixed inset-0 z-[999] flex items-start justify-center py-12">
+        <div class="pointer-events-none fixed inset-0 z-[999] flex items-start justify-center md:py-12">
             <div class="pointer-events-auto modal__card w-[600px] rounded-lg max-h-screen overflow-auto bg-white"
                 role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
                 <div class="sticky bg-white border-b shadow-sm p-3 top-0 flex items-center gap-3">
