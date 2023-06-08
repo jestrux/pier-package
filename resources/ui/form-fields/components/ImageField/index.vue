@@ -1,12 +1,8 @@
 <style scoped>
-    #bcImageWrapper{
-    }
-
     #bcImageWrapper label{
         display: flex !important;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 0.7em;
         text-transform: capitalize;
     }
 

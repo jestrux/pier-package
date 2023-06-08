@@ -15,8 +15,9 @@ class Form extends Component
 
     public function __construct($model, $rowId = null)
     {
+        $this->rowId = $rowId;
         $this->model = PierMigration::describe($model);
-        $this->values = $rowId != null ? null : PierMigration::detail($model, $rowId);
+        $this->values = $rowId == null ? null : PierMigration::detail($model, $rowId);
     }
 
     public function render()

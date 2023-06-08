@@ -9,7 +9,7 @@
 	<title>{{ config('app.name' ?? 'Pier')}} CMS </title>
 
 	<link rel="stylesheet" href="{{asset('pier/css/cms.css')}}" />
-    {{-- <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet"> --}}
+	<link rel="stylesheet" href="{{asset('pier/css/form.css')}}" />
 	<script src="https://cdn.tailwindcss.com"></script>
 
 	<style>

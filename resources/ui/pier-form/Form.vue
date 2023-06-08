@@ -1,29 +1,7 @@
 <template>
-  <form class="pier-form" action="#" method="POST" @submit.prevent="saveRow">
-    <div :key="reloadFields" class="grid grid-cols-12 gap-5">
-        <template
-          v-for="field in fields"
-        >
-          <div :key="field.label" v-if="field.type == 'group'" class="col-span-12 border-b border-neutral-500 mt-4">
-            <h3 class="font-bold mb-2 text-xl leading-none">
-              {{field.cleanLabel ? field.cleanLabel : field.label}}
-            </h3>
-          </div>
-
-          <div v-else :key="field.label" class="grid grid-cols-12" :class="{
-            'col-span-12': !field.width || field.width == 'full',
-            'col-span-6': field.width == 'half',
-            'col-span-4': field.width == 'third',
-          }">
-            <div :class="{
-              'col-span-12': !field.stretch || field.stretch == 'full',
-              'col-span-6': field.stretch == 'half',
-              'col-span-4': field.stretch == 'third',
-            }">
-              <PierEditorField :field="field" v-model="record[field.label]" />
-            </div>
-          </div>
-        </template>
+  <form action="#" method="POST" @submit.prevent="saveRow">
+    <div v-if="model">
+      <pier-form-fields :key="reloadFields" :fields="model.fields" :values="record" />
     </div>
 
     <div class="my-7 flex justify-end">
@@ -43,7 +21,7 @@
 </template>
 
 <script>
-import PierEditorField from "../form-fields/PierEditorField.vue";
+import PierFormFields from "../form-fields";
 import { handleNetworkError, showSuccessToast } from "../Utils";
 import * as API from "../API";
 const { insertRecord, updateRecord } = API;
@@ -70,21 +48,6 @@ export default {
     };
   },
   computed: {
-    // ...mapState(["savingRecord", "model.name"]),
-    // ...mapGetters(["model"]),
-    fields() {
-      if (!this.model) return []
-
-      return this.model.fields.reduce((agg, field, index) => {
-        const newGroup = field.group && this.model.fields[index-1]?.group != field.group;
-
-        return [
-          ...agg,
-          ...(newGroup ? [{ type: "group", label: field.group }] : []),
-          field
-        ]
-      }, []);
-    },
     modelName() {
       if (this.model) return this.model.name;
 
@@ -165,7 +128,7 @@ export default {
     },
   },
   components: {
-    PierEditorField,
+    PierFormFields,
   },
 };
 </script>

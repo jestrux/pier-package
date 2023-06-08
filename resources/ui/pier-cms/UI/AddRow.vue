@@ -8,22 +8,10 @@
       <form action="#" method="POST"
         @submit.prevent="saveRow"
       >
-        <div :key="reloadFields" class="modal-body overflow-y-auto grid grid-cols-12 gap-5"
+        <div :key="reloadFields" class="modal-body overflow-y-auto"
           style="padding-top: 10px; padding-bottom: 17px; max-height: 480px;"
         >
-          <template v-if="selectedModel">
-            <div
-              :key="field.label"
-              v-for="field in selectedModel.fields"
-              :class="{
-                'col-span-12': !field.width,
-                'col-span-6': field.width == 'half',
-                'col-span-4': field.width == 'third',
-              }"
-            >
-              <PierEditorField :field="field" v-model="record[field.label]" />
-            </div>
-          </template>
+          <pier-form-fields :fields="selectedModel.fields" :values="record" />
         </div>
 
         <div class="modal-buttons">
@@ -49,7 +37,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import PierEditorField from "../../form-fields/PierEditorField.vue";
+import PierFormFields from "../../form-fields";
 
 export default {
   name: "PierCMSAddRow",
@@ -104,7 +92,7 @@ export default {
     }
   },
   components: {
-    PierEditorField
+    PierFormFields
   }
 };
 </script>

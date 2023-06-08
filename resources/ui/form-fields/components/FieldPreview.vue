@@ -25,7 +25,8 @@
     }
     
     #FieldPreview h3{
-        max-width: 80%;
+        white-space: nowrap;
+        margin-bottom: 0.2rem;
         text-overflow: ellipsis;
     }
     

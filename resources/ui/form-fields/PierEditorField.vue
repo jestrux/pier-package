@@ -61,13 +61,13 @@
 
       <SwitchField
         v-else-if="field.type == 'boolean'"
-        :label="field.label.replace(/_/g, ' ')"
+        :label="field.cleanLabel ? field.cleanLabel : field.label"
         v-model="val"
         :required="field.required"
       />
       
       <StatusField v-else-if="field.type == 'status'"
-        :label="field.label.replace(/_/g, ' ')"
+        :label="field.cleanLabel ? field.cleanLabel : field.label"
         :meta="field.meta"
         v-model="val"
         :required="field.required"
@@ -82,7 +82,7 @@
       
       <ReferenceField
         v-else-if="field.type == 'reference'"
-        :label="field.label.replace(/_/g, ' ')"
+        :label="field.cleanLabel ? field.cleanLabel : field.label"
         :reference-model="field.meta.model"
         :reference-model-main-field="field.meta.mainField"
         :add-reference-inline="field.meta.addInline"
@@ -92,7 +92,7 @@
       
       <MultiReferenceField
         v-else-if="field.type == 'multi-reference'"
-        :label="field.label.replace(/_/g, ' ')"
+        :label="field.cleanLabel ? field.cleanLabel : field.label"
         :reference-model="field.meta.model"
         :reference-model-main-field="field.meta.mainField"
         :add-reference-inline="field.meta.addInline"
@@ -102,7 +102,7 @@
       
       <LinkField
         v-else-if="field.type == 'link'"
-        :label="field.label.replace(/_/g, ' ')"
+        :label="field.cleanLabel ? field.cleanLabel : field.label"
         show-preview
         v-model="val"
         :required="field.required"
