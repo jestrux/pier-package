@@ -1,5 +1,5 @@
 <template>
-  <form action="#" method="POST" @submit.prevent="saveRow">
+  <form class="pier-form" action="#" method="POST" @submit.prevent="saveRow">
     <div :key="reloadFields" class="grid grid-cols-12 gap-5">
         <template
           v-for="field in fields"
