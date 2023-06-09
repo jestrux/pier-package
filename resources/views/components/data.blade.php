@@ -1,10 +1,13 @@
+@if ($plain ?? false && $plain != 'false')
+    {!! eval('?>' . Blade::compileString($slot)) !!}
+@else
 <div id="pierComponent{{ $instanceId }}" pier-data-component="{{ $instanceId }}" x-data="pierComponent{{ $instanceId }}"
     x-init="init()" {{ $attributes }}>
     {!! eval('?>' . Blade::compileString($slot)) !!}
 </div>
 
 <script>
-    const appendAlpineJS = (
+    window.appendAlpineJS = (
         filepath = "//unpkg.com/alpinejs"
     ) => {
         return new Promise((resolve, reject) => {
@@ -81,3 +84,4 @@
         }));
     });
 </script>
+@endif
