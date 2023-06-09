@@ -93,9 +93,7 @@
       <MultiReferenceField
         v-else-if="field.type == 'multi-reference'"
         :label="field.cleanLabel ? field.cleanLabel : field.label"
-        :reference-model="field.meta.model"
-        :reference-model-main-field="field.meta.mainField"
-        :add-reference-inline="field.meta.addInline"
+        :field="field"
         v-model="val"
         :required="field.required"
       />

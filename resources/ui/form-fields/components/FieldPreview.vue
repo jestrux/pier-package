@@ -57,10 +57,10 @@
             <svg v-else-if="type === 'file'" fill="#656d77" viewBox="0 0 24 24"><path d="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z"/></svg>
         </div>
         <div style="min-width: 0;">
-            <h3 class="text-lg whitespace-no-wrap overflow-hidden">
+            <h3 class="text-lg truncate">
                 {{ title }}
             </h3>
-            <p class="text-sm whitespace-no-wrap overflow-hidden text-gray-600">
+            <p class="text-sm truncate text-gray-600">
                 {{ subtitle }}
             </p>
         </div>

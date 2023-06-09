@@ -60,15 +60,36 @@
             />
         </div>
 
-        <div class="flex flex-col gap-1" v-else>
-            <div v-for="(reference, index) in references" :key="index" 
-                class="flex items-center justify-between py-2 text-lg font-bold border-b">
-                <div class="truncate">{{ referenceModelKey ? reference[referenceModelKey] : "" }}</div>
+        <div v-else>
+            <div :class="{
+                'grid grid-cols-2 gap-2': referencePreviewField && referencePreviewField.type == 'image',
+                'flex flex-col gap-1': !referencePreviewField || !referencePreviewField.type != 'image',
+            }">
+                <template v-for="(reference, index) in references">
+                    <div :key="index" v-if="referencePreviewField && referencePreviewField.type == 'image'"
+                        class="flex-1 min-w-0 truncate relative"
+                    >
+                        <FieldPreview
+                            type="image" 
+                            :url="reference[referencePreviewField.label]"
+                            :isDp="field && field.meta && field.meta.face"
+                        />
 
-                <button type="button" class="flex-shrink-0 inline-flex items-center justify-center w-6 h-6 bg-gray-400 border rounded-full verflow-hidden ml-2 mr-1"
-                    @click="removeReference(index)">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                </button>
+                        <button type="button" class="absolute right-0.5 top-1 flex-shrink-0 inline-flex items-center justify-center w-6 h-6 bg-neutral-100 hover:bg-neutral-200 border rounded-full verflow-hidden ml-2 mr-1"
+                            @click="removeReference(index, {permanentDelete: true})">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                        </button>
+                    </div>
+
+                    <div :key="index" v-else class="flex items-center justify-between py-2 text-lg font-bold border-b">
+                        <div class="truncate">{{ referenceModelKey ? reference[referenceModelKey] : "" }}</div>
+
+                        <button type="button" class="flex-shrink-0 inline-flex items-center justify-center w-6 h-6 bg-neutral-100 hover:bg-neutral-200 border rounded-full verflow-hidden ml-2 mr-1"
+                            @click="removeReference(index, {permanentDelete: true})">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                        </button>
+                    </div>
+                </template>
             </div>
 
             <button type="button" @click="addNewReference" class="mt-3 self-start border border-current flex font-semibold gap-1 items-center rounded-full text-primary text-sm leading-none hover:bg-neutral-200/50" style="padding: 0.4rem 1rem;">
@@ -83,13 +104,12 @@
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
 import { mapState } from 'vuex';
+import FieldPreview from '../components/FieldPreview';
 
 export default {
     name: "MultiReferenceField",
     props: {
-        referenceModel: String,
-        referenceModelMainField: String,
-        addReferenceInline: Boolean,
+        field: Object,
         label: String,
         value: Array | String
     },
@@ -131,7 +151,11 @@ export default {
         getResultValue(result) {
             return result.label;
         },
-        removeReference(index) {
+        removeReference(index, {permanentDelete = false} = {}) {
+            if(this.references[index] && this.references[index]._id && permanentDelete) {
+                this.API.deleteRecord(this.referenceModel, this.references[index]._id);
+            }
+
             this.references.splice(index, 1);
         },
         handleSubmit(result) {
@@ -145,6 +169,29 @@ export default {
     },
     computed: {
         ...mapState(['models']),
+        referenceModel() {
+            if(!this.field || !this.field.meta) return null; 
+
+            return this.field.meta.model;
+        },
+        referenceModelMainField() {
+            if(!this.field || !this.field.meta) return null; 
+
+            return this.field.meta.mainField;
+        },
+        addReferenceInline() {
+            if(!this.field || !this.field.meta) return null; 
+
+            return this.field.meta.addInline;
+        },
+        referencePreviewField() {
+            if(!this.field || !this.field.meta || !this.field.meta.type) return null; 
+
+            return {
+                type: this.field.meta.type,
+                label: this.field.meta.field,
+            };
+        },
         referenceModelKey(){
             if(this.referenceModelMainField)
                 return this.referenceModelMainField;
@@ -153,6 +200,9 @@ export default {
         }
     },
     watch: {
+        referencePreviewField(newValue) {
+            console.log("referencePreviewField: ", newValue)
+        },
         value: function(newValue){
             this.dontUpdate = true;
             if(newValue && !this.references.length)
@@ -171,7 +221,8 @@ export default {
         }
     },
     components: {
-        Autocomplete
+        Autocomplete,
+        FieldPreview
     }
 }
 </script>
