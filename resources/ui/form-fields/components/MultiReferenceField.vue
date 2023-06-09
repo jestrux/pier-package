@@ -63,9 +63,9 @@
         <div class="flex flex-col gap-1" v-else>
             <div v-for="(reference, index) in references" :key="index" 
                 class="flex items-center justify-between py-2 text-lg font-bold border-b">
-                {{ referenceModelKey ? reference[referenceModelKey] : "" }}
+                <div class="truncate">{{ referenceModelKey ? reference[referenceModelKey] : "" }}</div>
 
-                <button type="button" class="inline-flex items-center justify-center w-6 h-6 bg-gray-400 border rounded-full verflow-hidden ml-2 mr-1"
+                <button type="button" class="flex-shrink-0 inline-flex items-center justify-center w-6 h-6 bg-gray-400 border rounded-full verflow-hidden ml-2 mr-1"
                     @click="removeReference(index)">
                     <svg class="w-4 h-4" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
                 </button>
