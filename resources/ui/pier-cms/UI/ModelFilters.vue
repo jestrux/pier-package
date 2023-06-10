@@ -138,7 +138,7 @@ export default {
               <ModelAutoComplete
                 modelName={field.meta.model}
                 modelMainField={field.meta.mainField}
-                placeholder={`Type to search for ${field.label}`}
+                placeholder={`Type to search...`}
                 v-model={this.modelFilters?.[field.label]}
                 onInput={({ _id }) => this.setFilter({ [field.label]: _id })}
               />
@@ -193,7 +193,7 @@ export default {
           class="popover-custom shadow-md rounded-md"
           style={{ display: this.showFilters ? "" : "none" }}
         >
-          <div key={this.filtersKey} class="p-3 flex flex-col">
+          <div key={this.filtersKey} class="p-3 flex flex-col gap-2">
             {filters.map((field) => {
               return (
                 <div class="ModelFilterField flex items-center justify-between gap-3">
