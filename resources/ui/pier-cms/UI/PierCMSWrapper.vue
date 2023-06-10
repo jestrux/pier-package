@@ -8,13 +8,14 @@
                 {{PierCMSConfig.appName ? PierCMSConfig.appName + " " : ""}}CMS
             </div>
             <ul>
-                <li v-for="model in models"
-                    :key="model._id">
-                    <router-link :to="`/${model.name}`"
-                        :class="{'active': selectedModelName.replace('%20', ' ') === model.name}">
-                        {{ model.plural_name }}
-                    </router-link>
-                </li>
+                <template v-for="model in models">
+                    <li v-if="!model.settings.hiddenOnCms" :key="model._id">
+                        <router-link :to="`/${model.name}`"
+                            :class="{'active': selectedModelName.replace('%20', ' ') === model.name}">
+                            {{ model.plural_name }}
+                        </router-link>
+                    </li>
+                </template>
             </ul>
         </aside>
 
