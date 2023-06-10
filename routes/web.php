@@ -87,7 +87,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/pier-export-data',  function () {
         $_GET['flat'] = true; // manually disable eager loading
 
-        return PierMigration::all()->map(function ($model) {
+        return PierMigration::orderBy('name')->get()->map(function ($model) {
             $model['data'] = PierMigration::browse($model['name']);
             return $model;
         });
