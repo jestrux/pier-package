@@ -10,7 +10,7 @@
       "
     >
       <div class="modal-title">
-        <h3 class="title">New {{ model.name }}</h3>
+        <h3 class="title">{{record && record._id ? 'Edit' : 'Add'}} {{ model.name }}</h3>
       </div>
 
       <form action="#" method="POST" @submit.prevent="saveRow">
