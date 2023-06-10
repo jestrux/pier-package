@@ -1022,7 +1022,7 @@ class PierMigration extends Model{
         return $pierModel;
     }
 
-    static function record($model, $fields, $display_field, $data = null){
+    static function record($model, $fields, $display_field, $data = null, $settings = '{"listPageType": "table"}'){
         $table_name = Str::snake($model);
         $model_name = self::pascal_to_sentence($model);
 
@@ -1031,7 +1031,7 @@ class PierMigration extends Model{
             "name" => $model_name, 
             "display_field" => $display_field, 
             "fields" => $fields->toJson(),
-            "settings" => '{"listPageType": "table"}'
+            "settings" => $settings ?? '{"listPageType": "table"}'
         ];
 
         $pierModel = PierMigration::create($modelEntry);

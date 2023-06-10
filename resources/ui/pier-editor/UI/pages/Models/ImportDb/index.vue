@@ -97,7 +97,6 @@ export default {
         }
 
         const metaModels = referenceFields.filter(({type}) => ['reference', 'multi-reference'].includes(type)).map(({meta}) => meta.model);
-        console.log("Reference fields: ", metaModels);
         return !metaModels.length || metaModels.every(metaModel => savedModels.includes(metaModel));
       });
     }

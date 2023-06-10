@@ -54,22 +54,23 @@ export default {
           
       }
       
-      try {
-        const parsedSettings = JSON.parse(settings);
-        settings = parsedSettings;
-      } catch (error) {
+      // try {
+      //   const parsedSettings = JSON.parse(settings);
+      //   settings = parsedSettings;
+      // } catch (error) {
           
-      }
+      // }
 
       const model = {
         ...this.model,
         displayField: this.model.display_field,
         name: this.model.name.replace(/ /g,""),
         fields,
-        settings,
+        // settings,
       };
-      console.log("Model: ", model);
-      delete model.settings;
+
+      console.log("Parsed model: ", model);
+      
       await insertModel(model);
       this.$emit("change", "saved");
     },

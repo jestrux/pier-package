@@ -21,6 +21,7 @@
 	@php
 		$models = $models->map(function($model) {
             $model->plural_name = Str::plural($model->name);
+            $model->settings = json_decode($model->settings);
             return $model;
         });
 	@endphp

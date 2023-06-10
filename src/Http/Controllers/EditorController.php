@@ -14,7 +14,8 @@ class EditorController extends Controller
         $fields = collect($request->input('fields'));
         $displayField = $request->input('displayField');
         $data = $request->input('data');
-        $res = PierMigration::record($model, $fields, $displayField, $data);
+        $settings = $request->input('settings') ?? null;
+        $res = PierMigration::record($model, $fields, $displayField, $data, $settings);
         return response()->json($res);
     }
 
