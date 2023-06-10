@@ -17,6 +17,15 @@
                 :placeholder="`Type to search for ${label}`"
                 v-model="val"
             />
+
+            <div style="position: relative; pointer-events: none">
+                <input
+                    style="position: absolute; top: -3rem; opacity: 0"
+                    type="text"
+                    :value="displayValue ? displayValue : ''"
+                    :required="required"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -30,7 +39,8 @@ export default {
         referenceModel: String,
         referenceModelMainField: String,
         label: String,
-        value: Object|String
+        value: Object|String,
+        required: Boolean
     },
     data() {
         return {

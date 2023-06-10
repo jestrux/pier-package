@@ -6,8 +6,8 @@
 <template>
   <c-dark-mode>
     <div id="PierApp" class="h-screen bg-dark-200 flex text-white">
-      <aside class="h-full bg-dark-300" style="width: 23%; min-width: 300px">
-        <div class="border-b border-gray-600 border-opacity-25 px-6 py-3">
+      <aside class="h-screen flex flex-col bg-dark-300" style="width: 23%; min-width: 300px">
+        <div class="w-full border-b border-gray-600 border-opacity-25 px-6 py-3">
           <div class="flex items-center justify-between mb-3">
             <c-text fontSize="3xl">
               Pier
@@ -35,37 +35,39 @@
           </c-button>
         </div>
 
-        <c-box py="3">
-          <c-box v-if="fetchingModels" d="flex" padding="6" align-items="center" justify-content="center">
-            <c-circular-progress color="orange" is-indeterminate />
+        <div class="flex-1 overflow-y-auto">
+          <c-box py="3">
+            <c-box v-if="fetchingModels" d="flex" padding="6" align-items="center" justify-content="center">
+              <c-circular-progress color="orange" is-indeterminate />
+            </c-box>
+            
+            <c-box v-else-if="!models" d="flex" padding="6" align-items="center" justify-content="center">
+              <c-text fontSize="xl">
+                Failed to fetch models.
+              </c-text>
+            </c-box>
+            
+            <c-box v-else>
+              <c-button
+                class="pier-model-link"
+                size="lg" px="6" py="4" v-for="(model, index) in models" 
+                :key="index"
+                width="100%"
+                :variant-color="modelBeingEdited && model._id === modelBeingEdited._id ? 'orange.300' : 'gray'"
+                backgroundColor="transparent"
+                :color="modelBeingEdited && model._id === modelBeingEdited._id ? 'orange.200' : '#999'"
+                borderRadius="0"
+                paddingLeft="1.8rem"
+                :disabled="$route.path === '/models/add'"
+                @click="$router.push(`/models/${model._id}/details`)"
+              >
+                <div class="text-left" style="width: 100%;">
+                  {{ model.name }}
+                </div>
+              </c-button>
+            </c-box>
           </c-box>
-          
-          <c-box v-else-if="!models" d="flex" padding="6" align-items="center" justify-content="center">
-            <c-text fontSize="xl">
-              Failed to fetch models.
-            </c-text>
-          </c-box>
-          
-          <c-box v-else>
-            <c-button
-              class="pier-model-link"
-              size="lg" px="6" py="4" v-for="(model, index) in models" 
-              :key="index"
-              width="100%"
-              :variant-color="modelBeingEdited && model._id === modelBeingEdited._id ? 'orange.300' : 'gray'"
-              backgroundColor="transparent"
-              :color="modelBeingEdited && model._id === modelBeingEdited._id ? 'orange.200' : '#999'"
-              borderRadius="0"
-              paddingLeft="1.8rem"
-              :disabled="$route.path === '/models/add'"
-              @click="$router.push(`/models/${model._id}/details`)"
-            >
-              <div class="text-left" style="width: 100%;">
-                {{ model.name }}
-              </div>
-            </c-button>
-          </c-box>
-        </c-box>
+        </div>
       </aside>
       
       <main class="h-full flex-1 flex flex-col">

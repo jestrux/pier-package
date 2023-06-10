@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import AddRow from "./AddRow.vue";
+import AddRow from "./AddRow";
 import { mapState, mapGetters } from "vuex";
 
 export default {

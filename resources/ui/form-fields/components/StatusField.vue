@@ -7,9 +7,10 @@
         font-size: .875rem !important;
         flex: none;
         width: auto;
+        min-width: 75px;
         position: relative;
         border: 1px solid #C8C8C8;
-        font-weight: 600;
+        font-weight: 500;
     }
 
     .status-label.selected{

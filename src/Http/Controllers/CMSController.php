@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 class CMSController extends Controller
 {
     public function index(){
-        $models = PierMigration::all();
+        $models = PierMigration::orderBy('name')->get();
         return view('pier::cms', compact('models'));
     }
     

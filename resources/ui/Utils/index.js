@@ -8,8 +8,8 @@ export function getYouTubeVideoIdFromUrl(url) {
 }
 
 export async function handleNetworkError(error, fallbackMessage = "Network error") {
-    if (error && error.response && error.response.data)
-        showErrorToast(error.response.data);
+    if (error && (error.message || (error.response && error.response.data)))
+        showErrorToast(error.message || error.response.data);
     else
         showErrorToast(fallbackMessage);
 

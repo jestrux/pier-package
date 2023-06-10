@@ -92,6 +92,15 @@
                 </template>
             </div>
 
+            <div style="position: relative; pointer-events: none">
+                <input
+                    style="position: absolute; top: -3rem; opacity: 0"
+                    type="text"
+                    :value="displayValue"
+                    :required="field.required"
+                />
+            </div>
+
             <button type="button" @click="addNewReference" class="mt-3 self-start border border-current flex font-semibold gap-1 items-center rounded-full text-primary text-sm leading-none hover:bg-neutral-200/50" style="padding: 0.4rem 1rem;">
                 <svg class="-ml-1" height="18px" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
                 <span class="lowercase first-letter:uppercase inline-block">New entry</span>
@@ -130,8 +139,8 @@ export default {
     methods: {
         async addNewReference() {
             const newReference = await window.showPierReferenceModalForm(this.referenceModel);
-            console.log("New reference: ", newReference);
-            this.references.push(newReference);
+            if(newReference) 
+                this.$set(this.references, this.references.length, newReference);
         },
         search(input) {
             // if (input.length < 1) { return [] }
@@ -169,6 +178,11 @@ export default {
     },
     computed: {
         ...mapState(['models']),
+        displayValue() {
+            if(!this.references || this.references.length) return "";
+
+            return this.references.map(({ _id }) => _id).join("");
+        },
         referenceModel() {
             if(!this.field || !this.field.meta) return null; 
 

@@ -24,7 +24,7 @@ class EditorController extends Controller
     }
     
     public function list(){
-        $res = PierMigration::all();
+        $res = PierMigration::orderBy('name')->get();
         return response()->json($res);
     }
     
