@@ -1,54 +1,65 @@
 <template>
-  <div class="modal open">
+  <form :id="formId" action="#" method="POST" @submit.prevent="saveRow">
     <div
-      class="modal-content rounded-t-md"
-      style="
-        width: 570px;
-        align-self: flex-start;
-        margin-top: 3rem;
-        border-radius: 12px;
-      "
+      class="modal-body overflow-y-auto"
+      style="padding-top: 10px; padding-bottom: 17px"
+      :style="{ maxHeight: onFullPage ? '' : '480px' }"
     >
-      <div class="modal-title">
-        <h3 class="title">{{record && record._id ? 'Edit' : 'Add'}} {{ model.name }}</h3>
+      <pier-form-fields :fields="model.fields" :values="record" />
+    </div>
+
+    <template v-if="!hideActionButtons">
+      <div v-if="onFullPage" class="flex justify-end">
+        <button
+          type="submit"
+          class="w-full px-12 py-0 h-12 bg-primary text-white border-primary text-sm uppercase tracking-wide font-bold focus:outline-none rounded-lg hover:opacity-90"
+          :class="{
+            'pointer-events-none opacity-50': saving || uploadingFile,
+          }"
+        >
+          {{
+            saving || uploadingFile
+              ? `SAVING ${modelName.toUpperCase()}...`
+              : record && record._id
+              ? "SAVE CHANGES"
+              : "SAVE"
+          }}
+        </button>
       </div>
 
-      <form action="#" method="POST" @submit.prevent="saveRow">
-        <div
-          :key="reloadFields"
-          class="modal-body overflow-y-auto"
-          style="padding-top: 10px; padding-bottom: 17px; max-height: 480px"
+      <div
+        v-else
+        class="flex items-center justify-end bg-black/5 py-2.5 pr-4 gap-2 rounded-b-md"
+      >
+        <button
+          class="p-2 text-sm"
+          :class="{
+            'pointer-events-none opacity-50': saving || uploadingFile,
+          }"
+          type="reset"
+          @click="$emit('close')"
         >
-          <pier-form-fields :fields="model.fields" :values="record" />
-        </div>
+          CANCEL
+        </button>
 
-        <div class="modal-buttons rounded-b-md">
-          <button
-            class="p-2 text-sm"
-            :class="{
-              'pointer-events-none opacity-50': saving || uploadingFile,
-            }"
-            type="reset"
-            @click="$emit('close')"
-          >
-            CANCEL
-          </button>
-
-          <button
-            class="text-sm bg-primary text-white py-2 px-4 rounded"
-            :class="{
-              'pointer-events-none opacity-50': saving || uploadingFile,
-            }"
-            type="submit"
-          >
-            {{
-              saving ? `SAVING ${modelName.toUpperCase()}...` : "SAVE CHANGES"
-            }}
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
+        <button
+          class="text-sm bg-primary text-white py-2 px-4 rounded"
+          :class="{
+            'pointer-events-none opacity-50': saving || uploadingFile,
+          }"
+          type="submit"
+        >
+          {{
+            saving
+              ? `SAVING ${modelName.toUpperCase()}...`
+              : record && record._id
+              ? "SAVE CHANGES"
+              : "SAVE"
+          }}
+        </button>
+      </div>
+    </template>
+  </form>
 </template>
 
 <script>
@@ -60,17 +71,10 @@ export default {
     values: Object,
     model: Object,
     saving: Boolean,
-  },
-  mounted() {
-    // if (this.values) {
-    //   this.record = this.values;
-    //   this.reloadFields = "be best";
-    // }
-  },
-  data: function () {
-    return {
-      reloadFields: "be",
-    };
+    isPopup: Boolean,
+    formId: String,
+    hideActionButtons: Boolean,
+    onFullPage: Boolean,
   },
   computed: {
     record: function () {
@@ -109,6 +113,7 @@ export default {
       const self = this;
       const data = Object.fromEntries(
         Object.entries(this.record).map(function ([key, value]) {
+          console.log("Field map: ", self.modelFieldMap, key);
           const fieldType = self.modelFieldMap[key].type;
 
           if (fieldType == "reference") value = value._id;

@@ -63,11 +63,13 @@
 </style>
 <template>
     <div>
-      <c-box d="flex" alignItems="center" p="6" mb="8" border-width="2px" border-color="#444" rounded="lg">
+      <c-box d="flex" alignItems="start" p="6" mb="8" border-width="2px" border-color="#444" rounded="lg">
         <c-box flex="1">
-          <c-text fontSize="2xl">Display Field</c-text>    
+          <c-text fontSize="2xl">Model</c-text>    
         </c-box>
         <c-box flex="2">
+          <c-text fontSize="lg" mb="2">Display Field</c-text>
+
           <c-box maxW="xs" pos="relative">
             <c-select :is-disabled="modelBeingEdited.savingDisplayField" :value="displayField" @change="displayFieldChanged($event)" placeholder="Choose one">
                 <option v-for="(choice, index) in displayFieldChoices"
@@ -84,40 +86,55 @@
         </c-box>
       </c-box>
 
-      <c-box d="flex" p="6" border-width="2px" border-color="#444" rounded="lg">
+      <c-box d="flex" alignItems="start" p="6" border-width="2px" border-color="#444" rounded="lg">
         <c-box flex="1">
-          <c-text fontSize="2xl">List Page Style</c-text>    
+          <c-text fontSize="2xl">CMS</c-text>    
         </c-box>
         <c-box flex="2">
-          <c-box d="grid" gridTemplateColumns="1fr 1fr" gridGap="8">
-            <button type="button" class="focus:outline-none"
-              @click="setListPageType('table')"
-            >
-              <div class="PierSettingsOption" :class="{'selected': settings.listPageType === 'table'}">
-                <img class="shadow-md rounded w-full object-cover object-left-top" src="pier/images/table.png" alt="">
-              </div>
-
-              <c-text :color="settings.listPageType === 'table' ? '#ffba7f' : ''"
-                :class="{'opacity-75': settings.listPageType !== 'table'}"
-                class="text-center uppercase tracking-widest" fontSize="xl" mt="3">
-                Table View
-              </c-text>
-            </button>
-
-            <button type="button" class="focus:outline-none"
-              @click="setListPageType('card')"
-            >
-              <div class="PierSettingsOption" :class="{'selected': settings.listPageType === 'card'}"
+          <c-box mb="8">
+            <c-text fontSize="lg" mb="2">List Page Style</c-text>
+            <c-box d="grid" gridTemplateColumns="1fr 1fr" gridGap="8">
+              <button type="button" class="focus:outline-none"
+                @click="setListPageType('table')"
               >
-                <img class="shadow-md rounded-md w-full object-cover object-left-top" src="pier/images/card.png" alt="">
-              </div>
+                <div class="PierSettingsOption" :class="{'selected': settings.listPageType === 'table'}">
+                  <img class="shadow-md rounded w-full object-cover object-left-top" src="pier/images/table.png" alt="">
+                </div>
 
-              <c-text :color="settings.listPageType === 'card' ? '#ffba7f' : ''"
-                :class="{'opacity-50': settings.listPageType !== 'card'}"
-                class="text-center uppercase tracking-widest" fontSize="xl" mt="3">
-                Card View
-              </c-text>
-            </button>
+                <c-text :color="settings.listPageType === 'table' ? '#ffba7f' : ''"
+                  :class="{'opacity-75': settings.listPageType !== 'table'}"
+                  class="text-center uppercase tracking-widest" fontSize="xl" mt="3">
+                  Table View
+                </c-text>
+              </button>
+
+              <button type="button" class="focus:outline-none"
+                @click="setListPageType('card')"
+              >
+                <div class="PierSettingsOption" :class="{'selected': settings.listPageType === 'card'}"
+                >
+                  <img class="shadow-md rounded-md w-full object-cover object-left-top" src="pier/images/card.png" alt="">
+                </div>
+
+                <c-text :color="settings.listPageType === 'card' ? '#ffba7f' : ''"
+                  :class="{'opacity-50': settings.listPageType !== 'card'}"
+                  class="text-center uppercase tracking-widest" fontSize="xl" mt="3">
+                  Card View
+                </c-text>
+              </button>
+            </c-box>
+          </c-box>
+
+          <c-box d="flex" alignItems="center">
+            <c-switch mr="3" id="addOnNewPage"
+              color="orange" size="md"
+              v-model="addOnNewPage"
+              @change="setAddOnNewPage"
+            />
+
+            <label for="addOnNewPage" class="mb-0.5 cursor-pointer text-lg ml-2">
+                Add On New Page
+            </label>
           </c-box>
         </c-box>
 
@@ -134,6 +151,7 @@ import {
   CText,
   CSelect,
   CSpinner,
+  CSwitch
 } from '@chakra-ui/vue';
 
 import { mapGetters } from 'vuex';
@@ -155,7 +173,8 @@ export default {
       records: [],
       settings: {},
       editCard: false,
-      displayField: ""
+      displayField: "",
+      addOnNewPage: false,
     };
   },
   computed: {
@@ -176,17 +195,20 @@ export default {
 
         this.settings = model.settings;
         this.displayField = model.display_field;
+        this.addOnNewPage = model.settings.addOnNewPage;
       }
     }
   },
   methods: {
     async setListPageType(listPageType){
       if(listPageType === 'table'){
-        // this.settings.listPageType = type;
         this.$store.dispatch('updateModelSettings', {...this.settings, listPageType});
       }
       else
         this.editCard = true;
+    },
+    setAddOnNewPage(addOnNewPage){
+      this.$store.dispatch('updateModelSettings', {...this.settings, addOnNewPage});
     },
     displayFieldChanged(newValue){
       this.$store.dispatch('updateModelDisplayField', newValue);
@@ -198,6 +220,7 @@ export default {
     CText,
     CSelect,
     CSpinner,
+    CSwitch,
     EditCardSettings
   }
 };

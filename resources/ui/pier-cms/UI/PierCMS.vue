@@ -6,7 +6,7 @@
       </span>
 
       <router-link
-        :to="`/${modelName}/list/add`"
+        :to="newEntryLink"
         class="border border-current flex font-semibold gap-1 items-center rounded-full text-primary text-sm leading-none hover:bg-neutral-200/50"
         style="padding: 0.4rem 1rem"
       >
@@ -84,6 +84,13 @@ export default {
   computed: {
     ...mapState(["modelFilters"]),
     ...mapGetters(["selectedModel"]),
+    newEntryLink() {
+      const model = this.selectedModel;
+      if(model && model.settings && model.settings.addOnNewPage)
+        return `/${this.modelName}/add`;
+
+      return `/${this.modelName}/list/add`;
+    }
   },
   watch: {
     modelName: function () {

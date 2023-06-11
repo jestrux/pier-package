@@ -2,6 +2,7 @@ import PierCMSWrapper from '../UI/PierCMSWrapper';
 import PierCMSList from '../UI/PierCMS';
 import Detail from '../UI/Detail';
 import AddRow from '../UI/AddRow';
+import AddRowFullPage from '../UI/AddRow/AddRowFullPage';
 import EditRow from '../UI/EditRow';
 import DeleteRow from '../UI/DeleteRow';
 const PierCMSContent = {
@@ -46,9 +47,20 @@ export default [
                         ]
                     },
                     {
+                        path: '/:modelName/add',
+                        name: 'Add Row',
+                        component: AddRowFullPage
+                    },
+                    {
                         path: '/:modelName/detail/:rowId/',
                         name: 'View Row',
                         component: Detail,
+                        props: true
+                    },
+                    {
+                        path: '/:modelName/:rowId/edit',
+                        name: 'Edit Row',
+                        component: EditRow,
                         props: true
                     },
                 ]

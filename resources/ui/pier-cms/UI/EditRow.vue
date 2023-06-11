@@ -8,12 +8,15 @@
       </div>
     </div>
 
-    <AddRow v-else :values="selectedRecord" />
+    <AddRow v-else-if="$route.path.indexOf('list') != -1" :values="selectedRecord" />
+
+    <AddRowFullPage v-else :values="selectedRecord" />
   </div>
 </template>
 
 <script>
 import AddRow from "./AddRow";
+import AddRowFullPage from "./AddRow/AddRowFullPage";
 import { mapState, mapGetters } from "vuex";
 
 export default {
@@ -49,7 +52,8 @@ export default {
     }
   },
   components: {
-    AddRow
+    AddRow,
+    AddRowFullPage
   }
 };
 </script>

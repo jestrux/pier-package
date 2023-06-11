@@ -157,9 +157,10 @@
       <div id="qlEditorWrapper" v-else-if="field.type === 'long text' && field.meta.wysiwyg">
         <vue-editor
           :editorToolbar="wysiwygToolbar"
-          v-model="val" 
-          :required="field.required"
+          v-model="val"
         />
+
+        <placeholder-input :required="field.required" :value="val" />
       </div>
 
       <input
@@ -212,6 +213,7 @@ import PasswordField from "./components/PasswordField";
 import PhoneField from "./components/PhoneField";
 import LinkField from "./components/LinkField";
 import LocationField from "./components/LocationField";
+import PlaceholderInput from "../components/PlaceholderInput";
 
 const UNSPLASH_CLIENT_ID = process.env.MIX_UNSPLASH_CLIENT_ID;
 
@@ -280,7 +282,8 @@ export default {
     LinkField,
     PasswordField,
     PhoneField,
-    LocationField
+    LocationField,
+    PlaceholderInput
   }
 };
 </script>
