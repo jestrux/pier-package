@@ -1,9 +1,15 @@
-@if ($plain ?? false && $plain != 'false')
-    {!! eval('?>' . Blade::compileString($slot)) !!}
+@php
+    $compiledSlot = Blade::compileString($slot);
+    $plain = !str_contains($compiledSlot, 'Jestrux\Pier\View\Components');
+@endphp
+
+@if ($plain)
+    {!! eval('?>' . $compiledSlot) !!}
 @else
+
 <div id="pierComponent{{ $instanceId }}" pier-data-component="{{ $instanceId }}" x-data="pierComponent{{ $instanceId }}"
     x-init="init()" {{ $attributes }}>
-    {!! eval('?>' . Blade::compileString($slot)) !!}
+    {!! eval('?>' . $compiledSlot) !!}
 </div>
 
 <script>

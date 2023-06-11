@@ -16,7 +16,6 @@ class Data extends Component{
     public $q;
     public $data;
     public $instanceId;
-    public $plain;
 
     function modifiedFilters($filters){
         return $filters->keys()->reduce(function($agg, $key) use($filters){
@@ -38,12 +37,11 @@ class Data extends Component{
         return $newFilters;
     }
 
-    public function __construct($model, $rowId = null, $filters = [], $orderBy = "", $groupBy = "", $limit = null, $pluck = null, $q = null, $plain = null){
+    public function __construct($model, $rowId = null, $filters = [], $orderBy = "", $groupBy = "", $limit = null, $pluck = null, $q = null){
         $this->model = $model;
         $this->filters = $filters;
         $this->orderBy = $orderBy;
         $this->groupBy = $groupBy;
-        $this->plain = $plain;
 
         if(count($filters) > 0)
             $this->filters = $this->modifiedFilters(collect($filters));
