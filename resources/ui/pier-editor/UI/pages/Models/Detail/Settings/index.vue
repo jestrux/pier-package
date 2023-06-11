@@ -71,7 +71,7 @@
           <c-text fontSize="lg" mb="2">Display Field</c-text>
 
           <c-box maxW="xs" pos="relative">
-            <c-select :is-disabled="modelBeingEdited.savingDisplayField" :value="displayField" @change="displayFieldChanged($event)" placeholder="Choose one">
+            <c-select :is-disabled="modelBeingEdited.savingDisplayField" :value="displayField" @change="updateModelDisplayField($event)" placeholder="Choose one">
                 <option v-for="(choice, index) in displayFieldChoices"
                   :key="index" :value="choice"
                 >
@@ -91,7 +91,7 @@
           <c-text fontSize="2xl">CMS</c-text>    
         </c-box>
         <c-box flex="2">
-          <c-box mb="8">
+          <!-- <c-box mb="8">
             <c-text fontSize="lg" mb="2">List Page Style</c-text>
             <c-box d="grid" gridTemplateColumns="1fr 1fr" gridGap="8">
               <button type="button" class="focus:outline-none"
@@ -123,13 +123,25 @@
                 </c-text>
               </button>
             </c-box>
+          </c-box> -->
+
+          <c-box mb="8" d="flex" alignItems="center">
+            <c-switch mr="3" id="hiddenOnCms"
+              color="orange" size="md"
+              v-model="settings.hiddenOnCms"
+              @change="updateSettings({hiddenOnCms: $event})"
+            />
+
+            <label for="hiddenOnCms" class="mb-0.5 cursor-pointer text-lg ml-2">
+                Don't show model in CMS
+            </label>
           </c-box>
 
           <c-box d="flex" alignItems="center">
             <c-switch mr="3" id="addOnNewPage"
               color="orange" size="md"
-              v-model="addOnNewPage"
-              @change="setAddOnNewPage"
+              v-model="settings.addOnNewPage"
+              @change="updateSettings({addOnNewPage: $event})"
             />
 
             <label for="addOnNewPage" class="mb-0.5 cursor-pointer text-lg ml-2">
@@ -154,8 +166,7 @@ import {
   CSwitch
 } from '@chakra-ui/vue';
 
-import { mapGetters } from 'vuex';
-import { populateModel, browseModel } from '../../../../../services/API';
+import { mapActions, mapGetters } from 'vuex';
 import EditCardSettings from "../EditCardSettings";
 
 export default {
@@ -174,7 +185,6 @@ export default {
       settings: {},
       editCard: false,
       displayField: "",
-      addOnNewPage: false,
     };
   },
   computed: {
@@ -190,29 +200,24 @@ export default {
     modelBeingEdited: {
       immediate: true,
       handler(model){
-        if(!model)
-          return;
+        if(!model) return;
 
         this.settings = model.settings;
         this.displayField = model.display_field;
-        this.addOnNewPage = model.settings.addOnNewPage;
       }
     }
   },
   methods: {
+    ...mapActions(['updateModelSettings', 'updateModelDisplayField']),
     async setListPageType(listPageType){
-      if(listPageType === 'table'){
-        this.$store.dispatch('updateModelSettings', {...this.settings, listPageType});
-      }
+      if(listPageType === 'table')
+        this.updateModelSettings({...this.settings, listPageType});
       else
         this.editCard = true;
     },
-    setAddOnNewPage(addOnNewPage){
-      this.$store.dispatch('updateModelSettings', {...this.settings, addOnNewPage});
+    updateSettings(newSettings){
+      this.updateModelSettings({...this.settings, ...newSettings});
     },
-    displayFieldChanged(newValue){
-      this.$store.dispatch('updateModelDisplayField', newValue);
-    }
   },
   components: {
     CBox,
