@@ -33,6 +33,20 @@ export default {
       this.record = this.values;
       this.reloadFields = "be best";
     }
+
+    this.$el.classList.add("PierFormWrapper");
+
+		this.$el.addEventListener(
+			"autosave-reference-field",
+			({ detail } = {}) => {
+				if (this.modelName && this.values && this.values._id) {
+					API.updateRecord(this.modelName, {
+						...detail,
+						_id: this.values._id,
+					});
+				}
+			}
+		);
   },
   data: function () {
     return {

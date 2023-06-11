@@ -139,8 +139,20 @@ export default {
     methods: {
         async addNewReference() {
             const newReference = await window.showPierReferenceModalForm(this.referenceModel);
-            if(newReference) 
+            if(newReference) {
                 this.$set(this.references, this.references.length, newReference);
+                
+                const PierFormWrapper = this.$el.closest(".PierFormWrapper");
+                if(PierFormWrapper) {
+                    PierFormWrapper.dispatchEvent(
+                        new CustomEvent("autosave-reference-field", {
+                            detail: {
+                                [this.field.label]: this.references.map(({_id}) => _id)
+                            },
+                        })
+                    );
+                }
+            }
         },
         search(input) {
             // if (input.length < 1) { return [] }

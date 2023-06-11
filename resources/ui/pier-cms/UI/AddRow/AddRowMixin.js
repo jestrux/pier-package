@@ -21,6 +21,20 @@ export default {
 				};
 			});
 		};
+
+		this.$el.classList.add("PierFormWrapper");
+
+		this.$el.addEventListener(
+			"autosave-reference-field",
+			({ detail } = {}) => {
+				if (this.values && this.values._id) {
+					this.API.updateRecord(this.selectedModelName, {
+						...detail,
+						_id: this.values._id,
+					});
+				}
+			}
+		);
 	},
 	data: function () {
 		return {
