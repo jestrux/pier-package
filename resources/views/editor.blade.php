@@ -7,7 +7,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'YouLead') }}</title>
+    <title>{{ config('app.name') }} Editor</title>
+    <link href="{{ asset('img/logo-icon.png') }}" rel="shortcut icon" type="image/png" sizes="16x16" />
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com" />

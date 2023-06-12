@@ -7,6 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<title>{{ config('app.name' ?? 'Pier')}} CMS </title>
+	<link href="{{ asset('img/logo-icon.png') }}" rel="shortcut icon" type="image/png" sizes="16x16" />
 
 	<link rel="stylesheet" href="{{asset('pier/css/cms.css')}}" />
 	<link rel="stylesheet" href="{{asset('pier/css/form.css')}}" />
