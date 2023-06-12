@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Jestrux\Pier\Http\Controllers\APIController;
 use Jestrux\Pier\Http\Controllers\CMSController;
 use Jestrux\Pier\Http\Controllers\EditorController;
 use Jestrux\Pier\Http\Controllers\HelperController;
@@ -72,15 +71,6 @@ Route::prefix('model')->group(function () {
     Route::patch('{model_name}/addField', [EditorController::class, 'add_field']);
     Route::patch('{model_name}/settings', [EditorController::class, 'update_settings']);
     Route::get('{model_name}/browse/{row_id?}', [EditorController::class, 'browse']);
-});
-
-Route::prefix('api')->group(function () {
-    Route::get('{model_name}/search', [APIController::class, 'searchResource']);
-    Route::get('{model_name}/{row_id?}', [APIController::class, 'resource']);
-    Route::post('{model_name}', [APIController::class, 'createResource']);
-    Route::post('{model_name}/upload_file', [APIController::class, 'upload_file']);
-    Route::patch('{model_name}/{row_id}', [APIController::class, 'updateResource']);
-    Route::delete('{model_name}/{row_id}', [APIController::class, 'deleteResource']);
 });
 
 Route::group(['prefix' => 'admin'], function () {
