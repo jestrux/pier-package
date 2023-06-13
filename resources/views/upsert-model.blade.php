@@ -2,7 +2,7 @@
     <div class="-mt-4 mb-6">
         <div class="bg-white shadow-sm fixed inset-x-0 py-3 z-10" style="top: 0">
             <div class="container mx-auto flex items-center">
-                <button onclick="history.back"
+                <button onclick="history.back()"
                     class="inline-flex items-center text-xs uppercase tracking-wider border rounded pt-2 pb-1 px-3 hover:bg-gray-100">
                     <svg class="w-4 mr-3 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
