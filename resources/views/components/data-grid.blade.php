@@ -28,7 +28,7 @@
                 </a>
 
                 @if ($showSearch)
-                    <x-pier-search-bar class="border border-gray-300 w-72 px-5 py-2" placeholder="Type to search..." />
+                    <x-pier-search-input class="border border-gray-300 w-72 px-5 py-2" placeholder="Type to search..." />
                 @endif
             </div>
         @endif
