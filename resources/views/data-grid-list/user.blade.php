@@ -9,7 +9,7 @@
             <div
                 class="h-full w-full py-3 px-4 relative rounded overflow-hidden bg-white shadow border border-gray-200 flex flex-col items-center text-center">
                 @isset($image)
-                    <div class="-mx-1 mb-3 relative rounded-full overflow-hidden w-10/12 aspect-square">
+                    <div class="mb-3 relative rounded-full overflow-hidden w-10/12 aspect-square">
                         {!! eval('?>' . Blade::compileString($image)) !!}
                     </div>
                 @elseif(isset($item->{$imageField}) && $item->{$imageField} != null)

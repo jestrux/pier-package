@@ -8,7 +8,7 @@
         <div id="item{{ $item->_id }}" class="group relative">
             <div class="h-full py-3 px-4 relative rounded w-full bg-white shadow border border-gray-200">
                 @isset($image)
-                    <div class="-mx-1 relative h-40 mb-3 w-full overflow-hidden">
+                    <div class="relative mb-3 w-full overflow-hidden">
                         {!! eval('?>' . Blade::compileString($image)) !!}
                     </div>
                 @elseif(isset($item->{$imageField}) && $item->{$imageField} != null)
