@@ -2,10 +2,11 @@
     $model = $modelDetails;
     $data = $modelData;
     $compiledSlot = Blade::compileString($slot);
-    $plain = $plain ?? !str_contains($compiledSlot, 'Jestrux\Pier\View\Components');
+    $plain = !is_null($plain) ? $plain : !(str_contains($compiledSlot, 'pier-ref') || str_contains($compiledSlot, 'Jestrux\Pier\View\Components'));
+    $plain = filter_var($plain, FILTER_VALIDATE_BOOLEAN);
 @endphp
 
-@if ($plain && $plain != 'false')
+@if ($plain)
     {!! eval('?>' . $compiledSlot) !!}
 @else
     <div id="pierComponent{{ $instanceId }}" pier-data-component="{{ $instanceId }}" x-data="pierComponent{{ $instanceId }}"
