@@ -82,6 +82,4 @@ Route::group(['prefix' => 'admin'], function () {
             return $model;
         });
     })->name('pier-export-data');
-
-    Route::view('/upsertModel/{model}/{rowId?}', 'pier::upsert-model');
 });
