@@ -98,7 +98,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["resetFilters", "setSelectedModel"]),
+    ...mapActions(["setFilter", "resetFilters", "setSelectedModel"]),
     setupModel() {
       this.resetFilters();
 
