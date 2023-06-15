@@ -19,6 +19,7 @@ class DataGrid extends Component {
     public $instanceId;
     public $lean;
     public $showActions;
+    public $showAddButton = true;
     public $showSearch;
 
     function modifiedFilters($filters){
@@ -31,25 +32,25 @@ class DataGrid extends Component {
     function filtersWithAnd($filters){
         $newFilters = [];
         $keys = collect($filters)->keys();
-        for ($i=0; $i < count($keys); $i++) { 
+        for ($i=0; $i < count($keys); $i++) {
             $key = $keys[$i];
             $shortKey = $i == 0 ? $key :  str_replace("where", "andWhere", $key);
-            
+
             $newFilters["andWhere$shortKey"] = $filters[$key];
         }
-        
+
         return $newFilters;
     }
 
     public function __construct(
-        $model, 
+        $model,
         $noCss = false,
         $template = "default",
         $redirectTo = null,
-        $filters = [], 
-        $imageField = "image", 
-        $metaField = null, 
-        $titleField = "title", 
+        $filters = [],
+        $imageField = "image",
+        $metaField = null,
+        $titleField = "title",
         $descriptionField = "description",
         $lean = false,
         $showActions = true,

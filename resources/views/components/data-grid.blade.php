@@ -14,12 +14,16 @@
 
 <div x-data="pierComponent{{ $instanceId }}" x-init="init()">
     <div class="container max-w-6xl mx-auto">
-        @if (!$lean)
+        @if (!$lean && ($showAddButton || $showSearch))
             <div class="mb-5 flex items-center justify-between">
-                <x-pier-add-button :model="$model" />
+                @if ($showAddButton)
+                    <x-pier-add-button :model="$model" />
+                @endif
 
                 @if ($showSearch)
-                    <x-pier-search-input class="border border-gray-300 w-72 px-3 h-10 rounded placeholder:text-black/20 focus:outline-none" placeholder="Type to search..." />
+                    <x-pier-search-input
+                        class="border border-gray-300 w-72 px-3 h-10 rounded placeholder:text-black/20 focus:outline-none"
+                        placeholder="Type to search..." />
                 @endif
             </div>
         @endif
@@ -69,16 +73,16 @@
                     }));
 
                     let body = {
-                        model: "{{ $model }}",
-                        template: "{{ $template }}",
-                        imageField: "{{ $imageField }}",
-                        metaField: "{{ $metaField }}",
-                        titleField: "{{ $titleField }}",
-                        descriptionField: "{{ $descriptionField }}",
-                        image: "{{ isset($image) ? $image : null }}",
-                        meta: "{{ isset($meta) ? $meta : null }}",
-                        title: "{{ isset($title) ? $title : null }}",
-                        description: "{{ isset($description) ? $description : null }}"
+                        model: `{{ $model }}`,
+                        template: `{{ $template }}`,
+                        imageField: `{{ $imageField }}`,
+                        metaField: `{{ $metaField }}`,
+                        titleField: `{{ $titleField }}`,
+                        descriptionField: `{{ $descriptionField }}`,
+                        image: `{{ isset($image) ? $image : null }}`,
+                        meta: `{{ isset($meta) ? $meta : null }}`,
+                        title: `{{ isset($title) ? $title : null }}`,
+                        description: `{{ isset($description) ? $description : null }}`
                     };
 
                     body = Object.fromEntries(Object.entries(body).filter(([key, value]) => {
