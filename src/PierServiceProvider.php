@@ -4,10 +4,13 @@ namespace Jestrux\Pier;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Jestrux\Pier\View\Components\ActionButtons;
+use Jestrux\Pier\View\Components\AddButton;
 use Jestrux\Pier\View\Components\Data;
 use Jestrux\Pier\View\Components\DataGrid;
 use Jestrux\Pier\View\Components\FilterButton;
 use Jestrux\Pier\View\Components\Form;
+use Jestrux\Pier\View\Components\Grid;
 use Jestrux\Pier\View\Components\SearchInput;
 
 // use Jestrux\Pier\Pier;
@@ -58,7 +61,10 @@ class PierServiceProvider extends ServiceProvider
             FilterButton::class,
             Form::class,
             SearchInput::class,
+            AddButton::class,
+            ActionButtons::class,
             DataGrid::class,
+            Grid::class
         ]);
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'pier');
         $this->registerRoutes();
@@ -71,11 +77,11 @@ class PierServiceProvider extends ServiceProvider
      */
     protected function registerRoutes()
     {
-        // Route::redirect('/pier-admin', '/pier/editor');
         Route::group($this->routeConfiguration(), function () {
             $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         });
 
+        $this->loadRoutesFrom(__DIR__.'/../routes/pier-internals.php');
         $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
     }
 

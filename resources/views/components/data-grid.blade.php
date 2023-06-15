@@ -16,19 +16,10 @@
     <div class="container max-w-6xl mx-auto">
         @if (!$lean)
             <div class="mb-5 flex items-center justify-between">
-                <a href="{{ url('/admin/upsertModel/' . $model) }}{{ !is_null($redirectTo) ? '?redirectTo=' . $redirectTo : '' }}"
-                    type="button"
-                    class="inline-flex items-center focus:outline-none px-3 py-1 leading-none mr-4 border-2 border-black uppercase text-xs tracking-wide font-semibold bg-transparent text-black rounded-full">
-                    <svg class="w-5 mr-1 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                    <span class="mr-1">Add {{ $model }}</span>
-                </a>
+                <x-pier-add-button :model="$model" />
 
                 @if ($showSearch)
-                    <x-pier-search-input class="border border-gray-300 w-72 px-5 py-2" placeholder="Type to search..." />
+                    <x-pier-search-input class="border border-gray-300 w-72 px-3 h-10 rounded placeholder:text-black/20 focus:outline-none" placeholder="Type to search..." />
                 @endif
             </div>
         @endif
