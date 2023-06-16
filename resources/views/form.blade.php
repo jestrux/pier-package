@@ -249,6 +249,17 @@
                 .value = "");
         }, false);
 
+        if(window.PierFormLoaded) {
+            window.loadPierForm({
+                pierFormId,
+                pierModel,
+                pierModelValues,
+                // onPierFormSuccess(data, el) {
+                //     console.log("On main form success: ", data, el);
+                // }
+            });
+        }
+
         window.addEventListener("PierForm:loaded", () => {
             window.loadPierForm = function({
                 pierFormId,
