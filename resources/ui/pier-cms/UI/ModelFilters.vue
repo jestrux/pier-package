@@ -198,7 +198,7 @@ export default {
               return (
                 <div class="ModelFilterField flex items-center justify-between gap-3">
                   <span class="inline-block first-letter:uppercase flex-1">
-                    {field.label.replace(/_/g, " ")}
+                    {field.label ? field.label.replace(/_/g, " ") : ""}
                   </span>
                   <div
                     key={field._id}

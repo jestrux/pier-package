@@ -36,11 +36,14 @@
 <template>
   <div class="input-group" style="margin: 0">
     <template v-if="field">
+      <input type="hidden" :name="field.label" :value="val" />
+      
       <label
         v-if="!hideLabel"
         class="inline-block first-letter:uppercase"
         :for="field.label"
       >{{ (field.cleanLabel ? field.cleanLabel : field.label).replace(/_/g, ' ') }}</label>
+
 
       <bc-image-field
         v-if="field.type == 'image'"
@@ -49,6 +52,7 @@
         :url="val"
         :is-dp="field.meta.face"
         :required="field.required"
+        :meta="field.meta"
       />
       
       <FileField

@@ -72,11 +72,11 @@
   <div id="bcImageWrapper">
     <label>
       <span class="inline-block first-letter:uppercase">
-        {{ label.replace(/_/g, " ") }}
+        {{ label ? label.replace(/_/g, " ") : '' }}
       </span>
       &nbsp;
 
-      <div v-if="src === null && (imageUploadUrl || unsplashClientId)">
+      <div v-if="(src === null || !showPreview) && (imageUploadUrl || unsplashClientId)">
         <button
           type="button"
           v-if="imageUploadUrl && imageUploadUrl.length"
@@ -123,14 +123,14 @@
       <button
         class="text-primary font-semibold"
         type="button"
-        v-if="src !== null"
+        v-else-if="src !== null"
         @click="src = null"
       >
         Change
       </button>
     </label>
 
-    <div v-if="src === null">
+    <div v-if="src === null || !showPreview">
       <LinkField
         v-if="source === 1"
         v-model="src"
@@ -152,6 +152,8 @@
       />
     </div>
 
+    <FieldPreview v-else-if="src !== null" type="image" :url="src" :isDp="isDp" />
+
     <div style="position: relative; pointer-events: none">
       <input
         style="position: absolute; top: -3rem; opacity: 0"
@@ -160,8 +162,6 @@
         :required="required"
       />
     </div>
-
-    <FieldPreview v-if="src !== null" type="image" :url="src" :isDp="isDp" />
   </div>
 </template>
 
@@ -178,7 +178,7 @@ export default {
       type: String,
       default: "Image",
     },
-    isDp: Boolean,
+    meta: Object,
     required: Boolean,
   },
   inject: ["PierCMSConfig"],
@@ -197,6 +197,14 @@ export default {
     };
   },
   computed: {
+    isDp() {
+      return this.meta && this.meta.face;
+    },
+    showPreview() {
+      if(!this.meta || this.meta.showPreview == undefined) return true;
+
+      return this.meta.showPreview;
+    },
     unsplashClientId() {
       return this.PierCMSConfig.unsplashClientId;
     },

@@ -122,7 +122,7 @@
 
 <template>
   <div id="fileUploader">
-    <img :src="src" alt="" width="100%" v-if="src">
+    <!-- <img :src="src" alt="" width="100%" v-if="src"> -->
 
     <div style="position:relative">
       <div id="fileDrop"></div>

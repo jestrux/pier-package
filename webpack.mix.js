@@ -10,4 +10,5 @@ mix.config.webpackConfig.output = {
 
 mix.js('resources/ui/pier-editor/index.js', 'js/pier-editor.js')
     .js('resources/ui/pier-cms/index.js', 'js/pier-cms.js')
-    .js('resources/ui/pier-form/index.js', 'js/pier-form.js');;
+    .js('resources/ui/pier-form/index.js', 'js/pier-form.js')
+    .js('resources/ui/pier-form-field/index.js', 'js/pier-form-field.js');
