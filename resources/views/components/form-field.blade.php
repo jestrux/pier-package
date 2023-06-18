@@ -1,46 +1,52 @@
-<div id="{{ $instanceId }}" class="PierFormFieldWrapper">
-    <pier-form-field :field="{{ json_encode($field) }}" />
+@php
+    if (!isset($field['meta'])) {
+        $field['meta'] = [];
+    }
+    
+    $uploadDir = env('PIER_UPLOAD_DIR') ?? null;
+    if (!is_null($uploadDir) && strlen($uploadDir) > 0) {
+        $uploadDir = url("api/$uploadDir/upload_file");
+    }
+    
+    $fieldProps = [
+        'unsplashClientId' => env('PIER_UNSPLASH_CLIENT_ID'),
+        'fileUploadUrl' => $uploadDir,
+        's3' => [
+            'bucketName' => env('PIER_S3_BUCKET'),
+            'region' => env('PIER_S3_REGION'),
+            'accessKeyId' => env('PIER_S3_ACCESS_KEY_ID'),
+            'secretAccessKey' => env('PIER_S3_SECRET_ACCESS_KEY'),
+        ],
+    ];
+@endphp
+
+<div class="pier-form-fields">
+    <div id="{{ $instanceId }}" class="PierFormFieldWrapper" data-field="{{ json_encode($field) }}"
+        data-value="{{ $value }}" on-change="{{ $onChange }}">
+    </div>
 </div>
 
-<script>
-    window.appendComponentScript = () => {
-        return new Promise((resolve, reject) => {
-            const filepath = "{{ asset('pier/js/pier-form-field.js') }}";
+<script defer>
+    window.formFieldProps = {!! json_encode($fieldProps) !!};
 
-            if (document.querySelector('head script[src="' + filepath + '"]'))
-                return resolve();
+    (() => {
+        const filepath = "{{ asset('pier/js/pier-form-field.js') }}";
 
-            const script = document.createElement("script");
-            script.setAttribute("type", "text/javascript");
-            script.setAttribute("src", filepath);
-            document.querySelector("head").appendChild(script);
+        if (document.querySelector('script[src="' + filepath + '"]'))
+            return
 
-            script.onload = resolve();
-        });
-    };
+        const script = document.createElement("script");
+        script.setAttribute("type", "text/javascript");
+        script.setAttribute("src", filepath);
+        script.setAttribute("defer", "defer");
+        document.body.appendChild(script);
 
-    if (window.initializePierFormFields)
-        window.initializePierFormFields();
-    else {
-        appendComponentScript().then(function() {
-            window.initializePierFormFields = function() {
-                setTimeout(() => {
-                    document.querySelectorAll(".PierFormFieldWrapper").forEach(field => {
-                        PierFormField(`#${field.id}`, {
-                            "unsplashClientId": "{{ env('PIER_UNSPLASH_CLIENT_ID') }}",
-                            "fileUploadUrl": "{{ env('PIER_UPLOAD_DIR') != null && strlen(env('PIER_UPLOAD_DIR')) > 0 ? url('api/' . env('PIER_UPLOAD_DIR') . '/upload_file') : null }}",
-                            "s3": {
-                                bucketName: "{{ env('PIER_S3_BUCKET') }}",
-                                region: "{{ env('PIER_S3_REGION') }}",
-                                accessKeyId: "{{ env('PIER_S3_ACCESS_KEY_ID') }}",
-                                secretAccessKey: "{{ env('PIER_S3_SECRET_ACCESS_KEY') }}",
-                            },
-                        });
-                    })
-                }, 200);
-            }
-
-            initializePierFormFields();
-        });
-    }
+        const link = document.createElement("link");
+        link.setAttribute("rel", "stylesheet");
+        link.setAttribute("href", "{{ asset('pier/css/form.css') }}");
+        link.setAttribute("defer", "defer");
+        document.querySelector("head").appendChild(link);
+    })();
 </script>
+
+{{-- <script src="{{ asset('pier/js/pier-form-field.js') }}" defer></script> --}}

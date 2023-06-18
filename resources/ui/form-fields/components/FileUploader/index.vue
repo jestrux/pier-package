@@ -189,7 +189,7 @@
         
         em.on('complete', function(status, payload) {
           self.uploading = false;
-          console.log(status, payload);
+          // console.log(status, payload);
           // console.log("Completed successfully: ", status, payload);
 
           if(status)

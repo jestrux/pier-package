@@ -126,12 +126,7 @@
         url,
         title
     } = {}) {
-        const modalTitle = document.querySelector(`#${modalId} header`);
-        const modalContent = document.querySelector(`#${modalId} main`);
-
-        if (!modalContent || !url) return;
-
-        if (title) modalTitle.textContent = title;
+        if (!url) return;
 
         const res = await fetch(url, {
             method: "GET",
@@ -142,12 +137,21 @@
 
         const data = await res.text();
 
-        showPierModal(modalId, {
-            url,
-            title
-        });
+        const modalContent = document.querySelector(`#${modalId} main`);
 
-        return _loadPierContent(_htmlToElements(data), 0, modalContent, false);
+        if (modalContent) {
+            const modalTitle = document.querySelector(`#${modalId} header`);
+            if (title) modalTitle.textContent = title;
+
+            showPierModal(modalId, {
+                url,
+                title
+            });
+
+            return _loadPierContent(_htmlToElements(data), 0, modalContent, false);
+        } else {
+            return _loadPierContent(_htmlToElements(data), 0, document.querySelector(`#${modalId}`), false);
+        }
     }
 
     window.addEventListener("load", function() {

@@ -229,7 +229,7 @@ export default {
       default: function() {
         return {
           label: "",
-          type: {},
+          type: "",
           meta: {}
         };
       }

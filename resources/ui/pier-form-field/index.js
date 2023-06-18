@@ -3,36 +3,34 @@ import "./bootstrap";
 import PierEditorField from "../form-fields/PierEditorField";
 import * as API from "../API";
 
-const defaultConfig = {};
+Vue.component("pier-form-field", PierEditorField);
 
-window.addEventListener("PierFormField:loaded", () => {
-	console.log("On form loaded....");
-})
+document.querySelectorAll(".PierFormFieldWrapper").forEach((node) => {
+	const value = node.getAttribute("data-value");
+	let field = node.getAttribute("data-field");
+	const onChange = eval(node.getAttribute("on-change"));
 
-window.PierFormField = (el, config) => {
-	const PierCMSConfig = {
-		...defaultConfig,
-		...config,
-	};
-
-	Vue.component("pier-form-field", PierEditorField);
+	try {
+		field = JSON.parse(field);
+	} catch (error) {}
 
 	new Vue({
-		el,
-		data() {
-			return {
-				val: "https://images.unsplash.com/photo-1686676844352-bd0f1fdf3465?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxNjE2NXwwfDF8YWxsfDl8fHx8fHwyfHwxNjg2NzQ4MTA0fA&ixlib=rb-4.0.3&q=80&w=1080",
-			};
-		},
+		el: node,
 		provide() {
 			return {
-				PierCMSConfig,
-				API
+				PierCMSConfig: window.formFieldProps ?? {},
+				API,
 			};
 		},
+		render: (h) =>
+			h("pier-form-field", {
+				props: {
+					field,
+					value: value ?? "",
+				},
+				on: {
+					input: (e) => (e != value ? onChange.apply(null, [e]) : ""),
+				},
+			}),
 	});
-};
-
-console.log("Form field loader....");
-
-window.dispatchEvent(new CustomEvent("PierFormField:loaded"));
+});

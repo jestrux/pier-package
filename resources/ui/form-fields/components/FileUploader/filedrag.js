@@ -84,7 +84,7 @@ FileDrag.prototype.UploadFile = function (file) {
 		headers: { "content-type": "multipart/form-data" },
 		onUploadProgress: (progressEvent) => {
 			var per = (progressEvent.loaded * 100) / progressEvent.total;
-			console.log("Progress: ", per);
+			// console.log("Progress: ", per);
 			this.em.emit("progressed", per);
 		},
 	};
@@ -95,7 +95,7 @@ FileDrag.prototype.UploadFile = function (file) {
 	form.append("name", name);
 	form.append("ext", ext);
 
-	console.log("Upload path: ", this);
+	// console.log("Upload path: ", this);
 
 	axios
 		.post(this.upload_path, form, config)

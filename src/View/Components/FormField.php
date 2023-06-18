@@ -8,7 +8,7 @@ class FormField extends Component
 {
     public $instanceId;
 
-    public function __construct(public $field)
+    public function __construct(public $field, public $value = "", public $onChange = "")
     {
         $this->instanceId = "pierFormField" . bin2hex(random_bytes(6));
     }
