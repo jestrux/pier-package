@@ -10,6 +10,7 @@ use Jestrux\Pier\View\Components\Data;
 use Jestrux\Pier\View\Components\DataGrid;
 use Jestrux\Pier\View\Components\FilterButton;
 use Jestrux\Pier\View\Components\Form;
+use Jestrux\Pier\View\Components\FormField;
 use Jestrux\Pier\View\Components\Grid;
 use Jestrux\Pier\View\Components\Modal;
 use Jestrux\Pier\View\Components\SearchInput;
@@ -66,7 +67,8 @@ class PierServiceProvider extends ServiceProvider
             ActionButtons::class,
             DataGrid::class,
             Grid::class,
-            Modal::class
+            Modal::class,
+            FormField::class
         ]);
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'pier');
         $this->registerRoutes();
