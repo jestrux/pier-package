@@ -1,4 +1,4 @@
-@aware(['rowActions', 'onEdit'])
+@aware(['rowActions', 'onEdit', 'model'])
 
 @php
     if (!is_null($rowActions ?? null)) {

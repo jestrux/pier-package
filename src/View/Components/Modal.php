@@ -18,6 +18,6 @@ class Modal extends Component
 
     public function render()
     {
-        return view('pier::components.form');
+        return view('pier::components.modal');
     }
 }

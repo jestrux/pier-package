@@ -37,6 +37,46 @@
             Alpine.data("pierComponent{{ $instanceId }}", () => ({
                 ref: "pierComponent{{ $instanceId }}",
                 filters: {!! collect($filters)->toJson() !!},
+                fetchingModalContent: false,
+                openAddModal(e) {
+                    let modal = this.$el.closest("[pier-data-component]");
+                    modal = !modal ? null : modal.querySelector('.pier-upsert-modal-wrapper');
+
+                    if (modal) {
+                        e.preventDefault();
+                        this.updateModalForm({
+                            detail: {
+                                modalId: modal.getAttribute("modal-id"),
+                                rowId: null
+                            }
+                        });
+                    }
+                },
+                async updateModalForm({
+                    detail
+                }) {
+                    const form = this.$el.closest("[pier-data-component]").querySelector(
+                        `#${detail.modalId} .PierFormWrapper`);
+
+                    if (form) {
+                        let values = {};
+
+                        if (detail.rowId) {
+                            this.fetchingModalContent = true;
+                            values = await fetch(`/api/{{ $model->name }}/${detail.rowId}`).then(
+                                res => res.json());
+                            this.fetchingModalContent = false;
+                        }
+
+                        form.dispatchEvent(new CustomEvent('update-form-values', {
+                            detail: values
+                        }));
+
+                        window.showPierModal(detail.modalId, {
+                            title: `${values?._id ? 'Edit' : 'Add'} {{ $model->name }}`
+                        });
+                    }
+                },
                 async updatePierComponentContent() {
                     const parentEl = this.$el;
                     const activeEl = document.activeElement;

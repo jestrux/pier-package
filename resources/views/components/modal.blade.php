@@ -28,11 +28,19 @@
 </div>
 
 <script>
-    window.showPierModal(id = "sampleModal") {
+    window.showPierModal = function(id = "sampleModal", {
+        title
+    } = {}) {
         const modal = document.querySelector("#" + id);
+
+        if (!modal) return;
+
         modal.querySelectorAll("[data-micromodal-close]").forEach(el => {
-            el.addEventListener("click", () => hideModal(id))
-        })
+            el.addEventListener("click", () => hidePierModal(id))
+        });
+
+        if (title)
+            document.querySelector(`#${id} header`).textContent = title;
 
         try {
             MicroModal.show(id);
@@ -42,8 +50,10 @@
         }
     }
 
-    window.hidePierModal(id = "sampleModal") {
+    window.hidePierModal = function(id = "sampleModal") {
         const modal = document.querySelector("#" + id);
+
+        if (!modal) return;
 
         // window.MicroModalInitialized
         try {
@@ -112,7 +122,17 @@
         }
     };
 
-    window.loadPierModalContent = async function(url, container, appendData = false) {
+    window.loadPierModalContent = async function(modalId, {
+        url,
+        title
+    } = {}) {
+        const modalTitle = document.querySelector(`#${modalId} header`);
+        const modalContent = document.querySelector(`#${modalId} main`);
+
+        if (!modalContent || !url) return;
+
+        if (title) modalTitle.textContent = title;
+
         const res = await fetch(url, {
             method: "GET",
             headers: {
@@ -122,7 +142,12 @@
 
         const data = await res.text();
 
-        return _loadPierContent(_htmlToElements(data), 0, container, appendData);
+        showPierModal(modalId, {
+            url,
+            title
+        });
+
+        return _loadPierContent(_htmlToElements(data), 0, modalContent, false);
     }
 
     window.addEventListener("load", function() {

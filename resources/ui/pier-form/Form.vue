@@ -1,20 +1,22 @@
 <template>
   <form action="#" method="POST" @submit.prevent="saveRow">
     <div v-if="model">
-      <pier-form-fields :key="reloadFields" :fields="model.fields" :values="record" />
+      <pier-form-fields
+        :key="reloadFields"
+        :fields="model.fields"
+        :values="record"
+      />
     </div>
 
     <div class="my-7 flex justify-end">
-      <button type="submit" class="w-full px-12 py-0 h-12 bg-primary text-white border-primary text-sm uppercase tracking-wide font-bold focus:outline-none rounded-lg hover:opacity-90"
+      <button
+        type="submit"
+        class="w-full px-12 py-0 h-12 bg-primary text-white border-primary text-sm uppercase tracking-wide font-bold focus:outline-none rounded-lg hover:opacity-90"
         :class="{
           'pointer-events-none opacity-50': savingRecord || uploadingFile,
         }"
       >
-        {{
-          savingRecord
-            ? `SAVING ${model.name.toUpperCase()}...`
-            : "SUBMIT"
-        }}
+        {{ savingRecord ? `SAVING ${model.name.toUpperCase()}...` : "SUBMIT" }}
       </button>
     </div>
   </form>
@@ -36,17 +38,19 @@ export default {
 
     this.$el.classList.add("PierFormWrapper");
 
-		this.$el.addEventListener(
-			"autosave-reference-field",
-			({ detail } = {}) => {
-				if (this.modelName && this.values && this.values._id) {
-					API.updateRecord(this.modelName, {
-						...detail,
-						_id: this.values._id,
-					});
-				}
-			}
-		);
+    this.$el.addEventListener("autosave-reference-field", ({ detail } = {}) => {
+      if (this.modelName && this.values && this.values._id) {
+        API.updateRecord(this.modelName, {
+          ...detail,
+          _id: this.values._id,
+        });
+      }
+    });
+
+    this.$el.addEventListener("update-form-values", ({ detail } = {}) => {
+      this.record = detail;
+      this.reloadFields = detail ? detail._id : null;
+    });
   },
   data: function () {
     return {
@@ -86,26 +90,35 @@ export default {
 
         this.savingRecord = false;
 
-        if(typeof this.PierCMSConfig.onPierFormSuccess == "function")
+        if (typeof this.PierCMSConfig.onPierFormSuccess == "function")
           this.PierCMSConfig.onPierFormSuccess(record, this.$el);
         else {
-          showSuccessToast(this.PierCMSConfig.successMessage ?? `${this.modelName} created`);
-          if (this.PierCMSConfig.pierRedirectTo && this.PierCMSConfig.pierRedirectTo.length)
-            this.PierCMSConfig.location.href = this.PierCMSConfig.pierRedirectTo;
+          showSuccessToast(
+            this.PierCMSConfig.successMessage ?? `${this.modelName} created`
+          );
+          if (
+            this.PierCMSConfig.pierRedirectTo &&
+            this.PierCMSConfig.pierRedirectTo.length
+          )
+            this.PierCMSConfig.location.href =
+              this.PierCMSConfig.pierRedirectTo;
         }
 
         document.dispatchEvent(
           new CustomEvent("pier-form-success", {
             detail: {
-              record, el: this.$el
+              record,
+              el: this.$el,
             },
           })
         );
       } catch (error) {
-        if(typeof this.PierCMSConfig.onPierFormError == "function")
-          this.PierCMSConfig.onPierFormError(error, `Error creating ${this.modelName}:`);
-        else
-          handleNetworkError(error, `Error creating ${this.modelName}:`);
+        if (typeof this.PierCMSConfig.onPierFormError == "function")
+          this.PierCMSConfig.onPierFormError(
+            error,
+            `Error creating ${this.modelName}:`
+          );
+        else handleNetworkError(error, `Error creating ${this.modelName}:`);
         this.savingRecord = false;
       }
     },
@@ -117,7 +130,10 @@ export default {
         this.savingRecord = false;
 
         showSuccessToast(`${this.modelName} updated`);
-        if (this.PierCMSConfig.pierRedirectTo && this.PierCMSConfig.pierRedirectTo.length)
+        if (
+          this.PierCMSConfig.pierRedirectTo &&
+          this.PierCMSConfig.pierRedirectTo.length
+        )
           window.location.href = this.PierCMSConfig.pierRedirectTo;
       } catch (error) {
         handleNetworkError(error, `Error creating ${this.modelName}:`);
