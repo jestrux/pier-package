@@ -22,7 +22,8 @@
 
 <div class="pier-form-fields">
     <div id="{{ $instanceId }}" class="PierFormFieldWrapper" data-field="{{ json_encode($field) }}"
-        data-value="{{ $value }}" on-change="{{ $onChange }}">
+        data-value="{{ $value }}" data-model="{{ $model }}" data-row-id="{{ $rowId }}"
+        on-change="{{ $onChange }}">
     </div>
 </div>
 

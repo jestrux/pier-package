@@ -6,6 +6,8 @@
     $plain = filter_var($plain, FILTER_VALIDATE_BOOLEAN);
 @endphp
 
+@include('pier::utils')
+
 @if ($plain)
     {!! eval('?>' . $compiledSlot) !!}
 @else

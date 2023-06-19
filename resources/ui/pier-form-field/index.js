@@ -7,8 +7,11 @@ Vue.component("pier-form-field", PierEditorField);
 
 document.querySelectorAll(".PierFormFieldWrapper").forEach((node) => {
 	const value = node.getAttribute("data-value");
-	let field = node.getAttribute("data-field");
+	const model = node.getAttribute("data-model");
+	const rowId = node.getAttribute("data-row-id");
 	const onChange = eval(node.getAttribute("on-change"));
+
+	let field = node.getAttribute("data-field");
 
 	try {
 		field = JSON.parse(field);
@@ -29,7 +32,20 @@ document.querySelectorAll(".PierFormFieldWrapper").forEach((node) => {
 					value: value ?? "",
 				},
 				on: {
-					input: (e) => (e != value ? onChange.apply(null, [e]) : ""),
+					input: async (newValue) => {
+						if (newValue == value) return;
+
+						if (model && rowId) {
+							await API.updateRecord(model, {
+								[field.label || field.name]: newValue,
+								_id: rowId,
+							});
+						}
+
+						newValue != value
+							? onChange.apply(null, [newValue])
+							: "";
+					},
 				},
 			}),
 	});
