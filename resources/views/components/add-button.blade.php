@@ -11,7 +11,7 @@
             'class' =>
                 'h-9 inline-flex items-center focus:outline-none px-2 leading-none hover:bg-black/5 transition-colors duration-300 border border-neutral-300 uppercase text-xs tracking-wide font-semibold bg-transparent rounded',
         ]) }}
-        x-on:click="openAddModal"
+        x-on:click="openUpsertModal"
     >
 
         <svg class="w-4 ml-0.5 mr-1 mb-px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"

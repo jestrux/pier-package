@@ -1,3 +1,5 @@
+@aware(['model'])
+
 @php
     $lean = $lean ?? false;
     $showActions = $showActions ?? true;
@@ -56,7 +58,7 @@
 
             @if (!$lean && $showActions)
                 <div class="absolute right-3 top-3">
-                    <x-pier-action-buttons :row-id="$item->_id" />
+                    <x-pier-action-buttons :model="$model ?? null" :row-id="$item->_id" />
                 </div>
             @endif
         </div>

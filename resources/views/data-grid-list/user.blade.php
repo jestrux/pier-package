@@ -1,3 +1,5 @@
+@aware(['model'])
+
 @php
     $lean = $lean ?? false;
     $showActions = $showActions ?? true;
@@ -9,13 +11,17 @@
             <div
                 class="h-full w-full p-1 relative rounded overflow-hidden bg-white shadow border border-neutral-200 flex flex-col items-center text-center">
                 @isset($image)
-                    <div class="relative rounded-full overflow-hidden w-10/12 aspect-square">
-                        {!! eval('?>' . Blade::compileString($image)) !!}
+                    <div class="pt-4 px-8 w-full -mx-1">
+                        <div class="relative rounded-full overflow-hidden w-full aspect-square">
+                            {!! eval('?>' . Blade::compileString($image)) !!}
+                        </div>
                     </div>
                 @elseif(isset($item->{$imageField}) && $item->{$imageField} != null)
-                    <div class="-mx-1 relative rounded-full overflow-hidden w-10/12 aspect-square">
-                        <img src="{{ $item->{$imageField} }}" class="absolute inset-0 h-full w-full object-cover"
-                            alt="" />
+                    <div class="pt-4 px-8 w-full -mx-1">
+                        <div class="relative rounded-full overflow-hidden w-full aspect-square">
+                            <img src="{{ $item->{$imageField} }}" class="absolute inset-0 h-full w-full object-cover"
+                                alt="" />
+                        </div>
                     </div>
                 @endisset
 
@@ -58,7 +64,7 @@
 
             @if (!$lean && $showActions)
                 <div class="absolute right-3 top-3">
-                    <x-pier-action-buttons :row-id="$item->_id" />
+                    <x-pier-action-buttons :model="$model ?? null" :row-id="$item->_id" />
                 </div>
             @endif
         </div>

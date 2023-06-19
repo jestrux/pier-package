@@ -11,6 +11,13 @@
 @else
     <div id="pierComponent{{ $instanceId }}" pier-data-component="{{ $instanceId }}" x-data="pierComponent{{ $instanceId }}"
         x-init="init()" {{ $attributes }}>
+
+        <div class="pier-upsert-modal-wrapper" modal-id="pierModal{{ $instanceId }}"
+            @update-pier-modal-form.window="updateModalForm">
+            <x-pier-modal id="pierModal{{ $instanceId }}" title="Edit {{ $model->name }}" placement="right"
+                width="700px" />
+        </div>
+
         {!! eval('?>' . $compiledSlot) !!}
     </div>
 
@@ -38,8 +45,9 @@
                 ref: "pierComponent{{ $instanceId }}",
                 filters: {!! collect($filters)->toJson() !!},
                 fetchingModalContent: false,
-                openAddModal(e) {
-                    let modal = this.$el.closest("[pier-data-component]");
+                openUpsertModal(e) {
+                    const el = this.$el;
+                    let modal = el.closest("[pier-data-component]");
                     modal = !modal ? null : modal.querySelector('.pier-upsert-modal-wrapper');
 
                     if (modal) {
@@ -47,7 +55,7 @@
                         this.updateModalForm({
                             detail: {
                                 modalId: modal.getAttribute("modal-id"),
-                                rowId: null
+                                rowId: el.getAttribute("data-row-id")
                             }
                         });
                     }
@@ -74,6 +82,11 @@
 
                         window.showPierModal(detail.modalId, {
                             title: `${values?._id ? 'Edit' : 'Add'} {{ $model->name }}`
+                        });
+                    } else {
+                        window.loadPierModalContent(detail.modalId, {
+                            url: `/admin/upsertModel/{{ $model->name }}/${detail.rowId}?plain=true`,
+                            title: `${detail.rowId ? 'Edit' : 'Add'} {{ $model->name }}`
                         });
                     }
                 },
