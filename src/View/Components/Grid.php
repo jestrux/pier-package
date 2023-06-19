@@ -21,7 +21,6 @@ class Grid extends Component
         public $showActions = true,
         public $rowActions = null,
     ) {
-        $this->upsertModalId = "pierModal" . bin2hex(random_bytes(6));
         $this->gridData = $data;
     }
 

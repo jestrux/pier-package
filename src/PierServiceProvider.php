@@ -14,6 +14,7 @@ use Jestrux\Pier\View\Components\FormField;
 use Jestrux\Pier\View\Components\Grid;
 use Jestrux\Pier\View\Components\Modal;
 use Jestrux\Pier\View\Components\SearchInput;
+use Jestrux\Pier\View\Components\Stack;
 
 // use Jestrux\Pier\Pier;
 
@@ -40,11 +41,11 @@ class PierServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('pier.php'),
+                __DIR__ . '/../config/config.php' => config_path('pier.php'),
             ], 'pier-config');
-    
+
             $this->publishes([
-                __DIR__.'/../resources/assets' => public_path('pier'),
+                __DIR__ . '/../resources/assets' => public_path('pier'),
             ], 'pier-assets');
         }
     }
@@ -56,8 +57,8 @@ class PierServiceProvider extends ServiceProvider
      */
     private function registerResources()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'pier');
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'pier');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->loadViewComponentsAs('pier', [
             Data::class,
             FilterButton::class,
@@ -68,9 +69,10 @@ class PierServiceProvider extends ServiceProvider
             DataGrid::class,
             Grid::class,
             Modal::class,
-            FormField::class
+            FormField::class,
+            Stack::class
         ]);
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'pier');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'pier');
         $this->registerRoutes();
     }
 
@@ -82,21 +84,22 @@ class PierServiceProvider extends ServiceProvider
     protected function registerRoutes()
     {
         Route::group($this->routeConfiguration(), function () {
-            $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+            $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
         });
 
-        $this->loadRoutesFrom(__DIR__.'/../routes/pier-internals.php');
-        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
+        $this->loadRoutesFrom(__DIR__ . '/../routes/pier-internals.php');
+        $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
     }
 
-    protected function routeConfiguration(){
+    protected function routeConfiguration()
+    {
         $prefix = config('pier.prefix');
         $middleware = config('pier.middleware');
-        
+
         $configs = [];
-        if($prefix) $configs['prefix'] = $prefix;
-        if($middleware) $configs['middleware'] = $middleware;
-        
+        if ($prefix) $configs['prefix'] = $prefix;
+        if ($middleware) $configs['middleware'] = $middleware;
+
         return $configs;
     }
 }

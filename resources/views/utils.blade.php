@@ -57,6 +57,17 @@
         }
     };
 
+    window.updatePierRow = (model, rowId, newValues) => {
+        return fetch(`/api/${model}/${rowId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify(newValues)
+        });
+    }
+
     window.loadPierSectionContent = async function(sectionSelector, {
         url,
     } = {}) {
@@ -74,9 +85,7 @@
         return _loadPierContent(_htmlToElements(data), 0, document.querySelector(sectionSelector), false);
     }
 
-    window.appendAlpineJS = (
-        filepath = "//unpkg.com/alpinejs"
-    ) => {
+    window.appendPierScript = (filepath) => {
         return new Promise((resolve, reject) => {
             if (document.querySelector('head script[src="' + filepath + '"]'))
                 return resolve();
@@ -86,7 +95,13 @@
             script.setAttribute("src", filepath);
             document.querySelector("head").appendChild(script);
 
-            script.onload = resolve();
+            script.onload = setTimeout(() => {
+                resolve();
+            }, 300);
         });
     };
+
+    window.appendAlpineJS = () => appendPierScript("//unpkg.com/alpinejs");
+
+    window.appendSortable = () => appendPierScript("https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js");
 </script>
