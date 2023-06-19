@@ -6,7 +6,11 @@
     $plain = filter_var($plain, FILTER_VALIDATE_BOOLEAN);
 @endphp
 
-@include('pier::utils')
+<style>
+    :root {
+        --primary-color: {{ env('APP_COLOR') ?? '#2c5282' }};
+    }
+</style>
 
 @if ($plain)
     {!! eval('?>' . $compiledSlot) !!}
@@ -14,14 +18,16 @@
     <div id="pierComponent{{ $instanceId }}" pier-data-component="{{ $instanceId }}" x-data="pierComponent{{ $instanceId }}"
         x-init="init()" {{ $attributes }}>
 
+        {!! eval('?>' . $compiledSlot) !!}
+
         <div class="pier-upsert-modal-wrapper" modal-id="pierModal{{ $instanceId }}"
             @update-pier-modal-form.window="updateModalForm">
             <x-pier-modal id="pierModal{{ $instanceId }}" title="Edit {{ $model->name }}" placement="right"
                 width="700px" />
         </div>
-
-        {!! eval('?>' . $compiledSlot) !!}
     </div>
+
+    @include('pier::utils')
 
     <script>
         window.appendAlpineJS = (
