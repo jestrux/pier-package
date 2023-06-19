@@ -30,6 +30,8 @@
 </div>
 
 <script>
+    appendAlpineJS();
+
     window.showPierModal = function(id = "sampleModal", {
         title
     } = {}) {

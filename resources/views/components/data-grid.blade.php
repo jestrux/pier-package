@@ -35,23 +35,9 @@
 </div>
 
 @if (!$lean && $showSearch)
+    @include('pier::utils')
+
     <script>
-        const appendAlpineJS = (
-            filepath = "//unpkg.com/alpinejs"
-        ) => {
-            return new Promise((resolve, reject) => {
-                if (document.querySelector('head script[src="' + filepath + '"]'))
-                    return resolve();
-
-                const script = document.createElement("script");
-                script.setAttribute("type", "text/javascript");
-                script.setAttribute("src", filepath);
-                document.querySelector("head").appendChild(script);
-
-                script.onload = resolve();
-            });
-        };
-
         appendAlpineJS();
 
         document.addEventListener('alpine:init', () => {

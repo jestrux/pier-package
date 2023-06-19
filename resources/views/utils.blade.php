@@ -73,4 +73,20 @@
 
         return _loadPierContent(_htmlToElements(data), 0, document.querySelector(sectionSelector), false);
     }
+
+    window.appendAlpineJS = (
+        filepath = "//unpkg.com/alpinejs"
+    ) => {
+        return new Promise((resolve, reject) => {
+            if (document.querySelector('head script[src="' + filepath + '"]'))
+                return resolve();
+
+            const script = document.createElement("script");
+            script.setAttribute("type", "text/javascript");
+            script.setAttribute("src", filepath);
+            document.querySelector("head").appendChild(script);
+
+            script.onload = resolve();
+        });
+    };
 </script>
