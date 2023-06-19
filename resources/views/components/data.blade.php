@@ -9,6 +9,8 @@
 @if ($plain)
     {!! eval('?>' . $compiledSlot) !!}
 @else
+    @include('pier::utils')
+
     <div id="pierComponent{{ $instanceId }}" pier-data-component="{{ $instanceId }}" x-data="pierComponent{{ $instanceId }}"
         x-init="init()" {{ $attributes }}>
 
@@ -21,7 +23,9 @@
         </div>
     </div>
 
-    @include('pier::utils')
+    <template id="slotTemplate">
+        {{ $slot }}
+    </template>
 
     <style>
         :root {
@@ -88,7 +92,6 @@
                     const activeElementIsWithinBounds = parentEl.contains(activeEl);
 
                     const model = "{{ $model->name }}";
-                    const view = encodeURIComponent(`{{ $slot }}`);
                     // exclude filters with empty, null or undefined values
                     let filters = Object.fromEntries(Object.entries(this.filters).filter(([key,
                         value
@@ -114,7 +117,11 @@
                         body: JSON.stringify({
                             model,
                             filters,
-                            view: decodeURIComponent(view),
+                            imageField: "{{ $imageField ?? null }}",
+                            metaField: "{{ $metaField ?? null }}",
+                            titleField: "{{ $titleField ?? null }}",
+                            descriptionField: "{{ $descriptionField ?? null }}",
+                            view: document.querySelector("#slotTemplate").innerHTML,
                         })
                     });
 

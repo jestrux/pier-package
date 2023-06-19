@@ -42,8 +42,22 @@ class Data extends Component
         return $newFilters;
     }
 
-    public function __construct($model, $rowId = null, $filters = [], $orderBy = "", $groupBy = "", $limit = null, $pluck = null, $q = null, $plain = null)
-    {
+    public function __construct(
+        $model,
+        $rowId = null,
+        $filters = [],
+        $orderBy = "",
+        $groupBy = "",
+        $limit = null,
+        $pluck = null,
+        $q = null,
+        $plain = null,
+        public $imageField = null,
+        public $metaField = null,
+        public $titleField = null,
+        public $descriptionField = null,
+        public $sortField = "index",
+    ) {
         $this->model = $model;
         $this->filters = $filters;
         $this->orderBy = $orderBy;

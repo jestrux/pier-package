@@ -39,7 +39,7 @@ Route::post('/data-refetch', function (Request $request) {
 
     view()->addLocation($file_location);
 
-    return view($filename, ["modelData" => $modelData, "modelDetails" => $modelDetails]);
+    return view($filename, [...$request->all(), "modelData" => $modelData, "modelDetails" => $modelDetails]);
 });
 
 Route::post('/data-grid-refetch', function (Request $request) {

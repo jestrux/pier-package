@@ -7,6 +7,7 @@ use Illuminate\View\Component;
 class Stack extends Component
 {
     public $stackData;
+    public $stackFields;
     public $stackModel;
     public $instanceId;
 
@@ -22,6 +23,13 @@ class Stack extends Component
         $this->instanceId = "pierStack" . bin2hex(random_bytes(6));
         $this->stackData = $data;
         $this->stackModel = $model;
+        $this->stackFields = [
+            'imageField' => $imageField,
+            'metaField' => $metaField,
+            'titleField' => $titleField,
+            'titleField' => $titleField,
+            'descriptionField' => $descriptionField,
+        ];
     }
 
     public function render()
