@@ -36,10 +36,19 @@ document.querySelectorAll(".PierFormFieldWrapper").forEach((node) => {
 						if (newValue == value) return;
 
 						if (model && rowId) {
-							await API.updateRecord(model, {
-								[field.label || field.name]: newValue,
-								_id: rowId,
-							});
+							let res;
+							if (rowId == "new") {
+								res = await API.insertRecord(model, {
+									[field.name || field.label]: newValue,
+								});
+							} else {
+								res = await API.updateRecord(model, {
+									[field.name || field.label]: newValue,
+									_id: rowId,
+								});
+							}
+
+							newValue = res;
 						}
 
 						newValue != value
