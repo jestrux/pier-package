@@ -6,12 +6,6 @@
     $plain = filter_var($plain, FILTER_VALIDATE_BOOLEAN);
 @endphp
 
-<style>
-    :root {
-        --primary-color: {{ env('APP_COLOR') ?? '#2c5282' }};
-    }
-</style>
-
 @if ($plain)
     {!! eval('?>' . $compiledSlot) !!}
 @else
@@ -28,6 +22,12 @@
     </div>
 
     @include('pier::utils')
+
+    <style>
+        :root {
+            --primary-color: {{ env('APP_COLOR') ?? '#2c5282' }};
+        }
+    </style>
 
     <script>
         appendAlpineJS();
