@@ -52,6 +52,10 @@
             modal.classList.add("is-open");
             modal.setAttribute("aria-hidden", "false");
         }
+
+        return new Promise((res) => {
+            modal.onCloseResolver = res;
+        })
     }
 
     window.hidePierModal = function(id = "sampleModal") {
@@ -66,6 +70,8 @@
             modal.classList.remove("is-open");
             modal.setAttribute("aria-hidden", "true");
         }
+
+        if (modal.onCloseResolver) modal.onCloseResolver();
     }
 
     window.loadPierModalContent = async function(modalId, {
