@@ -11,5 +11,6 @@ Route::get('/admin/upsertModel/{model}/{rowId?}', function ($model, $rowId = nul
         "rowId" => $rowId,
         "plain" => $_GET['plain'] ?? null,
         "successMessage" => $_GET['successMessage'] ?? null,
+        "onSave" => $_GET['onSave'] ?? null,
     ]);
 });

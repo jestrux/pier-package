@@ -5,7 +5,7 @@
 <div id="{{ $id }}"
     class="piermodal {{ $placement == 'right' ? 'piermodal-swipe' : 'piermodal-slide' }} {{ $open ? 'is-open' : '' }}"
     aria-hidden="{{ $open ? 'false' : 'true' }}">
-    <div class="piermodal__overlay" tabindex="-1" data-micromodal-close>
+    <div class="piermodal__overlay" tabindex="-1" data-pieromodal-close="{{ $id }}">
     </div>
 
     <div class="pointer-events-none fixed inset-0 z-[999] flex items-start justify-center md:py-12">
@@ -13,7 +13,7 @@
             role="dialog" aria-modal="true" aria-labelledby="modal-1-title" style="width: {{ $width }}">
             <div class="sticky z-10 bg-white border-b shadow-sm p-3 top-0 flex items-center gap-3">
                 <button class="w-7 h-7 rounded-full border flex items-center justify-center" aria-label="Close modal"
-                    data-micromodal-close>
+                    data-pieromodal-close="{{ $id }}">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -39,7 +39,7 @@
 
         if (!modal) return;
 
-        modal.querySelectorAll("[data-micromodal-close]").forEach(el => {
+        modal.querySelectorAll(`[data-pieromodal-close="${id}"]`).forEach(el => {
             el.addEventListener("click", () => hidePierModal(id))
         });
 
@@ -58,7 +58,7 @@
         })
     }
 
-    window.hidePierModal = function(id = "sampleModal") {
+    window.hidePierModal = function(id = "sampleModal", data) {
         const modal = document.querySelector("#" + id);
 
         if (!modal) return;
@@ -71,7 +71,7 @@
             modal.setAttribute("aria-hidden", "true");
         }
 
-        if (modal.onCloseResolver) modal.onCloseResolver();
+        if (modal.onCloseResolver) modal.onCloseResolver(data);
     }
 
     window.loadPierModalContent = async function(modalId, {
@@ -89,12 +89,10 @@
             url
         });
 
-        showPierModal(modalId, {
+        return showPierModal(modalId, {
             url,
             title
         });
-
-        return;
     }
 
     window.addEventListener("load", function() {

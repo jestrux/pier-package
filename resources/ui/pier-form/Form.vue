@@ -83,64 +83,7 @@ export default {
     },
   },
   methods: {
-    async createRecord(data) {
-      this.savingRecord = true;
-      try {
-        let record = await insertRecord(this.modelName, data);
-
-        this.savingRecord = false;
-
-        if (typeof this.PierCMSConfig.onPierFormSuccess == "function")
-          this.PierCMSConfig.onPierFormSuccess(record, this.$el);
-        else {
-          showSuccessToast(
-            this.PierCMSConfig.successMessage ?? `${this.modelName} created`
-          );
-          if (
-            this.PierCMSConfig.pierRedirectTo &&
-            this.PierCMSConfig.pierRedirectTo.length
-          )
-            this.PierCMSConfig.location.href =
-              this.PierCMSConfig.pierRedirectTo;
-        }
-
-        document.dispatchEvent(
-          new CustomEvent("pier-form-success", {
-            detail: {
-              record,
-              el: this.$el,
-            },
-          })
-        );
-      } catch (error) {
-        if (typeof this.PierCMSConfig.onPierFormError == "function")
-          this.PierCMSConfig.onPierFormError(
-            error,
-            `Error creating ${this.modelName}:`
-          );
-        else handleNetworkError(error, `Error creating ${this.modelName}:`);
-        this.savingRecord = false;
-      }
-    },
-    async editRecord(data) {
-      this.savingRecord = true;
-      try {
-        const record = await updateRecord(this.modelName, data);
-
-        this.savingRecord = false;
-
-        showSuccessToast(`${this.modelName} updated`);
-        if (
-          this.PierCMSConfig.pierRedirectTo &&
-          this.PierCMSConfig.pierRedirectTo.length
-        )
-          window.location.href = this.PierCMSConfig.pierRedirectTo;
-      } catch (error) {
-        handleNetworkError(error, `Error creating ${this.modelName}:`);
-        this.savingRecord = false;
-      }
-    },
-    saveRow() {
+    async saveRow() {
       const self = this;
       const data = Object.fromEntries(
         Object.entries(this.record).map(function ([key, value]) {
@@ -153,8 +96,47 @@ export default {
         })
       );
 
-      if (this.values) this.editRecord(data);
-      else this.createRecord(data);
+      try {
+        this.savingRecord = true;
+        const record = this.values
+          ? await updateRecord(this.modelName, data)
+          : await insertRecord(this.modelName, data);
+        this.savingRecord = false;
+
+        // document.dispatchEvent(
+        //   new CustomEvent("pier-form-success", {
+        //     detail: {
+        //       record,
+        //       el: this.$el,
+        //     },
+        //   })
+        // );
+
+        if (this.PierCMSConfig.onPierFormSuccess) {
+          try {
+            const onSave = eval(this.PierCMSConfig.onPierFormSuccess);
+            onSave.apply(null, [record, this.$el]);
+
+            console.log("Onsave: ", onSave);
+            return;
+          } catch (error) {
+            console.log("onPierFormSuccess error: ", error);
+          }
+        }
+
+        showSuccessToast(
+          this.PierCMSConfig.successMessage ?? `${this.modelName} saved`
+        );
+        if (
+          this.PierCMSConfig.pierRedirectTo &&
+          this.PierCMSConfig.pierRedirectTo.length
+        ) {
+          this.PierCMSConfig.location.href = this.PierCMSConfig.pierRedirectTo;
+        }
+      } catch (error) {
+        handleNetworkError(error, `Error saving ${this.modelName}:`);
+        this.savingRecord = false;
+      }
     },
   },
   components: {

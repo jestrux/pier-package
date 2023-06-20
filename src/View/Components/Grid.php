@@ -13,6 +13,7 @@ class Grid extends Component
         public $data = null,
         public $template = "default",
         public $imageField = null,
+        public $imageFallback = null,
         public $metaField = null,
         public $titleField = null,
         public $descriptionField = null,

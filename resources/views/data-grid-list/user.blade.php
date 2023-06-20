@@ -16,13 +16,23 @@
                             {!! eval('?>' . Blade::compileString($image)) !!}
                         </div>
                     </div>
-                @elseif(isset($item->{$imageField}) && $item->{$imageField} != null)
-                    <div class="pt-4 px-8 w-full -mx-1">
-                        <div class="relative rounded-full overflow-hidden w-full aspect-square">
-                            <img src="{{ $item->{$imageField} }}" class="absolute inset-0 h-full w-full object-cover"
-                                alt="" />
+                @elseif(isset($item->{$imageField}))
+                    @php
+                        $src = $item->{$imageField};
+
+                        if ((is_null($src) || strlen($src) < 1) && !is_null($imageFallback ?? null)) {
+                            $src = $imageFallback;
+                        }
+                    @endphp
+
+                    @if (!is_null($src))
+                        <div class="pt-4 px-8 w-full -mx-1">
+                            <div class="relative rounded-full overflow-hidden w-full aspect-square">
+                                <img src="{{ $src }}" class="absolute inset-0 h-full w-full object-cover"
+                                    alt="" />
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 @endisset
 
                 <div class="px-2 py-2 flex flex-col gap-1">

@@ -1,10 +1,11 @@
 @php
     $plain = $plain ?? false;
     $successMessage = $successMessage ?? null;
+    $onSave = $onSave ?? null; // "() => window.location.reload()";
 @endphp
 
 @if ($plain)
-    <x-pier-form :model="$model" :row-id="$rowId ?? null" :success-message="$successMessage" />
+    <x-pier-form :model="$model" :row-id="$rowId ?? null" :success-message="$successMessage" :on-save="$onSave" />
 @else
     <div class="bg-gray-200 h-screen overflow-y-auto">
         <div class="-mt-4 mb-6">
@@ -34,7 +35,7 @@
 
         <div class="container mx-auto py-16">
             <div class="bg-white rounded-xl shadow my-4 pt-2 pb-5 px-6 mx-auto w-full" style="max-width: 680px">
-                <x-pier-form :model="$model" :row-id="$rowId ?? null" :success-message="$successMessage" />
+                <x-pier-form :model="$model" :row-id="$rowId ?? null" :success-message="$successMessage" :on-save="$onSave" />
             </div>
         </div>
     </div>

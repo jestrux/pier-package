@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <template id="slotTemplate">
+    <template id="slotTemplate{{ $instanceId }}">
         {{ $slot }}
     </template>
 
@@ -62,6 +62,12 @@
                     const form = this.$el.closest("[pier-data-component]").querySelector(
                         `#${detail.modalId} .PierFormWrapper`);
 
+                    let modalResponse;
+
+                    window.closePierEditModal = function(e) {
+                        window.hidePierModal(detail.modalId, e);
+                    }
+
                     if (form) {
                         let values = {};
 
@@ -76,15 +82,17 @@
                             detail: values
                         }));
 
-                        window.showPierModal(detail.modalId, {
+                        modalResponse = await window.showPierModal(detail.modalId, {
                             title: `${values?._id ? 'Edit' : 'Add'} {{ $model->name }}`
                         });
                     } else {
-                        window.loadPierModalContent(detail.modalId, {
-                            url: `/admin/upsertModel/{{ $model->name }}/${detail.rowId}?plain=true`,
+                        modalResponse = await window.loadPierModalContent(detail.modalId, {
+                            url: `/admin/upsertModel/{{ $model->name }}/${detail.rowId}?plain=true&onSave=e => window.closePierEditModal(e)`,
                             title: `${detail.rowId ? 'Edit' : 'Add'} {{ $model->name }}`
                         });
                     }
+
+                    if (modalResponse?._id) window.location.reload();
                 },
                 async updatePierComponentContent() {
                     const parentEl = this.$el;
@@ -121,7 +129,8 @@
                             metaField: "{{ $metaField ?? null }}",
                             titleField: "{{ $titleField ?? null }}",
                             descriptionField: "{{ $descriptionField ?? null }}",
-                            view: document.querySelector("#slotTemplate").innerHTML,
+                            view: document.querySelector(
+                                "#slotTemplate{{ $instanceId }}").innerHTML,
                         })
                     });
 

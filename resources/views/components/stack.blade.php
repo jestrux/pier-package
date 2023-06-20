@@ -54,7 +54,7 @@
                 {!! eval('?>' . Blade::compileString($image)) !!}
             @elseif(isset($item->{$imageField}) && $item->{$imageField} != null)
                 <img style="width: 100px; aspect-ratio: 2/1.25; object-fit: cover"
-                    class="flex-shrink-0 md:rounded-md bg-gray-500 inset-0 w-full object-cover"
+                    class="flex-shrink-0 md:rounded-md inset-0 w-full object-cover"
                     src="{{ $item->{$imageField} }}" />
             @endisset
 

@@ -13,10 +13,20 @@
                     <div class="relative rounded-t-sm overflow-hidden">
                         {!! eval('?>' . Blade::compileString($image)) !!}
                     </div>
-                @elseif(isset($item->{$imageField}) && $item->{$imageField} != null)
-                    <div class="-mx-1 relative rounded-t-sm overflow-hidden">
-                        <img src="{{ $item->{$imageField} }}" class="h-40 w-full object-cover" alt="" />
-                    </div>
+                @elseif(isset($item->{$imageField}))
+                    @php
+                        $src = $item->{$imageField};
+
+                        if ((is_null($src) || strlen($src) < 1) && !is_null($imageFallback ?? null)) {
+                            $src = $imageFallback;
+                        }
+                    @endphp
+
+                    @if (!is_null($src))
+                        <div class="-mx-1 relative rounded-t-sm overflow-hidden">
+                            <img src="{{ $src }}" class="h-40 w-full object-cover" alt="" />
+                        </div>
+                    @endif
                 @endisset
 
                 <div class="px-2 py-2 flex flex-col gap-1">

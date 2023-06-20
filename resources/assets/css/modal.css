@@ -183,8 +183,9 @@
 	animation: mmslideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
-.piermodal-swipe[aria-hidden="false"] .piermodal__container,
-.piermodal-swipe[aria-hidden="false"] .piermodal__card {
+/* Support different transitions for nested modals */
+.piermodal-swipe[aria-hidden="false"] > div > .piermodal__container,
+.piermodal-swipe[aria-hidden="false"] > div > .piermodal__card {
 	animation: mmswipeIn 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
@@ -193,8 +194,9 @@
 	animation: mmfadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
-.piermodal-slide[aria-hidden="true"] .piermodal__container,
-.piermodal-slide[aria-hidden="true"] .piermodal__card {
+/* Support different transitions for nested modals */
+.piermodal-slide[aria-hidden="true"] > div > .piermodal__container,
+.piermodal-slide[aria-hidden="true"] > div > .piermodal__card {
 	animation: mmslideOut 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
