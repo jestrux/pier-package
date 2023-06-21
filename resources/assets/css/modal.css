@@ -18,8 +18,18 @@
 	padding-top: 3rem;
 }
 
+.piermodal__content {
+	padding-top: 48px;
+	padding-bottom: 48px;
+	z-index: 999;
+}
+
 .piermodal__card {
 	max-width: 100vw;
+	pointer-events: auto;
+	border-radius: 0.5rem;
+	overflow: hidden;
+	background-color: #fff;
 }
 
 .piermodal__container {

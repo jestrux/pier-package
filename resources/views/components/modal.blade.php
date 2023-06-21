@@ -8,7 +8,7 @@
     <div class="piermodal__overlay" tabindex="-1" data-pieromodal-close="{{ $id }}">
     </div>
 
-    <div class="pointer-events-none fixed inset-0 z-[999] flex items-start justify-center md:py-12">
+    <div class="piermodal__content pointer-events-none fixed inset-0 z-[999] flex items-start justify-center md:py-12">
         <div class="{{ $placement == 'right' ? 'fixed inset-y-0 right-0' : 'md:rounded-lg' }} piermodal__card pointer-events-auto min-w-full md:min-w-0 h-screen md:h-auto max-h-screen overflow-auto bg-white"
             role="dialog" aria-modal="true" aria-labelledby="modal-1-title" style="width: {{ $width }}">
             <div class="sticky z-10 bg-white border-b shadow-sm p-3 top-0 flex items-center gap-3">
@@ -19,7 +19,8 @@
                     </svg>
                 </button>
 
-                <header class="flex-1 text-center text-lg font-medium pr-7">{{ $title }}</header>
+                <header class="flex-1 text-center text-lg font-medium" style="padding-right: 50px">{{ $title }}
+                </header>
             </div>
 
             <main class="{{ !$noPadding ? 'px-5 pt-4' : '' }}">
@@ -30,8 +31,6 @@
 </div>
 
 <script>
-    appendAlpineJS();
-
     window.showPierModal = function(id = "sampleModal", {
         title
     } = {}) {
@@ -102,6 +101,10 @@
             window.MicroModalInitialized = true;
         }, 100);
     });
+
+    @if ($open)
+        showPierModal("{{ $id }}");
+    @endif
 </script>
 
 <script defer src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
