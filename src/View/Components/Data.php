@@ -57,6 +57,7 @@ class Data extends Component
         public $titleField = null,
         public $descriptionField = null,
         public $sortField = "index",
+        public $metaData = null,
     ) {
         $this->model = $model;
         $this->filters = $filters;
