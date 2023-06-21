@@ -1,7 +1,13 @@
 @php
-    if (!isset($field['meta'])) {
-        $field['meta'] = [];
-    }
+    $field = [
+        'type' => $type,
+        'label' => $label,
+        'name' => $name,
+        'required' => $required,
+        'min' => $min,
+        'max' => $max,
+        'meta' => $meta,
+    ];
     
     $uploadDir = env('PIER_UPLOAD_DIR') ?? null;
     if (!is_null($uploadDir) && strlen($uploadDir) > 0) {
