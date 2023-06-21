@@ -1,5 +1,6 @@
 {
     "/js/pier-cms.js": "/js/pier-cms.js",
     "/js/pier-editor.js": "/js/pier-editor.js",
-    "/js/pier-form.js": "/js/pier-form.js"
+    "/js/pier-form.js": "/js/pier-form.js",
+    "/js/pier-form-field.js": "/js/pier-form-field.js"
 }
