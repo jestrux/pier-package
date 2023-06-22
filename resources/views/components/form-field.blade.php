@@ -24,6 +24,9 @@
             'secretAccessKey' => env('PIER_S3_SECRET_ACCESS_KEY'),
         ],
     ];
+
+    dd($field);
+
 @endphp
 
 <div class="pier-form-fields">
