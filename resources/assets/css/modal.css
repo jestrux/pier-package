@@ -4,6 +4,19 @@
 		sans-serif;
 }
 
+.piermodal .fixed {
+	position: fixed;
+}
+
+.piermodal .inset-y-0 {
+	top: 0;
+	bottom: 0;
+}
+
+.piermodal .right-0 {
+	right: 0;
+}
+
 .piermodal__overlay {
 	position: fixed;
 	top: 0;
