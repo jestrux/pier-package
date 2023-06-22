@@ -25,8 +25,6 @@
         ],
     ];
 
-    dd($field);
-
 @endphp
 
 <div class="pier-form-fields">
