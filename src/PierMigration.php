@@ -303,6 +303,10 @@ class PierMigration extends Model{
             return $field->type == 'reference';
         });
 
+        $auth_fields = $fields->filter(function($field){
+            return $field->type == 'auth';
+        });
+
         if(count($data) > 0){
             if($status_fields->count() > 0){
                 foreach ($status_fields as $field) {
@@ -317,6 +321,20 @@ class PierMigration extends Model{
                 }
             }
 
+            if($auth_fields->count() > 0){
+                foreach ($auth_fields as $field) {
+                    foreach ($data as $result) {
+                        try {
+                            $result->{$field->label} = DB::table("users")->where(
+                                "id", '=', $result->{$field->label}
+                            )->first();
+                        } catch (\Throwable $th) {
+                            //throw $th;
+                        }
+                    }
+                }
+            }
+            
             if($reference_fields->count() > 0){
                 foreach ($reference_fields as $field) {
                     $referenced_table = Str::snake($field->meta->model);

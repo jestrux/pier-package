@@ -88,7 +88,8 @@ export default {
       const data = Object.fromEntries(
         Object.entries(this.record).map(function ([key, value]) {
           const fieldType = self.modelFieldsTypes[key];
-          if (fieldType == "reference") value = value._id;
+          if (fieldType == "auth") value = self.PierCMSConfig.authUser;
+          else if (fieldType == "reference") value = value._id;
           else if (fieldType == "multi-reference")
             value = value.map(({ _id }) => _id);
 

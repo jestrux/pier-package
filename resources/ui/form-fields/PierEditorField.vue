@@ -34,7 +34,7 @@
 </style>
 
 <template>
-  <div class="input-group" style="margin: 0">
+  <div class="input-group" style="margin: 0;">
     <template v-if="field">
       <input type="hidden" :name="field.label" :value="val" />
       
@@ -177,7 +177,7 @@
       />
       
       <input
-        v-else
+        v-else-if="field.type != 'auth'"
         :id="field.label"
         :name="field.label"
         :required="field.required"
@@ -237,9 +237,12 @@ export default {
     nolabel: Boolean,
     value: String | Number
   },
+  inject: ["PierCMSConfig"],
   mounted() {
     const longTextInput = this.$refs.longTextInput;
-    if(this.value){
+    if(this.field.type == "auth" && this.PierCMSConfig.authUser)
+      this.val = this.PierCMSConfig.authUser;
+    else if(this.value){
       this.val = this.value;
 
       this.$nextTick(() => {
@@ -263,7 +266,7 @@ export default {
     hideLabel: function() {
       if (!this.field || !this.field.type) return false;
 
-      const fieldTypesWithoutLabel = ["image", "video", "boolean", "file"];
+      const fieldTypesWithoutLabel = ["hidden", "auth", "image", "video", "boolean", "file"];
       return this.nolabel || fieldTypesWithoutLabel.includes(this.field.type.toLowerCase());
     }
   },

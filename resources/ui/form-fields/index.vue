@@ -5,6 +5,7 @@
         :key="field.label"
         v-if="field.type == 'group'"
         class="col-span-12 border-b border-neutral-500 mt-4"
+        :style="{position: ['hidden', 'auth'].includes(field.type) ? 'absolute' : ''}"
       >
         <h3 class="mb-2 text-lg leading-none font-semibold">
           {{ field.cleanLabel ? field.cleanLabel : field.label }}
@@ -20,6 +21,7 @@
           'col-span-6': field.width == 'half',
           'col-span-4': field.width == 'third',
         }"
+        :style="{position: ['hidden', 'auth'].includes(field.type) ? 'absolute' : ''}"
       >
         <div
           :class="{
@@ -27,6 +29,7 @@
             'col-span-6': field.stretch == 'half',
             'col-span-4': field.stretch == 'third',
           }"
+          :style="{position: ['hidden', 'auth'].includes(field.type) ? 'absolute' : ''}"
         >
           <PierEditorField :field="field" v-model="values[field.label]" />
         </div>

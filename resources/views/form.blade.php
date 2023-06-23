@@ -63,6 +63,7 @@
                 PierForm(`#${pierFormId}`, {
                     pierModel,
                     pierModelValues,
+                    "redirectTo": "{{ $redirectTo }}",
                     "successMessage": "{{ $successMessage }}",
                     "appName": "{{ env('APP_NAME') }}",
                     "unsplashClientId": "{{ env('PIER_UNSPLASH_CLIENT_ID') }}",
@@ -73,6 +74,7 @@
                         accessKeyId: "{{ env('PIER_S3_ACCESS_KEY_ID') }}",
                         secretAccessKey: "{{ env('PIER_S3_SECRET_ACCESS_KEY') }}",
                     },
+                    "authUser": "{{Auth::check() ? Auth::id() : null}}",
                     ...rest,
                 });
             }
