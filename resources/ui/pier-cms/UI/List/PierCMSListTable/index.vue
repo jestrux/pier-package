@@ -100,7 +100,7 @@
       <paginate v-if="records && records.length && !populatingRecords && !fetchingRecorsds && recordsPagination"
         :value="recordsPagination.current_page"
         :page-count="recordsPagination.last_page"
-        :click-handler="fetchRecords"
+        :click-handler="handleFetchRecords"
         :prev-text="'Prev'"
         :next-text="'Next'"
         container-class="PierPagination flex items-center" 
@@ -126,7 +126,7 @@
       }
     },
     mounted(){
-      this.fetchRecords();
+      this.handleFetchRecords();
     },
     computed: {
       ...mapState(['modelFilters', 'fetchingRecorsds', 'records', 'recordsPagination', 'populatingRecords']),
@@ -134,12 +134,12 @@
     watch: {
       model: function(newValue){
         if(newValue)
-          this.fetchRecords();
+          this.handleFetchRecords();
       },
     },
     methods: {
       ...mapActions(['setFilter', 'fetchRecords', 'populateRecords']),
-      fetchRecords(page = 1){
+      handleFetchRecords(page = 1){
         if(!this.model.fields)
           return;
         
