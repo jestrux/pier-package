@@ -1,6 +1,7 @@
 <template>
   <form :id="formId" action="#" method="POST" @submit.prevent="saveRow">
     <div
+      v-if="model"
       class="modal-body overflow-y-auto"
       style="padding-top: 10px; padding-bottom: 17px"
       :style="{ maxHeight: onFullPage ? '' : '480px' }"
