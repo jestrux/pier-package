@@ -108,6 +108,7 @@
 					accessKeyId: "{{env('PIER_S3_ACCESS_KEY_ID')}}",
 					secretAccessKey: "{{env('PIER_S3_SECRET_ACCESS_KEY')}}",
 				},
+				"authUser": "{{Auth::check() ? Auth::id() : null}}",
 			})
 		});
 	</script>
