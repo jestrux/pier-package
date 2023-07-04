@@ -53,7 +53,7 @@
 
 <script>
   import Paginate from 'vuejs-paginate';
-  import { mapState } from 'vuex';
+  import { mapActions, mapState } from 'vuex';
 
   export default {
     name: 'PierCMSListCard',
@@ -81,6 +81,7 @@
       },
     },
     methods: {
+      ...mapActions(['populateRecords']),
       fetchRecords(page = 1){
         if(!this.model.fields)
           return;
@@ -98,9 +99,6 @@
         });;
 
         return values;
-      },
-      populateRecords(itemCount){
-        this.$store.dispatch('populateRecords', itemCount);
       },
     },
     components:{

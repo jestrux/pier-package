@@ -145,9 +145,6 @@
         
         this.fetchRecords(page);
       },
-      populateRecords(itemCount){
-        this.populateRecords(itemCount);
-      },
       handleTableDataSelected(files) {
         if(files && files.length){
           const tableData = files[0];
