@@ -726,6 +726,24 @@ class PierMigration extends Model{
                     }
                 }
             }
+
+            $auth_fields = $model_fields->filter(function($field){
+                return $field->type == 'auth';
+            });
+
+            if($auth_fields->count() > 0){
+                foreach ($auth_fields as $field) {
+                    foreach ($result_data as $result) {
+                        try {
+                            $result->{$field->label} = DB::table("users")->where(
+                                "id", '=', $result->{$field->label}
+                            )->first();
+                        } catch (\Throwable $th) {
+                            //throw $th;
+                        }
+                    }
+                }
+            }
             
             if(isset($params['unique'])){
                 $result_data = $params['unique'] == "true" 

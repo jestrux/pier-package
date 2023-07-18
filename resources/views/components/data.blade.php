@@ -115,6 +115,8 @@
                         groupBy: "{{ $groupBy }}",
                         limit: "{{ $limit }}",
                         pluck: "{{ $pluck }}",
+                        page: "{{ $page }}",
+                        perPage: "{{ $perPage }}",
                     }
 
                     const res = await fetch("/data-refetch", {

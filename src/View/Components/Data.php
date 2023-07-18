@@ -10,14 +10,8 @@ class Data extends Component
     public $model;
     public $rowId;
     public $filters;
-    public $orderBy;
-    public $groupBy;
-    public $limit;
-    public $pluck;
-    public $q;
     public $modelDetails;
     public $modelData;
-    public $plain;
     public $instanceId;
 
     function modifiedFilters($filters)
@@ -46,12 +40,14 @@ class Data extends Component
         $model,
         $rowId = null,
         $filters = [],
-        $orderBy = "",
-        $groupBy = "",
-        $limit = null,
-        $pluck = null,
-        $q = null,
-        $plain = null,
+        public $orderBy = "",
+        public $groupBy = "",
+        public $limit = null,
+        public $pluck = null,
+        public $q = null,
+        public $plain = null,
+        public $page = null,
+        public $perPage = null,
         public $imageField = null,
         public $metaField = null,
         public $titleField = null,
@@ -60,10 +56,8 @@ class Data extends Component
         public $metaData = null,
     ) {
         $this->model = $model;
+        $this->rowId = $rowId;
         $this->filters = $filters;
-        $this->orderBy = $orderBy;
-        $this->groupBy = $groupBy;
-        $this->plain = $plain;
 
         if (count($filters) > 0)
             $this->filters = $this->modifiedFilters(collect($filters));
@@ -71,6 +65,10 @@ class Data extends Component
         $params = $this->filtersWithAnd($this->filters);
         $params["orderBy"] = $this->orderBy;
         $params["groupBy"] = $this->groupBy;
+
+        if ($page != null) $params["page"] = $page;
+
+        if ($perPage != null) $params["perPage"] = $perPage;
 
         if ($limit != null) $params["limit"] = $limit;
 
