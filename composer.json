@@ -1,38 +1,41 @@
 {
-    "name": "jestrux/pier",
-    "description": "A description for pier.",
-    "type": "package",
-    "license": "MIT",
-    "keywords": [
-        "laravel"
-    ],
-    "authors": [
-        {
-            "name": "jestrux",
-            "email": "wakyj07@gmail.com"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Jestrux\\Pier\\": "./src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Jestrux\\Pier\\Tests\\": "tests"
-        }
-    },
-    "scripts": {
-        "test": "vendor/bin/phpunit"
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Jestrux\\Pier\\PierServiceProvider"
-            ]
-        }
-    },
-    "require-dev": {
-        "orchestra/testbench": "^6.0"
-    }
+	"name": "jestrux/pier",
+	"description": "A description for pier.",
+	"type": "package",
+	"license": "MIT",
+	"keywords": [
+		"laravel"
+	],
+	"authors": [
+		{
+			"name": "jestrux",
+			"email": "wakyj07@gmail.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Jestrux\\Pier\\": "./src"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Jestrux\\Pier\\Tests\\": "tests"
+		}
+	},
+	"scripts": {
+		"test": "vendor/bin/phpunit"
+	},
+	"extra": {
+		"laravel": {
+			"providers": [
+				"Jestrux\\Pier\\PierServiceProvider"
+			]
+		}
+	},
+	"require": {
+		"fakerphp/faker": "^1.9.1"
+	},
+	"require-dev": {
+		"orchestra/testbench": "^6.0"
+	}
 }
