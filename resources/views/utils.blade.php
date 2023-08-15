@@ -57,8 +57,8 @@
         }
     };
 
-    window.updatePierRow = (model, rowId, newValues) => {
-        return fetch(`/api/${model}/${rowId}`, {
+    window.updatePierRow = async (model, rowId, newValues) => {
+        const res = await fetch(`/api/${model}/${rowId}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -66,6 +66,8 @@
             },
             body: JSON.stringify(newValues)
         });
+
+        return await res.json();
     }
 
     window.loadPierSectionContent = async function(sectionSelector, {
