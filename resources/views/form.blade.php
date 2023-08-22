@@ -74,6 +74,7 @@
                         accessKeyId: "{{ env('PIER_S3_ACCESS_KEY_ID') }}",
                         secretAccessKey: "{{ env('PIER_S3_SECRET_ACCESS_KEY') }}",
                     },
+                    'pierForm': "{{ env('PIER_FORM_TOKEN') }}",
                     "authUser": "{{Auth::check() ? Auth::id() : null}}",
                     ...rest,
                 });

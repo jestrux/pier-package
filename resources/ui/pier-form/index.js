@@ -17,6 +17,8 @@ window.PierForm = (el = "#pierForm", config) => {
 		...config,
 	};
 
+	window.__pierForm = config.pierForm;
+
 	new Vue({
 		el,
 		provide() {

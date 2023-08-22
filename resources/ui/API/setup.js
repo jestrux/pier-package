@@ -40,7 +40,8 @@ export const request = async (type, endpoint, token, data) => {
     url,
     headers: {
       "Content-Type": "application/json",
-      'Authorization': token
+      'Authorization': token,
+      'X-PIER-FORM': window.__pierForm
     },
     data
   });

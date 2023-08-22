@@ -15,6 +15,8 @@ document.querySelectorAll(".PierFormFieldWrapper").forEach((node) => {
 
 	let field = node.getAttribute("data-field");
 
+	window.__pierForm = window.formFieldProps.pierForm;
+
 	try {
 		field = JSON.parse(field);
 	} catch (error) {}
