@@ -5,6 +5,8 @@ import * as API from "../API";
 
 Vue.component("pier-form-field", PierEditorField);
 
+console.log("PierCMS: PierFormField loaded");
+
 document.querySelectorAll(".PierFormFieldWrapper").forEach((node) => {
 	const value = node.getAttribute("data-value");
 	const model = node.getAttribute("data-model");

@@ -81,17 +81,17 @@ class PierServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerRoutes()
+    protected function registerRoutes(): void
     {
         Route::group($this->routeConfiguration(), function () {
             $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
-        });
 
-        $this->loadRoutesFrom(__DIR__ . '/../routes/pier-internals.php');
-        $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
+            $this->loadRoutesFrom(__DIR__ . '/../routes/pier-internals.php');
+            $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
+        });
     }
 
-    protected function routeConfiguration()
+    protected function routeConfiguration(): array
     {
         $prefix = config('pier.prefix');
         $middleware = config('pier.middleware');
