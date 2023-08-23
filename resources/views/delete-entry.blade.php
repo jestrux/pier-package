@@ -176,7 +176,10 @@
                             method: "DELETE",
                             headers: {
                                 'Content-Type': 'application/json'
-                            }
+                            },
+                            body: JSON.stringify({
+                                _token: "{{ csrf_token() }}"
+                            })
                         });
                         item.remove();
                         showsuccessMessage(`${model} has beeen deleted`);
