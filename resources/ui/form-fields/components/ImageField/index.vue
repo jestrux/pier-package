@@ -151,6 +151,7 @@
         v-else-if="showUpload && source === 'upload'"
         v-model="src"
         :upload-url="imageUploadUrl"
+        type="image"
       />
     </div>
 

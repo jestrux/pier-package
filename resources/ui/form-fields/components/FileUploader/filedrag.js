@@ -1,12 +1,22 @@
 import axios from "axios";
 import EM from "EventEmitter";
 import S3FileUpload from "../../../Utils/S3";
-// export let em;
-// var upload_path = "";
-function FileDrag(el, url, s3Config) {
+import { showErrorToast } from "../../../Utils";
+
+function FileDrag(
+	el,
+	{
+		url,
+		s3,
+		type,
+		maxSize = 10 * 1000000
+	} = {}
+) {
+	this.fileType = type;
+	this.maxSize = maxSize;
 	this.em = new EM();
 	this.upload_path = url;
-	this.s3Config = s3Config;
+	this.s3Config = s3;
 	const input = el.querySelector("input");
 
 	if (input) {
@@ -41,10 +51,50 @@ FileDrag.prototype.FileSelectHandler = function (e) {
 
 	let file = files[0];
 
-	// if (file.type.indexOf("image") == -1) {
-	//     this.em.emit("nonimage", file.name);
-	//     return;
-	// }
+	let supportedFileTypes = [
+		"xlsx",
+		"xls",
+		"csv",
+		"tab",
+		"tsv",
+		"spreadsheet",
+		"excel",
+		"pdf",
+		"doc",
+		"docx",
+		"ppt",
+		// Images
+		"png",
+		"svg",
+		"jpg",
+		"jpeg",
+		"webp",
+		"gif",
+		// Videos
+		"mp4",
+		"webm",
+		"mov",
+		// Other
+		"json",
+	];
+
+	if (this.fileType == "image") {
+		supportedFileTypes = ["png", "svg", "jpg", "jpeg", "webp", "gif"];
+	}
+
+	const typeSupported =
+		!file.type || !file.type.length
+			? null
+			: supportedFileTypes.find((type) => file.type.indexOf(type) != -1);
+
+	if (!typeSupported) return showErrorToast("Invalid file type.");
+
+	const fileSize = files[0].size; // file size in bytes
+	if (fileSize > this.maxSize) {
+		return showErrorToast(
+			`File is too large. Max file size is ${this.maxSize / 1000000}Mbs.`
+		);
+	}
 
 	var reader = new FileReader();
 	reader.onload = (e) => {

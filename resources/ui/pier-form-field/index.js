@@ -1,8 +1,12 @@
 import "./bootstrap";
 
+import VueToast from "vue-toast-notification";
+import "vue-toast-notification/dist/theme-default.css";
+
 import PierEditorField from "../form-fields/PierEditorField";
 import * as API from "../API";
 
+Vue.use(VueToast);
 Vue.component("pier-form-field", PierEditorField);
 
 console.log("PierCMS: PierFormField loaded");

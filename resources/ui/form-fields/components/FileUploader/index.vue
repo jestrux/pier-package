@@ -129,7 +129,9 @@
       <div style="position:absolute; botton: 3rem; left: 50%; transform: translateX(-50%); bottom: 1rem;">
         <label  style="cursor: pointer; position:relative; font-size: 0.9rem; line-height: 1; color: #3775f2; padding: 0.35rem 0.55rem;">
           or select file
-          <input type="file" style="display:none">
+          <input type="file" style="display:none"
+            :accept="fileTypes"
+          />
         </label>
       </div>
     </div>
@@ -156,6 +158,7 @@
   
   export default {
     props: {
+      type: String,
       uploadUrl: String,
       location: String,
     },
@@ -168,6 +171,19 @@
         src: ""
       }
     },
+    computed: {
+      fileTypes() {
+        const sheets = ".csv, text/csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, .tab, .tsv";
+        const docs = ".doc, .docx, .pdf, application/pdf";
+        const images = ".png, .svg, .jpg, .jpeg, .webp, .gif";
+        const videos = ".mp4, .webm, .mov";
+        const other = ".json";
+
+        if(this.type == "image") return images;
+
+        return [sheets, docs, images, videos, other].join(',');
+      }
+    },
     mounted: function() {
       this.setup();
     },
@@ -175,7 +191,11 @@
       setup(){
         const self = this;
 
-        const { em } = new FileDrag(this.$el, this.uploadUrl, this.PierCMSConfig.s3);
+        const { em } = new FileDrag(this.$el, {
+          url: this.uploadUrl, 
+          s3: this.PierCMSConfig.s3, 
+          type: this.type
+        });
 
         em.on('loaded', function(file, src) {
           self.src = src;
