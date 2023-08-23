@@ -83,9 +83,10 @@ class PierServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
+        $this->loadRoutesFrom(__DIR__ . '/../routes/excluded.php');
+
         Route::group($this->routeConfiguration(), function () {
             $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
-
             $this->loadRoutesFrom(__DIR__ . '/../routes/pier-internals.php');
             $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
         });
