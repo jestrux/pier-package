@@ -3,15 +3,7 @@ import EM from "EventEmitter";
 import S3FileUpload from "../../../Utils/S3";
 import { showErrorToast } from "../../../Utils";
 
-function FileDrag(
-	el,
-	{
-		url,
-		s3,
-		type,
-		maxSize = 10 * 1000000
-	} = {}
-) {
+function FileDrag(el, { url, s3, type, maxSize = 10 * 1000000 } = {}) {
 	this.fileType = type;
 	this.maxSize = maxSize;
 	this.em = new EM();
@@ -74,7 +66,7 @@ FileDrag.prototype.FileSelectHandler = function (e) {
 		"mp4",
 		"webm",
 		"mov",
-		// Other
+		// Misc
 		"json",
 	];
 
@@ -87,7 +79,7 @@ FileDrag.prototype.FileSelectHandler = function (e) {
 			? null
 			: supportedFileTypes.find((type) => file.type.indexOf(type) != -1);
 
-	if (!typeSupported) return showErrorToast("Invalid file type.");
+	// if (!typeSupported) return showErrorToast("Invalid file type.");
 
 	const fileSize = files[0].size; // file size in bytes
 	if (fileSize > this.maxSize) {
@@ -144,8 +136,7 @@ FileDrag.prototype.UploadFile = function (file) {
 	form.append("photo", file);
 	form.append("name", name);
 	form.append("ext", ext);
-
-	// console.log("Upload path: ", this);
+	form.append("fileType", this.fileType);
 
 	axios
 		.post(this.upload_path, form, config)
@@ -153,6 +144,7 @@ FileDrag.prototype.UploadFile = function (file) {
 			const res = result.data;
 			const payload = res.success ? res.path : res.msg;
 			this.em.emit("complete", res.success, payload);
+			if (!res.success) showErrorToast(payload);
 		})
 		.catch((e) => {
 			console.log("Error uploading file: ", e);
@@ -161,6 +153,7 @@ FileDrag.prototype.UploadFile = function (file) {
 				false,
 				"A network or server error occured!"
 			);
+			showErrorToast("An unknown error occured!");
 		});
 };
 

@@ -51,9 +51,48 @@ class APIController extends Controller
     public function upload_file($model, Request $request){
         $folder_name = Str::snake($model);
         $file = $request->file('photo');
+        $fileType = $request->input('fileType');
         $imageNameExt = $file->getClientOriginalName();
         $imageName = pathinfo($imageNameExt,PATHINFO_FILENAME);
         $imageNameStore = $imageName . '_' . time() . '.' . pathinfo($imageNameExt, PATHINFO_EXTENSION);
+
+        $supportedFileTypes = [
+            "xlsx",
+            "xls",
+            "csv",
+            "tab",
+            "tsv",
+            "spreadsheet",
+            "excel",
+            "pdf",
+            "doc",
+            "docx",
+            "ppt",
+            // Images
+            "png",
+            "svg",
+            "jpg",
+            "jpeg",
+            "webp",
+            "gif",
+            // Videos
+            "mp4",
+            "webm",
+            "mov",
+            // Misc
+            "json",
+        ];
+
+        if ($fileType ?? "" == "image")
+            $supportedFileTypes = ["png", "svg", "jpg", "jpeg", "webp", "gif"];
+
+        if (!in_array(pathinfo($imageNameExt, PATHINFO_EXTENSION), $supportedFileTypes)) {
+            return response()->json([
+                "success" => false,
+                "msg" => "Invalid file type",
+            ]);
+        }
+
         $path = $file->storeAs($folder_name ?? "", $imageNameStore);
 
         return response()->json([

@@ -215,7 +215,7 @@
           if(status)
             self.$emit("input", payload);
           else{
-            self.upload_error = payload;
+            // self.upload_error = payload;
             self.src = null;
           }
         });
