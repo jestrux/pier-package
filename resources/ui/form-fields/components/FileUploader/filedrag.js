@@ -79,7 +79,7 @@ FileDrag.prototype.FileSelectHandler = function (e) {
 			? null
 			: supportedFileTypes.find((type) => file.type.indexOf(type) != -1);
 
-	// if (!typeSupported) return showErrorToast("Invalid file type.");
+	if (!typeSupported) return showErrorToast("Invalid file type.");
 
 	const fileSize = files[0].size; // file size in bytes
 	if (fileSize > this.maxSize) {
