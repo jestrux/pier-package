@@ -1,5 +1,5 @@
 <template>
-  <div class="pier-form-fields grid grid-cols-12 gap-5">
+  <div class="pier-form-fields flex flex-col md:grid grid-cols-12 gap-5">
     <template v-for="field in formattedFields">
       <div
         :key="field.label"
@@ -15,7 +15,7 @@
       <div
         v-else
         :key="field.label"
-        class="grid grid-cols-12"
+        class="flex flex-col md:grid grid-cols-12"
         :class="{
           'col-span-12': !field.width || field.width == 'full',
           'col-span-6': field.width == 'half',
