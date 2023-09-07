@@ -63,7 +63,7 @@ Route::prefix('model')->group(function () {
     Route::get('{model_name}/drop', [EditorController::class, 'drop']);
     Route::post('{model_name}/migrate', [EditorController::class, 'migrate']);
     Route::post('{model_name}/populate', [EditorController::class, 'populate']);
-    Route::get('{model_name}/describe', [EditorController::class, 'describe']);
+    // Route::get('{model_name}/describe', [EditorController::class, 'describe']);
     Route::get('{model_name}/fields', [EditorController::class, 'fields']);
     Route::get('{model_name}/settings', [EditorController::class, 'settings']);
     Route::get('{model_name}', [EditorController::class, 'describe']);
