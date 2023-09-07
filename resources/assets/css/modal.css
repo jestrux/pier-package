@@ -35,6 +35,17 @@
 	padding-top: 48px;
 	padding-bottom: 48px;
 	z-index: 999;
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+	line-height: 1.5;
+	color: rgba(0, 0, 0, 0.8);
+}
+
+@media only screen and (max-width: 680px) {
+	.piermodal__content {
+		padding-top: 0;
+		margin-top: 0;
+	}
 }
 
 .piermodal__card {
@@ -77,13 +88,6 @@
 
 .piermodal__header .piermodal__close:before {
 	content: "\2715";
-}
-
-.piermodal__content {
-	margin-top: 2rem;
-	margin-bottom: 2rem;
-	line-height: 1.5;
-	color: rgba(0, 0, 0, 0.8);
 }
 
 .piermodal__btn {
