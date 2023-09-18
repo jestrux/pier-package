@@ -58,7 +58,7 @@ PIER_S3_SECRET_ACCESS_KEY=
 If you plan to upload files to your asset files instead of S3, there are two ways:
 
 ### With access to storage:link
-Add the following field to `.env` which points to a `post`` url.
+Add the following field to `.env` which points to a `post` url.
 
 ```
 PIER_UPLOAD_URL=/pier-upload-file
