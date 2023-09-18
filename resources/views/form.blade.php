@@ -53,6 +53,17 @@
             });
         }
 
+        @php
+            $uploadUrl = env('PIER_UPLOAD_URL') ?? null;
+
+            if(is_null($uploadUrl)) {
+                $uploadDir = env('PIER_UPLOAD_DIR') ?? null;
+                if (!is_null($uploadDir) && strlen($uploadDir) > 0) {
+                    $uploadUrl = url("api/$uploadDir/upload_file");
+                }
+            }
+        @endphp
+
         window.addEventListener("PierForm:loaded", () => {
             window.loadPierForm = function({
                 pierFormId,
@@ -67,7 +78,7 @@
                     "successMessage": "{{ $successMessage }}",
                     "appName": "{{ env('APP_NAME') }}",
                     "unsplashClientId": "{{ env('PIER_UNSPLASH_CLIENT_ID') }}",
-                    "fileUploadUrl": "{{ env('PIER_UPLOAD_DIR') != null && strlen(env('PIER_UPLOAD_DIR')) > 0 ? url('api/' . env('PIER_UPLOAD_DIR') . '/upload_file') : null }}",
+                    "fileUploadUrl": "{{$uploadUrl}}",
                     "s3": {
                         bucketName: "{{ env('PIER_S3_BUCKET') }}",
                         region: "{{ env('PIER_S3_REGION') }}",

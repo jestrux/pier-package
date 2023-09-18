@@ -9,14 +9,18 @@
         'meta' => $meta,
     ];
     
-    $uploadDir = env('PIER_UPLOAD_DIR') ?? null;
-    if (!is_null($uploadDir) && strlen($uploadDir) > 0) {
-        $uploadDir = url("api/$uploadDir/upload_file");
+    $uploadUrl = env('PIER_UPLOAD_URL') ?? null;
+
+    if(is_null($uploadUrl)) {
+        $uploadDir = env('PIER_UPLOAD_DIR') ?? null;
+        if (!is_null($uploadDir) && strlen($uploadDir) > 0) {
+            $uploadUrl = url("api/$uploadDir/upload_file");
+        }
     }
     
     $fieldProps = [
         'unsplashClientId' => env('PIER_UNSPLASH_CLIENT_ID'),
-        'fileUploadUrl' => $uploadDir,
+        'fileUploadUrl' => $uploadUrl,
         's3' => [
             'bucketName' => env('PIER_S3_BUCKET'),
             'region' => env('PIER_S3_REGION'),
