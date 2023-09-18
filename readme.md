@@ -55,7 +55,27 @@ PIER_S3_SECRET_ACCESS_KEY=
 ```
 
 ## Storing uploads locally
-If you plan to upload files to your asset files instead of S3, add the following field to `.env`
+If you plan to upload files to your asset files instead of S3, there are two ways:
+
+### With access to storage:link
+Add the following field to `.env` which points to a `post`` url.
+
+```
+PIER_UPLOAD_URL=/pier-upload-file
+```
+
+The controller should return a response similar to the one below.
+
+```php
+return response()->json([
+    "success" => true,
+    "path" => asset(str_replace("public", "storage", $path))
+]);
+```
+
+### Without access to storage:link
+
+Add the following field to `.env`
 
 ```
 PIER_UPLOAD_DIR=pierFiles
