@@ -4,7 +4,7 @@ Headless CMS and API generator for Laravel projects.
 
 # Demo of how Pier works
 
-- [https://vimeo.com/manage/videos/737768985](https://vimeo.com/737768985)
+- [https://vimeo.com/737768985](https://vimeo.com/737768985)
 
 # How to Use
 
