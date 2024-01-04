@@ -33,9 +33,10 @@
 		}
 	},
 	"require": {
-		"fakerphp/faker": "^1.9.1"
+		"fakerphp/faker": "^1.9.1",
+		"livewire/livewire": "^3.3.5"
 	},
 	"require-dev": {
-		"orchestra/testbench": "^6.0"
+		"orchestra/testbench": "^8.19.0"
 	}
 }

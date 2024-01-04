@@ -6,15 +6,18 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Jestrux\Pier\View\Components\ActionButtons;
 use Jestrux\Pier\View\Components\AddButton;
+use Jestrux\Pier\View\Components\Counter;
 use Jestrux\Pier\View\Components\Data;
 use Jestrux\Pier\View\Components\DataGrid;
 use Jestrux\Pier\View\Components\FilterButton;
 use Jestrux\Pier\View\Components\Form;
 use Jestrux\Pier\View\Components\FormField;
 use Jestrux\Pier\View\Components\Grid;
+use Jestrux\Pier\View\Components\Livewire\Table;
 use Jestrux\Pier\View\Components\Modal;
 use Jestrux\Pier\View\Components\SearchInput;
 use Jestrux\Pier\View\Components\Stack;
+use Livewire\Livewire;
 
 // use Jestrux\Pier\Pier;
 
@@ -59,6 +62,9 @@ class PierServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'pier');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+
+        Livewire::component('table', Table::class);
+
         $this->loadViewComponentsAs('pier', [
             Data::class,
             FilterButton::class,
