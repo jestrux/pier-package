@@ -69,7 +69,7 @@ PIER_UPLOAD_URL=/pier-upload-file
 
 The controller should return a response similar to the one below.
 
-```php
+```blade
 return response()->json([
     "success" => true,
     "path" => asset(str_replace("public", "storage", $path))
@@ -103,7 +103,7 @@ Also update the local disk under `config.filesystems.php` as follows:
 
 ## Model
 
-```php
+```blade
 @piermodel('Article')
     {{$name}} {{ $fields }} {{ $data }}
 @endpiermodel
@@ -111,7 +111,7 @@ Also update the local disk under `config.filesystems.php` as follows:
 
 ## Data
 
-```php
+```blade
 @pierdata('Song')
     {{$data}}
 @endpierdata()
@@ -132,7 +132,7 @@ Also update the local disk under `config.filesystems.php` as follows:
 
 ## Row
 
-```php
+```blade
 @pierrow('Book', '044365e5...')
     {{ $data }}
 @endpierrow
@@ -150,7 +150,7 @@ Also update the local disk under `config.filesystems.php` as follows:
 
 ## Table
 
-```php
+```blade
 <x-pier::table model="Renter" :perPage="5" />
 
 // Paired with model for customization
