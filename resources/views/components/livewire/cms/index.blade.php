@@ -65,7 +65,7 @@
             @foreach ($models as $model)
                 <li wire:key="{{ $model->_id }}">
                     <a wire:navigate href="{{ url('pier-cms/' . $model->name) }}"
-                        class="{{ $model->_id == $currentModel->_id ? 'bg-content/5 text-primary border-current' : 'border-transparent opacity-50' }} hover:bg-content/5 capitalize px-4 h-12 flex items-center border-l-[3px] text-base font-semibold">
+                        class="{{ $model->_id == $currentModel->_id ? 'bg-content/5 text-primary border-current' : 'border-transparent opacity-75' }} hover:bg-content/5 capitalize px-4 h-12 flex items-center border-l-[3px] text-base font-medium">
                         {{ str($model->name)->plural() }}
                     </a>
                 </li>
@@ -145,14 +145,15 @@
                     </div>
                 </div>
                 <div class="relative rounded-full">
-                    <svg fill="#aaa" class="absolute inset-y-0 ml-3 my-auto inset-left-0 w-6 h-6">
+                    <svg fill="currentColor"
+                        class="absolute inset-y-0 ml-3 my-auto inset-left-0 w-6 h-6 text-content/50">
                         <path
                             d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
                     </svg>
 
                     <input wire:model.live="q" type="search"
                         placeholder="Search {{ str($currentModel->name)->plural()->lower() }}..."
-                        class="min-w-[250px] rounded-full py-1 pl-10 pr-3 border border-neutral-500 outline-none" />
+                        class="min-w-[250px] rounded-full py-1 pl-10 pr-3 bg-transparent border border-content/20 placeholder:text-content/30 outline-none" />
                 </div>
             </div>
         </header>
