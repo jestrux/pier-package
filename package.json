@@ -31,7 +31,7 @@
         "date-fns": "^2.14.0",
         "emotion": "^10.0.27",
         "popper.js": "^1.16.1",
-        "tailwindcss": "^1.4.6",
+        "tailwindcss": "^3.4.1",
         "unsplash-js": "^6.0.0",
         "visibilityjs": "^2.0.2",
         "vue-material-design-icons": "^4.6.0",

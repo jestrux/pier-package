@@ -2,22 +2,25 @@
 
 namespace Jestrux\Pier;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
+
 use Jestrux\Pier\View\Components\ActionButtons;
 use Jestrux\Pier\View\Components\AddButton;
-use Jestrux\Pier\View\Components\Counter;
 use Jestrux\Pier\View\Components\Data;
 use Jestrux\Pier\View\Components\DataGrid;
 use Jestrux\Pier\View\Components\FilterButton;
 use Jestrux\Pier\View\Components\Form;
 use Jestrux\Pier\View\Components\FormField;
 use Jestrux\Pier\View\Components\Grid;
-use Jestrux\Pier\View\Components\Livewire\Table;
 use Jestrux\Pier\View\Components\Modal;
 use Jestrux\Pier\View\Components\SearchInput;
 use Jestrux\Pier\View\Components\Stack;
-use Livewire\Livewire;
+
+use Jestrux\Pier\View\Components\Livewire\CMS;
+use Jestrux\Pier\View\Components\Livewire\Table;
 
 // use Jestrux\Pier\Pier;
 
@@ -40,6 +43,7 @@ class PierServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->registerDirectives();
         $this->registerResources();
 
         if ($this->app->runningInConsole()) {
@@ -54,6 +58,105 @@ class PierServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the package directives.
+     *
+     * @return void
+     */
+    private function registerDirectives()
+    {
+        function pierDataDirective($expression)
+        {
+            return <<<PHP
+                <?php
+                    \$expression = $expression;
+
+                    ob_start();
+
+                    (function() {
+                        \$args = func_get_args();
+
+                        \$withModel = count(\$args) > 1 && \$args[1];
+
+                        \$arg = \$args[0];
+                        \$model = \$arg;
+                        \$filters = null;
+
+                        if(is_array(\$arg)) {
+                            \$model = \$arg['model'];
+                            \$filters = \$arg;
+                        }
+
+                        \$__res = \$withModel 
+                            ? \Jestrux\Pier\PierData::model(model: \$model, filters: \$filters)
+                            :\Jestrux\Pier\PierData::browse(model: \$model, filters: \$filters);
+
+                        \$model = \$__res['model'] ?? null;
+
+                        extract(\$__res);
+                        
+                        extract(\$__res['pagination']);
+
+                        if(\$withModel && \$model) {
+                            extract([
+                                'name' => \$model->name,
+                                'mainField' => \$model->display_field,
+                                'fields' => \$model->fields,
+                                'settings' => \$model->settings,
+                            ]);
+                        }
+                ?>
+            PHP;
+        }
+
+        Blade::directive('pierdata', function ($expression) {
+            return pierDataDirective($expression);
+        });
+
+        Blade::directive('endpierdata', function () {
+            return <<<PHP
+                <?php })(\$expression); echo ob_get_clean(); ?>
+            PHP;
+        });
+
+        Blade::directive('piermodel', function ($expression) {
+            return pierDataDirective($expression);
+        });
+
+        Blade::directive('endpiermodel', function () {
+            return <<<PHP
+                <?php })(\$expression, true); echo ob_get_clean(); ?>
+            PHP;
+        });
+
+        Blade::directive('pierrow', function ($expression) {
+            return <<<PHP
+                <?php
+                    \$expression = $expression;
+
+                    ob_start();
+
+                    (function() {
+                        \$args = func_get_args();
+
+                        \$arg = \$args[0];
+                        \$model = array_is_list(\$arg) ? \$arg[0] : \$arg['model'];
+                        \$rowId = array_is_list(\$arg) ? \$arg[1] : \$arg['rowId'];
+
+                        \$__res = \Jestrux\Pier\PierData::row(model: \$model, rowId: \$rowId);
+
+                        extract(\$__res);
+                ?>
+            PHP;
+        });
+
+        Blade::directive('endpierrow', function () {
+            return <<<PHP
+                <?php })(\$expression, true); echo ob_get_clean(); ?>
+            PHP;
+        });
+    }
+
+    /**
      * Register the package resources.
      *
      * @return void
@@ -64,6 +167,7 @@ class PierServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         Livewire::component('table', Table::class);
+        Livewire::component('cms', CMS::class);
 
         $this->loadViewComponentsAs('pier', [
             Data::class,

@@ -4,7 +4,7 @@ Headless CMS and API generator for Laravel projects.
 
 # Demo of how Pier works
 
-- [https://vimeo.com/737768985](https://vimeo.com/737768985)
+-   [https://vimeo.com/737768985](https://vimeo.com/737768985)
 
 # How to Use
 
@@ -14,15 +14,15 @@ Add these lines to your `composer.json` file
 
 ```json
 {
-    "require": {
-        "jestrux/pier": "dev-master"
-    },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/jestrux/pier-package.git"
-        }
-    ]
+	"require": {
+		"jestrux/pier": "dev-master"
+	},
+	"repositories": [
+		{
+			"type": "git",
+			"url": "https://github.com/jestrux/pier-package.git"
+		}
+	]
 }
 ```
 
@@ -37,6 +37,7 @@ Now that we have our package installed, we need to migrate the database to add t
 `php artisan migrate`
 
 ### Publish package asset files
+
 `php artisan vendor:publish --tag=pier-assets`
 
 You will now find the pier asset files under `/public/pier`
@@ -55,9 +56,11 @@ PIER_S3_SECRET_ACCESS_KEY=
 ```
 
 ## Storing uploads locally
+
 If you plan to upload files to your asset files instead of S3, there are two ways:
 
 ### With access to storage:link
+
 Add the following field to `.env` which points to a `post` url.
 
 ```
@@ -96,9 +99,76 @@ Also update the local disk under `config.filesystems.php` as follows:
 ++'url' => env('APP_URL') . '/img/uploads',
 ```
 
+# Pier Directives
+
+## Model
+
+```php
+@piermodel('Article')
+    {{$name}} {{ $fields }} {{ $data }}
+@endpiermodel
+```
+
+## Data
+
+```php
+@pierdata('Song')
+    {{$data}}
+@endpierdata()
+
+// With filters
+@pierdata([
+    'model' => 'Book',
+    'q' => 'harry',
+    'page' => null,
+    'pluck' => 'name',
+    'randomize' => true,
+    'limit' => 3,
+    // 'first' => true
+])
+    {{ $data }}
+@endpierdata
+```
+
+## Row
+
+```php
+@pierrow('Book', '044365e5...')
+    {{ $data }}
+@endpierrow
+
+// Alternative
+@pierrow([
+    'model' => 'Book',
+    'rowId' => '044365e5...',
+])
+    {{ $data }}
+@endpierrow
+```
+
+# Pier Components
+
+## Table
+
+```php
+<x-pier::table model="Renter" :perPage="5" />
+
+// Paired with model for customization
+@piermodel([
+    'model' => 'Apartment',
+    'page' => 1,
+    'perPage' => 10
+])
+    <livewire:table :$fields :rows="$data" :$page :$perPage />
+    <br />
+    Showing: {{ $data->count() }} of {{ $totalRows }} results
+@endpiermodel
+```
+
 # Customize
 
 ## CMS
+
 To change the theme color, app name and app logo in the CMS, update the following:
 
 ```
@@ -110,9 +180,11 @@ APP_LOGO=img/logo.png
 **Note:** Similar to the sample above, the `APP_LOGO` should be a path in your public folder, Pier will automatically wrap it with `asset()`
 
 ## Pier Configs
+
 Before you can customize pier configs, you need to first publish the package's config file that includes some defaults for us. To publish that, run the following command.
 
 ### Publish the package config
+
 `php artisan vendor:publish --tag=pier-config`
 
 You will now find the config file located in `/config/pier.php`

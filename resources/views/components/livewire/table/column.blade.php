@@ -1,13 +1,14 @@
 @php
     $value = $row->{$field->label};
     $type = $field->type;
-    $centered = $field->centered ?? false;
     $meta = $field->meta ?? null;
 
     if ($type == 'reference') {
         $type = $meta->type;
         $value = $value->{$meta->field};
     }
+
+    $centered = in_array($type, $centeredFields);
 
     $value = match ($type) {
         'image' => (function () use ($value, $meta) {

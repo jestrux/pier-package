@@ -612,7 +612,7 @@ class PierMigration extends Model{
             $paginate = in_array("page", $param_keys);
             if($paginate){
                 $paginated = true;
-                $items_per_page = in_array("perPage", $param_keys) ? $params['perPage'] : 25;
+                $items_per_page = $params['perPage'] ?? 25;
                 [$results,$pluck_props] = self::do_pluck($results, $params, true, $items_per_page);
             }
         }
@@ -754,15 +754,14 @@ class PierMigration extends Model{
             }
         }
 
-        if(isset($params['limit']) && !$paginated){
-            $limit = $params['limit'];
-            if($limit == 1){
-                if($result_data->count() == 0)
-                    return null;
-                    
-                return $result_data->first();
-            }
-            $result_data = $result_data->take($limit);
+        if(isset($params['limit'])){
+            $result_data = $result_data->take($params['limit']);
+        }
+
+        if(isset($params['first'])){
+            if($result_data->count() == 0) $result_data = null;
+
+            $result_data = $result_data->first();
         }
 
         if($has_been_paginated) $results['data'] = $result_data;

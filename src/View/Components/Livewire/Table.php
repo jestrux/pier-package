@@ -3,60 +3,63 @@
 namespace Jestrux\Pier\View\Components\Livewire;
 
 use Livewire\Component;
-use Jestrux\Pier\PierMigration;
+use Jestrux\Pier\PierData;
 
 class Table extends Component
 {
+    public $modelDetails;
     public $model;
     public $q = "";
     public $page = 1;
-    public $perPage = 25;
+    public $perPage;
     public $fields;
     public $rows;
+    public $pagination;
+
+    public $centeredFields = [
+        // "image",
+        // "phone",
+        // "email",
+        // "video",
+        "rating",
+        "boolean",
+        // "date"
+    ];
 
     public function mount()
     {
-        $res = PierMigration::browse_model($this->model, [
-            'q' => $this->q,
-            'page' => $this->page,
-            'perPage' => $this->perPage,
-        ]);
-        $model = $res['model'];
-        $data = $res['data'];
+        if (!$this->model) return;
 
-        $centeredFields = [
-            "image",
-            "phone",
-            "email",
-            "video",
-            "rating",
-            "boolean",
-            "date"
-        ];
+        $res = PierData::model(
+            model: $this->model,
+            filters: [
+                'q' => $this->q,
+                'page' => $this->page,
+                'perPage' => $this->perPage,
+            ]
+        );
 
-        $this->fields = collect(json_decode($model->fields))->map(function ($field) use ($centeredFields) {
-            $fieldType = $field->type;
-
-            if ($fieldType == 'reference' && $field->meta?->type ?? null) {
-                $fieldType = $field->meta?->type;
-            }
-
-            $field->centered = in_array($fieldType, $centeredFields);
-            return $field;
-        });
-
-        $this->rows = $data['data'];
+        $this->rows = $res['data'];
+        $this->pagination = $res['pagination'];
+        $this->modelDetails = $res['model'];
+        $this->fields = $res['model']['fields'];
     }
 
     public function updated()
     {
-        $res = PierMigration::browse($this->model, [
-            'q' => $this->q,
-            'page' => $this->page,
-            'perPage' => $this->perPage,
-        ]);
+        if (!$this->model) return;
+
+        $res = PierData::browse(
+            model: $this->model,
+            filters: [
+                "q" => $this->q,
+                "page" => $this->page,
+                "perPage" => $this->perPage,
+            ]
+        );
 
         $this->rows = $res['data'];
+        $this->pagination = $res['pagination'];
     }
 
     public function render()
