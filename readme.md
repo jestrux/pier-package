@@ -167,6 +167,24 @@ Download a sample pier db to use for testing [here 👉](/pier-db.json)
     Showing: {{ $data->count() }} of {{ $totalRows }} results
 @endpiermodel
 
+// Use one of the handy pier helper functions
+@php
+    $data = pierData('Complex');
+    $fields = pierModelFields('Complex');
+@endphp
+
+<livewire:pier-table :$fields :$data /> <br />
+
+// Alternatively you can use this which will put
+// Model $name, $fields and $data in this local scope
+@php
+    extract(pierModelWithData($model, ['limit' => 2, 'randomize' => true]));
+@endphp
+
+Data for: {{ str($name)->plural() }} <br />
+<livewire:pier-table :$fields :$data /> <br />
+Showing: {{ $data->count() }} of {{ $totalRows }} results
+
 // Custom data, custom fields
 @php
     $data = [(object) ['name' => 'Heather Moon', 'phone' => '+255 700 123 467', 'image' => 'https://images.unsplash.com/photo-1507036066871-b7e8032b3dea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxNjE2NXwwfDF8c2VhcmNofDE4fHxnaXJsfGVufDB8fHx8MTcwNDU4NjMzMXww&ixlib=rb-4.0.3&q=80&w=100']];
