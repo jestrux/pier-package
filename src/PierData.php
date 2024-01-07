@@ -28,7 +28,7 @@ class PierData
         $pagination = $res;
 
         return [
-            'data' => $res,
+            'data' => $res['data'],
             'pagination' => [
                 'perPage' => $pagination['per_page'],
                 'page' => $pagination['current_page'],
@@ -49,6 +49,7 @@ class PierData
 
         $model = $res['model'];
         $model->fields = collect(json_decode($model->fields));
+        $model->settings = collect(json_decode($model->settings));
         $pagination = $res['data'];
         $data = $res['data']['data'];
 

@@ -150,19 +150,30 @@ Also update the local disk under `config.filesystems.php` as follows:
 
 ## Table
 
-```blade
-<x-pier::table model="Renter" :perPage="5" />
+Download a sample pier db to use for testing [here 👉](/pier-db.json)
 
-// Paired with model for customization
+```blade
+// Basic usage with a Pier model
+<x-pier::table model="Renter" :per-page="5" />
+
+// Paired with piermodel directive
 @piermodel([
     'model' => 'Apartment',
-    'page' => 1,
+    'q' => '5 bed',
     'perPage' => 10
 ])
-    <livewire:table :$fields :rows="$data" :$page :$perPage />
+    <livewire:pier-table :$fields :$data />
     <br />
     Showing: {{ $data->count() }} of {{ $totalRows }} results
 @endpiermodel
+
+// Custom data, custom fields
+@php
+    $data = [(object) ['name' => 'Heather Moon', 'phone' => '+255 700 123 467', 'image' => 'https://images.unsplash.com/photo-1507036066871-b7e8032b3dea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxNjE2NXwwfDF8c2VhcmNofDE4fHxnaXJsfGVufDB8fHx8MTcwNDU4NjMzMXww&ixlib=rb-4.0.3&q=80&w=100']];
+    $fields = [pierField('name'), pierField('phone'), pierField(label: 'image', type: 'image', meta: ['face' => true])];
+@endphp
+
+<x-pier::table :$data :$fields />
 ```
 
 # Customize

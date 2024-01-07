@@ -1,18 +1,18 @@
 @php
-    $value = $row->{$field->label};
+    $value = ($row->{$field->label}) ?? "";
     $type = $field->type;
     $meta = $field->meta ?? null;
 
     if ($type == 'reference') {
         $type = $meta->type;
-        $value = $value->{$meta->field};
+        $value = ($value->{$meta->field}) ?? "";
     }
 
     $centered = in_array($type, $centeredFields);
 
     $value = match ($type) {
         'image' => (function () use ($value, $meta) {
-            $sizing = $meta && $meta->face ? ' w-[40px] aspect-square rounded-full' : ' w-[60px] aspect-[2/1.3] rounded';
+            $sizing = $meta && ($meta->face ?? null) ? ' w-[40px] aspect-square rounded-full' : ' w-[60px] aspect-[2/1.3] rounded';
             return "<img class='$sizing inline-block object-cover object-center' src='$value' />";
         })(),
 
@@ -40,7 +40,9 @@
 @endphp
 
 <td class="p-3 text-sm max-w-[120px] truncate {{ $centered ? 'text-center' : 'text-left' }}">
-    {!! $value !!}
+    <span class="{{ $loop->index == 0 ? 'pl-4' : '' }}">
+        {!! $value !!}
+    </span>
 </td>
 
 {{-- <tr data-v-627a034d="" class="text-capitalize">

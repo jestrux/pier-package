@@ -18,7 +18,7 @@
 </head>
 
 <body class="h-screen bg-gray-200">
-    <livewire:cms :modelName="$modelName ?? null" />
+    <livewire:pier-cms :modelName="$modelName ?? null" />
 </body>
 
 </html>

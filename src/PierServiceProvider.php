@@ -20,6 +20,7 @@ use Jestrux\Pier\View\Components\SearchInput;
 use Jestrux\Pier\View\Components\Stack;
 
 use Jestrux\Pier\View\Components\Livewire\CMS;
+use Jestrux\Pier\View\Components\Livewire\DataTable;
 use Jestrux\Pier\View\Components\Livewire\Table;
 
 // use Jestrux\Pier\Pier;
@@ -43,6 +44,8 @@ class PierServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        require __DIR__ . '/helpers.php';
+        
         $this->registerDirectives();
         $this->registerResources();
 
@@ -166,8 +169,9 @@ class PierServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'pier');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
-        Livewire::component('table', Table::class);
-        Livewire::component('cms', CMS::class);
+        Livewire::component('pier-datatable', DataTable::class);
+        Livewire::component('pier-table', Table::class);
+        Livewire::component('pier-cms', CMS::class);
 
         $this->loadViewComponentsAs('pier', [
             Data::class,
