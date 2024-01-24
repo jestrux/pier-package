@@ -38,7 +38,7 @@
             x-on:focusin.window="! $refs.panel.contains($event.target) && close()" x-id="['dropdown-button']">
             <button x-ref="button" x-on:click="toggle()" :aria-expanded="open" :aria-controls="$id('dropdown-button')"
                 type="button"
-                class="cursor-pointer flex items-center justify-center w-7 h-7 bg-white rounded-full focus:outline-none border border-transparent focus:border-neutral-200">
+                class="cursor-pointer flex items-center justify-center w-7 h-7 bg-card rounded-full focus:outline-none border border-transparent focus:border-content/5">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />

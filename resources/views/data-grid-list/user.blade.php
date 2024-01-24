@@ -9,7 +9,7 @@
     @foreach ($data as $item)
         <div id="item{{ $item->_id }}" class="group relative p-0.5">
             <div
-                class="h-full w-full p-1 relative rounded overflow-hidden bg-white shadow border border-neutral-200 flex flex-col items-center text-center">
+                class="h-full w-full p-1 relative rounded overflow-hidden bg-card shadow-sm border border-stroke flex flex-col items-center text-center">
                 @isset($image)
                     <div class="pt-4 px-8 w-full -mx-1">
                         <div class="relative rounded-full overflow-hidden w-full aspect-square">

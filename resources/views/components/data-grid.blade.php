@@ -22,7 +22,7 @@
 
                 @if ($showSearch)
                     <x-pier-search-input
-                        class="border border-gray-300 w-72 px-3 h-10 rounded placeholder:text-black/20 focus:outline-none"
+                        class="bg-transparent border-2  border-stroke w-72 px-3 h-10 rounded placeholder:text-content/20 focus:outline-none"
                         placeholder="Type to search..." />
                 @endif
             </div>

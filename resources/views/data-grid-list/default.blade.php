@@ -8,7 +8,7 @@
 <div class="grid grid-cols-2 lg:grid-cols-2 xl:grid-cols-3" style="gap: {{ $gap ?? '12px' }}">
     @foreach ($data as $item)
         <div id="item{{ $item->_id }}" class="group relative p-0.5">
-            <div class="h-full py-1 px-1 relative rounded w-full bg-white shadow border border-gray-200">
+            <div class="h-full py-1 px-1 relative rounded w-full bg-card shadow-sm border border-stroke">
                 @isset($image)
                     <div class="relative rounded-t-sm overflow-hidden">
                         {!! eval('?>' . Blade::compileString($image)) !!}
