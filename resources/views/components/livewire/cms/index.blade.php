@@ -110,11 +110,11 @@
 
         <div class="flex-1 overflow-y-auto">
             <div class="p-8">
-                @piermodel(['model' => $currentModel->name, 'q' => $q, ...$filters ?? []])
+                @pierdata(['model' => $currentModel->name, 'q' => $q, ...$filters ?? []])
                     <div class="bg-card text-content/80">
-                        <livewire:pier-table :$fields :$data />
+                        <x-pier-table :$fields :$data />
                     </div>
-                @endpiermodel
+                @endpierdata
                 {{-- <livewire:pier-table :model="$currentModel->name" :q="$q" /> --}}
             </div>
         </div>

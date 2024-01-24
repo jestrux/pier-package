@@ -99,31 +99,26 @@ Also update the local disk under `config.filesystems.php` as follows:
 ++'url' => env('APP_URL') . '/img/uploads',
 ```
 
+Download a sample pier db to use with the examples below [here 👉](/pier-db.json)
+
 # Pier Directives
-
-## Model
-
-```blade
-@piermodel('Article')
-    {{$name}} {{ $fields }} {{ $data }}
-@endpiermodel
-```
 
 ## Data
 
 ```blade
-@pierdata('Song')
-    {{$data}}
+@pierdata('Renter')
+    @foreach($data as $renter)
+        <p>{{$renter->name}}</p>
+    @endforeach
 @endpierdata()
 
 // With filters
 @pierdata([
-    'model' => 'Book',
-    'q' => 'harry',
-    'page' => null,
+    'model' => 'Renter',
+    'q' => 'ar',
     'pluck' => 'name',
     'randomize' => true,
-    'limit' => 3,
+    'perPage' => 3,
     // 'first' => true
 ])
     {{ $data }}
@@ -133,16 +128,16 @@ Also update the local disk under `config.filesystems.php` as follows:
 ## Row
 
 ```blade
-@pierrow('Book', '044365e5...')
-    {{ $data }}
+@pierrow(['Complex', '26da45e8-135a-4be6-9a86-ad1f63135065'])
+    {{ $data->name }}
 @endpierrow
 
-// Alternative
+// Alternatively
 @pierrow([
-    'model' => 'Book',
-    'rowId' => '044365e5...',
+    'model' => 'Complex',
+    'rowId' => '26da45e8-135a-4be6-9a86-ad1f63135065',
 ])
-    {{ $data }}
+    {{ $data->name }}
 @endpierrow
 ```
 
@@ -150,53 +145,39 @@ Also update the local disk under `config.filesystems.php` as follows:
 
 ## Table
 
-Download a sample pier db to use for testing [here 👉](/pier-db.json)
-
 ### Basic usage
 
 ```blade
 // Basic usage with a Pier model
-<x-pier::table model="Renter" :per-page="5" />
+<x-pier-table model="Renter" :per-page="5" />
 ```
 
-### Paired with piermodel directive
+### Paired with `pierdata` directive
 
 ```blade
-@piermodel([
+@pierdata([
     'model' => 'Apartment',
-    'q' => '5 bed',
-    'perPage' => 10
+    'perPage' => 5
 ])
-    <livewire:pier-table :$fields :$data />
+    <x-pier-table :$fields :$data />
     <br />
     Showing: {{ $data->count() }} of {{ $totalRows }} results
-@endpiermodel
+@endpierdata
 ```
 
-### Use one of the handy pier helper functions
-
-```blade
-@php
-    $data = pierData('Complex');
-    $fields = pierModelFields('Complex');
-@endphp
-
-<livewire:pier-table :$fields :$data /> <br />
-```
-
-### Pair `pierModelWithData` with the PHP extract function
+### Use with the `pierData` helper with the PHP extract function
 
 ```blade
 
 @php
-    // Will put Model `$name`, `$fields` and `$data`
+    // Will put `$data`, `$model`, `$fields` and `$pagination`
     // and pagination info in this local scope
-    extract(pierModelWithData($model, ['limit' => 2, 'randomize' => true]));
+    extract(pierData('Renter', ['limit' => 2, 'randomize' => true]));
 @endphp
 
-Data for: {{ str($name)->plural() }} <br />
-<livewire:pier-table :$fields :$data /> <br />
-Showing: {{ $data->count() }} of {{ $totalRows }} results
+Data for: {{ str($model->name)->plural() }} <br />
+<x-pier-table :$data :$fields /> <br />
+Showing: {{ $data->count() }} of {{ $pagination->totalRows }} results
 ```
 
 ### Custom data, custom fields
@@ -207,7 +188,7 @@ Showing: {{ $data->count() }} of {{ $totalRows }} results
     $fields = [pierField('name'), pierField('phone'), pierField(label: 'image', type: 'image', meta: ['face' => true])];
 @endphp
 
-<x-pier::table :$data :$fields />
+<x-pier-table :$data :$fields />
 ```
 
 # Customize

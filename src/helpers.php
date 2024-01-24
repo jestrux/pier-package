@@ -1,37 +1,32 @@
 <?php
 
-use Jestrux\Pier\PierData;
 use Jestrux\Pier\PierMigration;
 
 function pierData($model, $filters = null)
 {
-    $res = PierData::browse(
-        model: $model,
-        filters: $filters
-    );
-
-    if ($filters && $filters['page']) return $res;
-
-    return $res['data'];
-}
-
-function pierModelWithData($model, $filters = null)
-{
-    $res = PierData::model(
-        model: $model,
-        filters: $filters
-    );
-
-    $data = $res['data'];
+    $filters = $filters ?? [];
+    if (!isset($filters['page'])) $filters['page'] = 1;
+    $res = PierMigration::browse_model($model, $filters);
 
     $model = $res['model'];
+    $model->mainField = $model->display_field;
+    $model->fields = collect(json_decode($model->fields));
+    $model->settings = collect(json_decode($model->settings));
+    $pagination = $res['data'];
+    $data = $res['data']['data'];
 
-    $name = $model->name;
-    $mainField = $model->display_field;
-    $fields = $model->fields;
-    $settings = $model->settings;
-
-    return compact(["data", "model", "name", "mainField", "fields", "settings"]);
+    return [
+        'data' => $data,
+        'model' => $model,
+        'fields' => $model->fields,
+        'pagination' => (object) [
+            'perPage' => $pagination['per_page'],
+            'page' => $pagination['current_page'],
+            'lastPage' => $pagination['last_page'],
+            'totalRows' => $pagination['total_rows'],
+            'hasMorePages' => $pagination['has_more_pages'],
+        ]
+    ];
 }
 
 function pierModelFields($model)

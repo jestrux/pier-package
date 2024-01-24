@@ -46,7 +46,7 @@ class PierServiceProvider extends ServiceProvider
     public function boot()
     {
         require __DIR__ . '/helpers.php';
-        
+
         $this->registerDirectives();
         $this->registerResources();
 
@@ -68,18 +68,13 @@ class PierServiceProvider extends ServiceProvider
      */
     private function registerDirectives()
     {
-        function pierDataDirective($expression)
-        {
+        Blade::directive('pierdata', function ($expression) {
             return <<<PHP
                 <?php
                     \$expression = $expression;
 
-                    ob_start();
-
                     (function() {
                         \$args = func_get_args();
-
-                        \$withModel = count(\$args) > 1 && \$args[1];
 
                         \$arg = \$args[0];
                         \$model = \$arg;
@@ -90,30 +85,17 @@ class PierServiceProvider extends ServiceProvider
                             \$filters = \$arg;
                         }
 
-                        \$__res = \$withModel 
-                            ? \Jestrux\Pier\PierData::model(model: \$model, filters: \$filters)
-                            :\Jestrux\Pier\PierData::browse(model: \$model, filters: \$filters);
-
-                        \$model = \$__res['model'] ?? null;
+                        \$__res = pierData(model: \$model, filters: \$filters);
 
                         extract(\$__res);
-                        
-                        extract(\$__res['pagination']);
 
-                        if(\$withModel && \$model) {
-                            extract([
-                                'name' => \$model->name,
-                                'mainField' => \$model->display_field,
-                                'fields' => \$model->fields,
-                                'settings' => \$model->settings,
-                            ]);
-                        }
+                        \$fields = \$__res['model']->fields;
+
+                        \$__env = view();
+
+                        ob_start();
                 ?>
             PHP;
-        }
-
-        Blade::directive('pierdata', function ($expression) {
-            return pierDataDirective($expression);
         });
 
         Blade::directive('endpierdata', function () {
@@ -122,40 +104,31 @@ class PierServiceProvider extends ServiceProvider
             PHP;
         });
 
-        Blade::directive('piermodel', function ($expression) {
-            return pierDataDirective($expression);
-        });
-
-        Blade::directive('endpiermodel', function () {
-            return <<<PHP
-                <?php })(\$expression, true); echo ob_get_clean(); ?>
-            PHP;
-        });
-
         Blade::directive('pierrow', function ($expression) {
             return <<<PHP
                 <?php
                     \$expression = $expression;
 
-                    ob_start();
-
                     (function() {
                         \$args = func_get_args();
 
                         \$arg = \$args[0];
+                        
                         \$model = array_is_list(\$arg) ? \$arg[0] : \$arg['model'];
                         \$rowId = array_is_list(\$arg) ? \$arg[1] : \$arg['rowId'];
 
-                        \$__res = \Jestrux\Pier\PierData::row(model: \$model, rowId: \$rowId);
+                        \$data = \Jestrux\Pier\PierMigration::detail(\$model, \$rowId);
 
-                        extract(\$__res);
+                        \$__env = view();
+
+                        ob_start();
                 ?>
             PHP;
         });
 
         Blade::directive('endpierrow', function () {
             return <<<PHP
-                <?php })(\$expression, true); echo ob_get_clean(); ?>
+                <?php })(\$expression); echo ob_get_clean(); ?>
             PHP;
         });
     }

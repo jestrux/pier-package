@@ -3,20 +3,19 @@
 namespace Jestrux\Pier\View\Components\Livewire;
 
 use Livewire\Component;
-use Jestrux\Pier\PierData;
 
 class DataTable extends Component
 {
     public $modelDetails;
-    
+
     public $model;
-    
+
     public $q = "";
-    
+
     public $filters = [];
-    
+
     public $fields;
-    
+
     public $data;
 
     public $page = 1;
@@ -27,7 +26,7 @@ class DataTable extends Component
 
     public function mount()
     {
-        $res = PierData::model(
+        $res = pierData(
             model: $this->model,
             filters: [
                 'q' => $this->q,
@@ -40,12 +39,12 @@ class DataTable extends Component
         $this->data = $res['data'];
         $this->pagination = $res['pagination'];
         $this->modelDetails = $res['model'];
-        $this->fields = $res['model']['fields'];
+        $this->fields = $res['fields'];
     }
 
     public function updated()
     {
-        $res = PierData::browse(
+        $res = pierData(
             model: $this->model,
             filters: [
                 "q" => $this->q,
