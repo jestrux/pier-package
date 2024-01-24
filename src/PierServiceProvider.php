@@ -18,10 +18,11 @@ use Jestrux\Pier\View\Components\Grid;
 use Jestrux\Pier\View\Components\Modal;
 use Jestrux\Pier\View\Components\SearchInput;
 use Jestrux\Pier\View\Components\Stack;
+use Jestrux\Pier\View\Components\Table;
 
 use Jestrux\Pier\View\Components\Livewire\CMS;
 use Jestrux\Pier\View\Components\Livewire\DataTable;
-use Jestrux\Pier\View\Components\Livewire\Table;
+use Jestrux\Pier\View\Components\Livewire\Table as LivewireTable;
 
 // use Jestrux\Pier\Pier;
 
@@ -170,7 +171,7 @@ class PierServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         Livewire::component('pier-datatable', DataTable::class);
-        Livewire::component('pier-table', Table::class);
+        Livewire::component('pier-table', LivewireTable::class);
         Livewire::component('pier-cms', CMS::class);
 
         $this->loadViewComponentsAs('pier', [
@@ -184,7 +185,8 @@ class PierServiceProvider extends ServiceProvider
             Grid::class,
             Modal::class,
             FormField::class,
-            Stack::class
+            Stack::class,
+            Table::class,
         ]);
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'pier');
         $this->registerRoutes();

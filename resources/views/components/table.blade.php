@@ -1,10 +1,10 @@
-@props([
+{{-- @props([
     'model' => null,
     'fields' => null,
     'data' => null,
     'page' => 1,
     'perPage' => 1000,
-])
+]) --}}
 
 @php
     if ($data && ($model || $fields || count($data) > 0)) {
