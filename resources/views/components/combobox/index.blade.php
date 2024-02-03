@@ -42,12 +42,12 @@
     <div x-combobox x-model="selected" nullable>
         <div class="mt-1 flex flex-col items-end relative rounded-md focus-within:ring-2 focus-within:ring-blue-500">
             <div
-                class="flex items-center justify-between gap-2 w-full px-2 py-1 bg-card border-2 border-stroke rounded-md">
+                class="flex items-center justify-between gap-2 w-full px-2.5 h-10 bg-card border-2 border-stroke rounded-md">
                 <input x-combobox:input x-bind:display-value="res => res?.label"
                     x-on:change="query = $event.target.value;"
                     class="bg-transparent border-none p-0 focus:outline-none focus:ring-0 placeholder:text-content/20"
                     placeholder="Search..." autocomplete="off" />
-                <button x-combobox:button class="absolute inset-y-0 right-0 flex items-center pr-2">
+                <button x-combobox:button class="absolute inset-y-0 right-0 flex items-center pr-2.5">
                     <!-- Heroicons up/down -->
                     <svg class="shrink-0 w-5 h-5 opacity-50" viewBox="0 0 20 20" fill="none" stroke="currentColor">
                         <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" stroke-width="1.5" stroke-linecap="round"

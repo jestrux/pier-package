@@ -1,4 +1,4 @@
-@aware(['model'])
+@props(['model'])
 
 @php
     $fields = $model->fields;
@@ -13,10 +13,12 @@
 @endphp
 
 @if ($filters->count() > 0)
-    <div class="flex items-center gap-3 border-r border-content/20 mr-6 pr-6">
+    <div class="flex items-center gap-3 mr-6 pr-6 relative">
+        <span class="absolute inset-y-1.5 right-0 border-r border-stroke"></span>
+
         <x-pier::popover>
             <x-pier::popover.button
-                class="flex items-center gap-1 rounded-lg border-2 border-stroke pl-3 pr-2 py-1 text-content/50 text-sm">
+                class="flex items-center gap-1 rounded-md border-2 border-stroke pl-3 pr-1.5 py-1.5 text-content/50 text-sm">
                 <svg class="-ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" />
                 </svg>
@@ -28,7 +30,8 @@
                     x-text="Object.keys($wire.filters ?? {}).length">
                 </div>
 
-                <svg class="w-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                <svg class="ml-1.5 w-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                 </svg>
             </x-pier::popover.button>
@@ -44,7 +47,7 @@
                             <div key={field._id} class="flex-shrink-0" style="width: 220px">
                                 @if ($field->type == 'reference')
                                     <x-pier::combobox :model="$field->meta->model" value="$wire.filters?.['{{ $field->label }}']"
-                                        on-change="e => $wire.setFilter('{{ $field->label }}', e.detail)">
+                                        on-change="e => $wire.set('filters.{{ $field->label }}', e.detail)">
                                     </x-pier::combobox>
                                 @endif
 
@@ -54,14 +57,15 @@
                                     @endphp
 
                                     <x-pier::radio :choices="$choices" :value="$wire->filters->{$field->label} ?? ''"
-                                        on-change="e => $wire.setFilter('{{ $field->label }}', e.detail)">
+                                        on-change="e => $wire.set('filters.{{ $field->label }}', e.detail)">
                                     </x-pier::radio>
                                 @endif
 
                                 @if ($field->type == 'status')
-                                    <select class="pl-2 bg-transparent border-2 border-stroke p-1 rounded w-full"
+                                    <select
+                                        class="bg-transparent border-2 border-stroke focus:border-stroke pl-3 py-0 h-10 rounded-md w-full focus:ring-1 focus:ring-blue-500"
                                         x-bind:value="$wire.filters?.['{{ $field->label }}']"
-                                        x-on:change="$wire.setFilter('{{ $field->label }}', $event.target.value)">
+                                        x-on:change="$wire.set('filters.{{ $field->label }}', $event.target.value)">
                                         <option value="">All</option>
                                         @foreach ($field->meta->availableStatuses as $status)
                                             <option>{{ $status->name }}</option>
@@ -74,10 +78,12 @@
                 </div>
 
                 <div class="h-8 flex items-center px-3 bg-content/5 rounded-b-md">
-                    <button class="underline text-xs font-semibold"
-                        x-on:click="$dispatch('reset-filters'); $wire.resetFilters()">
-                        Reset filters
-                    </button>
+                    <x-pier::popover.close>
+                        <button class="text-primary text-xs font-semibold"
+                            x-on:click="$dispatch('reset-filters'); $wire.resetFilters()">
+                            Reset filters
+                        </button>
+                    </x-pier::popover.close>
                 </div>
             </x-pier::popover.panel>
         </x-pier::popover>
