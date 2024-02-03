@@ -1,11 +1,12 @@
 @php
-    $value = ($row->{$field->label}) ?? "";
+    $value = $row->{$field->label} ?? '';
     $type = $field->type;
     $meta = $field->meta ?? null;
+    $tooltip = $value->{$meta->mainField ?? ''} ?? '';
 
     if ($type == 'reference') {
         $type = $meta->type;
-        $value = ($value->{$meta->field}) ?? "";
+        $value = $value->{$meta->field} ?? '';
     }
 
     $centered = in_array($type, $centeredFields);
@@ -19,6 +20,16 @@
         'date' => (function () use ($value) {
             $date = \Carbon\Carbon::parse($value);
             return $date->format($date->year === now()->year ? 'M d, g:i A' : 'M d, Y, g:i A');
+        })(),
+
+        'status' => (function () use ($value, $field, $row) {
+            $color = $row->{$field->label . 'Meta'}->color ?? '';
+            $color = $color ? "<span class='w-2.5 h-2.5 rounded-full' style='background: $color;'></span>" : '';
+            return "<span class='flex items-center gap-1.5'>$color$value</span>";
+        })(),
+
+        'boolean' => (function () use ($value, $meta) {
+            return "<span class='text-xl'>" . ($value ? '✅' : '❌') . '</span>';
         })(),
 
         'location' => (function () use ($value, $meta) {
@@ -40,7 +51,7 @@
 @endphp
 
 <td class="p-3 text-sm max-w-[120px] truncate {{ $centered ? 'text-center' : 'text-left' }}">
-    <span class="{{ $loop->index == 0 ? 'pl-4' : '' }}">
+    <span title="{{ $tooltip }}" class="{{ $loop->index == 0 ? 'pl-4' : '' }}">
         {!! $value !!}
     </span>
 </td>
