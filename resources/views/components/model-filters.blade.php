@@ -1,59 +1,85 @@
 @aware(['model'])
 
-<div class="flex items-center gap-3 border-r border-content/20 mr-6 pr-6">
-    Filters:
+@php
+    $fields = $model->fields;
 
-    <button x-on:click="$wire.set('filters', {...$wire.filters, whereVerified: $wire.filters.whereVerified ? 0 : 1})">
-        Verified
-    </button>
-</div>
+    try {
+        $fields = json_decode($fields);
+    } catch (\Throwable $th) {
+        //throw $th;
+    }
 
-{{-- <div class="relative">
-    <button id="showFiltersButton" class="rounded-md border-2 py-1 px-2 flex items-center focus:outline-none"
-        style="display: flex;"><svg fill="#888" width="24" height="24" viewBox="0 0 24 24">
-            <path
-                d="M7,6h10l-5.01,6.3L7,6z M4.25,5.61C6.27,8.2,10,13,10,13v6c0,0.55,0.45,1,1,1h2c0.55,0,1-0.45,1-1v-6 c0,0,3.72-4.8,5.74-7.39C20.25,4.95,19.78,4,18.95,4H5.04C4.21,4,3.74,4.95,4.25,5.61z">
-            </path>
-        </svg><svg viewBox="0 0 24 24" class="h-4 w-4 ml-1">
-            <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z"></path>
-        </svg>
-    </button>
+    $filters = collect($fields)->filter(fn($field) => collect(['status', 'boolean', 'reference'])->contains($field->type));
+@endphp
 
-    <div id="filterDropdown" class="popover-custom shadow-md rounded-md" x-placement="bottom"
-        style="display: none; position: absolute; will-change: top, left; top: 36px; left: 32px;">
-        <div class="p-3 flex flex-col gap-2">
-            <div class="ModelFilterField flex items-center justify-between gap-3">
-                <span class="inline-block first-letter:uppercase flex-1">type</span>
-                <div class="flex-shrink-0" style="width: 180px;"><select class="border p-1 rounded w-full">
-                        <option value="">All</option>
-                        <option value="Presidential">Presidential</option>
-                        <option value="Standard">Standard</option>
-                        <option value="Economy">Economy</option>
-                    </select></div>
-            </div>
-            <div class="ModelFilterField flex items-center justify-between gap-3">
-                <span class="inline-block first-letter:uppercase flex-1">complex</span>
-                <div class="flex-shrink-0" style="width: 180px;">
-                    <div>
-                        <div>
-                            <div>
-                                <div data-position="below" class="autocomplete" style="position: relative;"><input
-                                        role="combobox" autocomplete="off" autocapitalize="off" autocorrect="off"
-                                        spellcheck="false" aria-autocomplete="list" aria-haspopup="listbox"
-                                        aria-owns="autocomplete-result-list-2" aria-expanded="false"
-                                        aria-activedescendant="" placeholder="Type to search..."
-                                        class="autocomplete-input">
-                                    <ul id="autocomplete-result-list-2" role="listbox" class="autocomplete-result-list"
-                                        style="position: absolute; z-index: 1; width: 100%; visibility: hidden; pointer-events: none; top: 100%;">
-                                    </ul>
-                                </div>
+@if ($filters->count() > 0)
+    <div class="flex items-center gap-3 border-r border-content/20 mr-6 pr-6">
+        <x-pier::popover>
+            <x-pier::popover.button
+                class="flex items-center gap-1 rounded-lg border-2 border-stroke pl-3 pr-2 py-1 text-content/50 text-sm">
+                <svg class="-ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" />
+                </svg>
+
+                <div>Filters</div>
+
+                <div x-cloak x-show="Object.keys($wire.filters ?? {}).length"
+                    class="h-4 w-4 rounded-full bg-blue-500 text-white text-[10px] font-bold tracking-tighter flex items-center justify-center"
+                    x-text="Object.keys($wire.filters ?? {}).length">
+                </div>
+
+                <svg class="w-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                </svg>
+            </x-pier::popover.button>
+
+            <x-pier::popover.panel position="bottom-end"
+                class="border-2 border-stroke shadow-xl z-10 w-96 overflow-hidden">
+                <div class="p-3 flex flex-col gap-4">
+                    @foreach ($filters as $field)
+                        <div class="ModelFilterField flex items-center justify-between gap-3">
+                            <span class="inline-block first-letter:uppercase flex-1">
+                                {{ $field->label }}
+                            </span>
+                            <div key={field._id} class="flex-shrink-0" style="width: 220px">
+                                @if ($field->type == 'reference')
+                                    <x-pier::combobox :model="$field->meta->model" value="$wire.filters?.['{{ $field->label }}']"
+                                        on-change="e => $wire.setFilter('{{ $field->label }}', e.detail)">
+                                    </x-pier::combobox>
+                                @endif
+
+                                @if ($field->type == 'boolean')
+                                    @php
+                                        $choices = collect([['label' => 'All', 'value' => ''], ['label' => '✅', 'value' => '1'], ['label' => '❌', 'value' => '0']]);
+                                    @endphp
+
+                                    <x-pier::radio :choices="$choices" :value="$wire->filters->{$field->label} ?? ''"
+                                        on-change="e => $wire.setFilter('{{ $field->label }}', e.detail)">
+                                    </x-pier::radio>
+                                @endif
+
+                                @if ($field->type == 'status')
+                                    <select class="pl-2 bg-transparent border-2 border-stroke p-1 rounded w-full"
+                                        x-bind:value="$wire.filters?.['{{ $field->label }}']"
+                                        x-on:change="$wire.setFilter('{{ $field->label }}', $event.target.value)">
+                                        <option value="">All</option>
+                                        @foreach ($field->meta->availableStatuses as $status)
+                                            <option>{{ $status->name }}</option>
+                                        @endforeach
+                                    </select>
+                                @endif
                             </div>
                         </div>
-                    </div>
+                    @endforeach
                 </div>
-            </div>
-        </div>
-        <div class="h-8 flex items-center px-3 bg-neutral-100 rounded-b-md"><button
-                class="underline text-xs font-semibold">Reset filters</button></div>
+
+                <div class="h-8 flex items-center px-3 bg-content/5 rounded-b-md">
+                    <button class="underline text-xs font-semibold"
+                        x-on:click="$dispatch('reset-filters'); $wire.resetFilters()">
+                        Reset filters
+                    </button>
+                </div>
+            </x-pier::popover.panel>
+        </x-pier::popover>
     </div>
-</div> --}}
+@endif

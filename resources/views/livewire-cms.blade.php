@@ -14,7 +14,7 @@
 
     <link rel="manifest" href="{{ asset('manifest.json') }}" />
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
 </head>
 
 <body class="h-screen bg-gray-200">

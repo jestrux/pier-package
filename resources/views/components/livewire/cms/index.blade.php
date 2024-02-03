@@ -1,8 +1,9 @@
 @assets()
 <meta name="csrf_token" value="{{ csrf_token() }}" />
 
-<style>
+<style type="text/tailwindcss">
     :root {
+        --stroke-color: 226 232 240;
         --border-color: #e2e8f0;
         --canvas-color: 229 229 229;
         --card-color: 255 255 255;
@@ -12,6 +13,7 @@
 
     @media (prefers-color-scheme: dark) {
         :root {
+            --stroke-color: 53 53 53;
             --border-color: rgba(255, 255, 255, 0.16);
             --canvas-color: 24 24 24;
             --card-color: 37 37 37;
@@ -24,7 +26,7 @@
     }
 
     * {
-        border-color: var(--border-color);
+        border-color: rgb(var(--stroke-color));
     }
 
     .flex>* {
@@ -41,6 +43,7 @@
                     card: "rgb(var(--card-color) / <alpha-value>)",
                     content: "rgb(var(--content-color) / <alpha-value>)",
                     primary: "rgb(var(--primary-color) / <alpha-value>)",
+                    stroke: "rgb(var(--stroke-color) / <alpha-value>)",
                 },
             },
         },
@@ -76,7 +79,7 @@
 
 
     <main class="flex-1 h-screen flex flex-col relative">
-        <header class="flex items-center justify-between px-8 h-16 pl-11 bg-card flex-shrink-0 shadow-sm">
+        <header class="flex items-center justify-between px-8 h-16 pl-11 bg-card flex-shrink-0 border shadow-sm">
             <span class="mr-3 my-3 font-bold capitalize text-xl">
                 {{ str($currentModel->name)->plural() }}
             </span>
@@ -110,7 +113,7 @@
 
         <div class="flex-1 overflow-y-auto">
             <div class="p-8">
-                @pierdata(['model' => $currentModel->name, 'q' => $q, ...$filters ?? []])
+                @pierdata(['model' => $currentModel->name, 'q' => $q, ...$this->getFilters() ?? []])
                     <div class="bg-card text-content/80">
                         <x-pier-table :$fields :$data />
                     </div>
