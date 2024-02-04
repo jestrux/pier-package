@@ -26,7 +26,7 @@
     <!-- Radio Label -->
     {{-- <label x-radio:label class="sr-only">Backend framework: <span x-text="value"></span></label> --}}
 
-    <div class="flex items-center flex-wrap gap-4 -mx-1.5">
+    <div class="flex items-center flex-wrap gap-2 -mx-1.5">
         <template x-for="(choice, index) in choices" x-bind:key="index">
             <div x-radio:option x-bind:value="choice.value"
                 class="flex items-center gap-2 cursor-pointer px-2 py-1 rounded focus:outline-none focus:ring-1 ring-content/20">

@@ -79,7 +79,7 @@
 
 
     <main class="flex-1 h-screen flex flex-col relative">
-        <header class="flex items-center justify-between px-8 h-16 pl-11 bg-card flex-shrink-0 border shadow-sm">
+        <header class="flex items-center justify-between px-8 h-16 bg-card flex-shrink-0 border shadow-sm">
             <span class="mr-3 my-3 font-bold capitalize text-xl">
                 {{ str($currentModel->name)->plural() }}
             </span>
@@ -94,7 +94,7 @@
 
             <span class="flex-1"></span>
 
-            <div class="mr-8 flex items-center">
+            <div class="flex items-center">
                 <x-pier::model-filters :model="$currentModel" />
 
                 <div class="relative rounded-full">
@@ -112,7 +112,7 @@
         </header>
 
         <div class="flex-1 overflow-y-auto">
-            <div class="p-8">
+            <div class="px-8 py-4">
                 @pierdata(['model' => $currentModel->name, 'q' => $q, ...$this->getFilters() ?? []])
                     <div class="bg-card text-content/80">
                         <x-pier-table :$fields :$data />
