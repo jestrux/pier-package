@@ -20,7 +20,9 @@ class Table extends Component
         // "video",
         "rating",
         "boolean",
-        // "date"
+        // "date",
+        "status",
+        "color",
     ];
 
     public function render()
