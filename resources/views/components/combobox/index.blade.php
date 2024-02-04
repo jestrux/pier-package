@@ -1,9 +1,15 @@
-@props(['model', 'value', 'onChange' => 'console.log'])
+@props(['model', 'value' => null, 'onChange' => 'console.log'])
+
+@assets()
+    <script defer src="https://unpkg.com/@alpinejs/ui@3.13.3-beta.4/dist/cdn.min.js"></script>
+    <script defer src="https://unpkg.com/@alpinejs/focus@3.13.3/dist/cdn.min.js"></script>
+@endassets
 
 <div x-data="{
     modelName: '{{ $model }}',
     query: '',
     width: '', //'220px',
+    defaultValue: '{{ $value }}',
     _selected: null,
     selected: null,
     results: [],
@@ -19,12 +25,20 @@
             ).then(res => res.json());
 
             this.results = res;
+
+            return res;
         } catch (error) {
             console.log('Failed to search.', error);
         }
     },
     init() {
-        this.search();
+        this.search().then(res => {
+            if (this.defaultValue) {
+                const value = res.find(({ _id }) => _id == this.defaultValue);
+                this.selected = value;
+                this._selected = value;
+            }
+        });
         this.$watch('query', _ => this.search);
         this.$watch('selected', newValue => {
             if (this._selected?._id == newValue?._id) return;
@@ -42,7 +56,9 @@
     <div x-combobox x-model="selected" nullable>
         <div class="mt-1 flex flex-col items-end relative rounded-md focus-within:ring-2 focus-within:ring-blue-500">
             <div
-                class="flex items-center justify-between gap-2 w-full px-2.5 h-10 bg-card border-2 border-stroke rounded-md">
+                {{ $attributes->merge([
+                    'class' => 'flex items-center justify-between gap-2 w-full px-2.5 h-10 bg-card border-2 border-stroke rounded-md',
+                ]) }}>
                 <input x-combobox:input x-bind:display-value="res => res?.label"
                     x-on:change="query = $event.target.value;"
                     class="bg-transparent border-none p-0 focus:outline-none focus:ring-0 placeholder:text-content/20"

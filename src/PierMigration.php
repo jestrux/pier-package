@@ -770,7 +770,8 @@ class PierMigration extends Model{
         return $results;
     }
 
-    static function detail($model, $row_id){
+    static function detail($model, $row_id, $filters = []){
+        $_GET['flat'] = $filters['flat'] ?? null;
         $table_name = Str::snake($model);
         $result = DB::table($table_name)->where("_id", '=', $row_id)->first();
 
