@@ -17,9 +17,15 @@ class Form extends Component
 
     public function mount()
     {
-        $model = pierModel($this->modelName);
-        $this->fields = $model->fields;
-        $this->model = $model;
+        if ($this->modelName) {
+            $model = pierModel($this->modelName);
+            $this->fields = $model->fields;
+            $this->model = $model;
+
+            if ($this->rowId) {
+                $this->values = $model && $this->rowId ? (array) pierRow($model, $this->rowId, ['flat' => true]) : [];
+            }
+        }
     }
 
     public function render()
