@@ -1,4 +1,4 @@
-@props(['model'])
+@props(['model', 'onChange' => 'console.log'])
 
 @php
     $fields = $model->fields;
@@ -14,7 +14,27 @@
 @endphp
 
 @if ($filters->count() > 0)
-    <div class="flex items-center gap-3 mr-5 pr-5 relative">
+    <div class="flex items-center gap-3 mr-5 pr-5 relative" x-data="{
+        filters: {},
+        tempFilters: {},
+        init() {
+            this.$watch('tempFilters', (newValue) => {
+                const entries = Object.entries(newValue).reduce((agg, [key, value]) => {
+                    if (typeof value === 'object') value = value?._id;
+    
+                    if ([null, undefined, ''].includes(value)) return agg;
+    
+                    return [...agg, [key, value]];
+                }, []);
+    
+                this.filters = Object.fromEntries(entries);
+                this.$wire.set('filters', this.filters);
+            });
+        },
+        resetFilters() {
+            this.tempFilters = {};
+        },
+    }">
         <span class="absolute inset-y-1.5 right-0 border-r-2 border-stroke"></span>
 
         <x-pier::popover>
@@ -26,9 +46,9 @@
 
                 <div>Filters</div>
 
-                <div x-cloak x-show="Object.keys($wire.filters ?? {}).length"
+                <div x-cloak x-show="Object.keys(filters ?? {}).length"
                     class="h-4 w-4 rounded-full bg-blue-500 text-white text-[10px] font-bold tracking-tighter flex items-center justify-center"
-                    x-text="Object.keys($wire.filters ?? {}).length">
+                    x-text="Object.keys(filters ?? {}).length">
                 </div>
 
                 <svg class="ml-1.5 w-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
@@ -37,36 +57,22 @@
                 </svg>
             </x-pier::popover.button>
 
-            <x-pier::popover.panel position="bottom-end"
-                class="border-2 border-stroke shadow-xl z-10 w-96 overflow-hidden">
+            <x-pier::popover.panel position="bottom-end" class="border-2 border-stroke shadow-xl z-10 w-96">
                 <div class="p-3 flex flex-col gap-4">
                     @foreach ($filters as $field)
                         <div class="ModelFilterField flex items-center justify-between gap-3">
                             <span class="pl-1 inline-block first-letter:uppercase flex-1">
                                 {{ $field->label }}
                             </span>
-                            <div key={field._id} class="flex-shrink-0" style="width: 220px">
+                            <div key={field._id} class="flex-shrink-0" style="width: 220px"
+                                x-model="tempFilters['{{ $field->label . ($field->type == 'rating' ? 'IsGreaterThanOrEqual' : '') }}']">
                                 @if ($field->type == 'reference')
-                                    <x-pier::combobox :model="$field->meta->model" :value="$wire->filters->{$field->label} ?? ''"
-                                        on-change="e => $wire.set('filters.{{ $field->label }}', e.detail)">
-                                    </x-pier::combobox>
+                                    <x-pier::combobox :model="$field->meta->model" x-model="tempFilters['{{ $field->label }}']" />
                                 @endif
 
                                 @if ($field->type == 'rating')
-                                    <x-pier::multi-range :max="$field->meta->outOf" :value="$wire->filters->{$field->label} ?? 0"
-                                        on-change="e => $wire.set('filters.{{ $field->label }}IsGreaterThanOrEqual', e.detail)">
-                                    </x-pier::multi-range>
-
-                                    {{-- <div class="flex items-center gap-2">
-                                        <input class="w-full" type="range" step="0.5" x-bind:min="0"
-                                            x-bind:max="{{ $field->meta->outOf }}"
-                                            x-on:change="$wire.set('filters.{{ $field->label }}IsGreaterThanOrEqual', $event.target.value)"
-                                            x-bind:value="$wire.filters?.['{{ $field->label }}IsGreaterThanOrEqual'] ?? 0" />
-
-                                        <span
-                                            class="h-7 w-10 flex items-center justify-center border-2 border-stroke rounded text-xs font-bold"
-                                            x-text="$wire.filters?.['{{ $field->label }}IsGreaterThanOrEqual'] ?? 0"></span>
-                                    </div> --}}
+                                    <x-pier::multi-range :max="$field->meta->outOf"
+                                        x-model="tempFilters['{{ $field->label }}IsGreaterThanOrEqual']" />
                                 @endif
 
                                 @if ($field->type == 'boolean')
@@ -74,16 +80,13 @@
                                         $choices = collect([['label' => 'All', 'value' => ''], ['label' => '✅', 'value' => '1'], ['label' => '❌', 'value' => '0']]);
                                     @endphp
 
-                                    <x-pier::radio :choices="$choices" :value="$wire->filters->{$field->label} ?? ''"
-                                        on-change="e => $wire.set('filters.{{ $field->label }}', e.detail)">
-                                    </x-pier::radio>
+                                    <x-pier::radio :choices="$choices" x-model="tempFilters['{{ $field->label }}']" />
                                 @endif
 
                                 @if ($field->type == 'status')
                                     <select
                                         class="bg-transparent border-2 border-stroke focus:border-stroke pl-3 py-0 h-10 rounded-md w-full focus:ring-1 focus:ring-blue-500"
-                                        x-bind:value="$wire.filters?.['{{ $field->label }}']"
-                                        x-on:change="$wire.set('filters.{{ $field->label }}', $event.target.value)">
+                                        x-model="tempFilters['{{ $field->label }}']">
                                         <option value="">All</option>
                                         @foreach ($field->meta->availableStatuses as $status)
                                             <option>{{ $status->name }}</option>
@@ -96,12 +99,12 @@
                 </div>
 
                 <div class="h-8 flex items-center px-4 bg-content/5 rounded-b-md">
-                    <x-pier::popover.close>
-                        <button class="underline opacity-45 hover:opacity-60 text-xs font-semibold"
-                            x-on:click="$dispatch('reset-filters'); $wire.resetFilters()">
-                            Reset filters
-                        </button>
-                    </x-pier::popover.close>
+                    {{-- <x-pier::popover.close> --}}
+                    <button class="underline opacity-45 hover:opacity-60 text-xs font-semibold"
+                        x-on:click="resetFilters">
+                        Reset filters
+                    </button>
+                    {{-- </x-pier::popover.close> --}}
                 </div>
             </x-pier::popover.panel>
         </x-pier::popover>

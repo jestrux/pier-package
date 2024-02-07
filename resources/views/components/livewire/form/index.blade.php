@@ -10,7 +10,7 @@
 @endassets
 
 
-<div>
+<div x-data="{ values: $wire.values ?? [] }">
     @php
         $formId = 'pierForm' . bin2hex(random_bytes(6));
     @endphp
@@ -22,10 +22,11 @@
         @foreach ($fields as $_field)
             @php
                 $field = (object) $_field;
-                $value = $values[$field->name ?? $field->label] ?? '';
+                $value = $values[$field->label] ?? '';
             @endphp
 
-            <x-pier::livewire.form.field :$field :$value :$formId />
+            <x-pier::livewire.form.field :$field :$value :$formId
+                on-change="e => values['{{ $field->label }}'] = e.detail" />
         @endforeach
     </div>
 

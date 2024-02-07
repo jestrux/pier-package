@@ -1,33 +1,43 @@
-@props(['value' => 0, 'max' => 5, 'onChange' => 'console.log'])
+@props(['value' => 0, 'max' => 5, 'xModel'])
 
-<div x-data="{
+@assets()
+    <script>
+        window.pierDebouncer = (func, timeout = 300) => {
+            let timer;
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    func.apply(this, args);
+                }, timeout);
+            };
+        }
+    </script>
+@endassets
+
+<div @if ($xModel ?? null) x-modelable="value" x-model.debounce="{{ $xModel }}" @endif
+    x-data='{
+    xmodelSet: {{ json_encode($xModel ?? null != null) }},
     value: {{ $value }},
     _value: {{ $value }},
     max: {{ $max }},
-    reset() {
-        this.value = {{ $value }};
-        this._value = {{ $value }};
-    },
     init() {
-        this.$watch('value', newValue => {
-            if (this._value == newValue) return;
+        this.$watch("_value", window.pierDebouncer((newValue) => {
+            if((newValue ?? 0) !== (this.value ?? 0)) {
+                this.xmodelSet ? this.value = newValue : this.$dispatch("input", newValue);
+            }
+        }));
 
-            this.$el.dispatchEvent(
-                new CustomEvent('select', {
-                    detail: newValue,
-                })
-            );
-
-            this._value = newValue;
+        this.$watch("value", (newValue) => {
+            if(newValue !== this._value) this._value = newValue ?? 0;
         });
     }
-}" class="flex items-center gap-2" x-on:select="{{ $onChange }}"
-    x-on:reset-filters.window="reset()">
+}'
+    class="flex items-center gap-2">
     <input class="w-full" type="range" step="0.5" x-bind:min="0" x-bind:max="max"
-        x-bind:value="value" x-model.debounce="value" />
+        x-model.stop="_value" />
 
     <span class="h-7 w-10 flex items-center justify-center border-2 border-stroke rounded text-xs font-bold"
-        x-text="value"></span>
+        x-text="_value"></span>
 </div>
 
 {{-- <style>
@@ -71,7 +81,7 @@
             this.mintrigger();
             this.maxtrigger();
         }
-    }" x-on:reset-filters.window="reset()" class="relative max-w-xl w-full">
+    }" x-on:reset-form.window="reset()" class="relative max-w-xl w-full">
         <div>
             <input type="range" step="0.1" x-bind:min="min" x-bind:max="max"
                 x-on:input="mintrigger" x-model="minValue"

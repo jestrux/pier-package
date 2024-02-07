@@ -1,4 +1,4 @@
-@props(['choices' => [], 'value' => '', 'onChange' => 'console.log'])
+@props(['choices' => [], 'value' => ''])
 
 @assets()
     <script defer src="https://unpkg.com/@alpinejs/ui@3.13.3-beta.4/dist/cdn.min.js"></script>
@@ -7,27 +7,13 @@
 
 <div x-data="{
     value: '{{ $value ?? '' }}',
-    _value: '{{ $value ?? '' }}',
     choices: {!! $choices !!},
-    reset() {
-        this.value = '';
-        this._value = '';
-    },
     init() {
         this.$watch('value', newValue => {
-            if (this._value == newValue) return;
-
-            this.$el.dispatchEvent(
-                new CustomEvent('change', {
-                    detail: newValue,
-                })
-            );
-
-            this._value = newValue;
+            this.$dispatch('input', newValue);
         });
     }
-}" x-radio x-model="value" x-on:reset-filters.window="reset()" class="w-full"
-    x-on:change="{{ $onChange }}">
+}" x-radio x-model="value" x-on:reset-form="value = ''" class="w-full">
     <!-- Radio Label -->
     {{-- <label x-radio:label class="sr-only">Backend framework: <span x-text="value"></span></label> --}}
 

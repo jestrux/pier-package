@@ -16,27 +16,16 @@ class CMS extends Component
     public $q = "";
     public $filters = [];
 
-    public function setFilter($key, $value)
-    {
-        if (!$this->filters) $this->filters = [];
-
-        if ($value == '') unset($this->filters[$key]);
-
-        else $this->filters[$key] = $value;
-    }
-
-    public function resetFilters()
-    {
-        $this->filters = [];
-    }
-
     public function getFilters()
     {
         $filters = [];
         $index = 0;
 
         foreach ($this->filters as $key => $value) {
-            $filters[($index == 0 ? "where" : "andWhere") . $key] = $value;
+            if ($value ?? '' != '') {
+                $filters[($index == 0 ? "where" : "andWhere") . $key] = $value;
+            }
+
             $index++;
         }
 

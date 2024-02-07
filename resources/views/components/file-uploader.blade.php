@@ -1,4 +1,4 @@
-@props(['value' => '', 'onChange' => 'console.log'])
+@props(['value' => '', 'xModel'])
 
 @assets()
     <script src="{{ asset('pier/js/file-uploader.umd.cjs') }}"></script>
@@ -8,11 +8,11 @@
     $config = pierConfig();
 @endphp
 
-<div id="pierFileUploader" class="group relative rounded-md overflow-hidden"
+<div @if ($xModel ?? null) x-modelable="value" x-model="{{ $xModel }}" @endif id="pierFileUploader"
+    class="group relative rounded-md overflow-hidden"
     x-data='{
         preview: null,
         value: "{{ $value }}",
-        _value: "{{ $value }}",
         error: "There was an error when uploading the file.",
         reset() {},
         init() {
@@ -28,21 +28,13 @@
             });
 
             this.$watch("value", newValue => {
-                if (this._value == newValue) return;
-    
-                this.$el.dispatchEvent(
-                    new CustomEvent("change", {
-                        detail: newValue,
-                    })
-                );
-    
-                this._value = newValue;
+                $dispatch("input", newValue);
             });
         }
-    }'
-    x-on:change="{{ $onChange }}">
-    <div class="absolute inset-0 z-20" x-cloak x-show="value || preview">
-        <img class="w-full h-full object-cover object-center" x-bind:src="value || preview" alt="" />
+    }'>
+    <div class="absolute inset-0 z-20 bg-card" x-cloak x-show="value || preview">
+        <img class="w-full h-full object-cover object-center bg-[--input-bg-color]" x-bind:src="value || preview"
+            alt="" />
 
         <button type="button" x-on:click="reset()"
             class="absolute z-10 right-1 top-1 w-8 h-8 rounded-full hover:opacity-90 transition flex items-center justify-center">
@@ -55,7 +47,7 @@
         </button>
     </div>
 
-    <div class="relative">
+    <div class="relative" x-bind:class="{ 'opacity-0': value || preview }" x-on:input="e => e.stopPropagation()">
         <div id="fileUploaderDrop"
             class="border-4 border-dashed border-transparent group-data-[dragover=true]:border-content/10 bg-[--input-bg-color] transition text-center text-sm relative flex flex-col items-center justify-center p-4"
             style="min-height: 120px;"></div>

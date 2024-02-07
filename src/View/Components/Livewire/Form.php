@@ -23,7 +23,7 @@ class Form extends Component
             $this->model = $model;
 
             if ($this->rowId) {
-                $this->values = $model && $this->rowId ? (array) pierRow($model, $this->rowId, ['flat' => true]) : [];
+                $this->values = $model && $this->rowId ? (array) pierRow($this->modelName, $this->rowId) : [];
             }
         }
     }

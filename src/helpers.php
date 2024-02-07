@@ -2,7 +2,7 @@
 
 use Jestrux\Pier\PierMigration;
 
-function pierRow($model, $rowId, $filters)
+function pierRow($model, $rowId, $filters = [])
 {
     return PierMigration::detail($model, $rowId, $filters);
 }

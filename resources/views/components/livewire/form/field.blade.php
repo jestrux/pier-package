@@ -1,4 +1,4 @@
-@props(['field' => (object) [], 'value' => '', 'formId' => ''])
+@props(['field' => (object) [], 'value' => '', 'formId' => '', 'onChange' => 'console.log'])
 
 @assets()
     <style>
@@ -110,32 +110,44 @@
         $widthClass = fn($width) => ['col-span-6' => 'half', 'col-span-4' => 'third'][$width ?? ''] ?? 'col-span-12';
     @endphp
 
-    <div class="flex flex-col md:grid grid-cols-12 {{ $widthClass($width) }}"
+    <div x-data='{ 
+        value: {{ !is_scalar($value) ? json_encode($value) : '"' . $value . '"' }},
+        init() {
+          this.$watch("value", newValue => {
+            this.$el.dispatchEvent(
+                new CustomEvent("change", {
+                  detail: newValue,
+                })
+            );
+          });
+        }
+      }'
+        x-on:change.stop="{{ $onChange }}" class="flex flex-col md:grid grid-cols-12 {{ $widthClass($width) }}"
         style="position: {{ $hiddenOrAuth ? 'absolute' : '' }}">
         <div class="{{ $widthClass($stretch) }}" style="position: {{ $hiddenOrAuth ? 'absolute' : '' }}">
-            <div class="pier-form-field relative">
+            <div class="pier-form-field relative" x-model="value">
                 @unless ($hideLabel)
                     <label class="pier-label first-letter:uppercase" for="{{ $label }}">
                         {{ $label }}
                     </label>
                 @endunless
 
+                @php
+                    $specialFields = collect(['hidden', 'auth', 'image', 'file', 'rating', 'boolean', 'status', 'reference']);
+                @endphp
+
                 @if (collect(['image', 'file'])->contains($type))
-                    <x-pier::file-uploader :value="$value ?? ''"
-                        on-change="e => $wire.set('values.{{ $label }}', e.detail)" />
+                    <x-pier::file-uploader :value="$value" />
                 @elseif ($type == 'reference')
-                    <x-pier::combobox class="pier-input" :model="$meta->model" :value="$value ?? ''"
-                        on-change="e => $wire.set('values.{{ $label }}', e.detail)" />
+                    <x-pier::combobox class="pier-input" :model="$meta->model" :value="$value" :displayField="$meta->mainField ?? 'label'" />
                 @elseif ($type == 'rating')
-                    <x-pier::multi-range :max="$meta->outOf" :value="$value ?? 0"
-                        on-change="e => $wire.set('values.{{ $label }}', e.detail)" />
+                    <x-pier::multi-range :max="$meta->outOf" :value="$value ?? 0" />
                 @elseif ($type == 'boolean')
                     @php
                         $choices = collect([['label' => '✅', 'value' => '1'], ['label' => '❌', 'value' => '0']]);
                     @endphp
 
-                    <x-pier::radio :choices="$choices" :value="$value ?? ''"
-                        on-change="e => $wire.set('values.{{ $label }}', e.detail)" />
+                    <x-pier::radio :choices="$choices" :value="$value" />
                 @elseif ($type == 'status')
                     @php
                         $choices = collect($meta->availableStatuses)->map(
@@ -146,17 +158,19 @@
                         );
                     @endphp
 
-                    <x-pier::radio :choices="$choices" :value="$value ?? ''"
-                        on-change="e => $wire.set('values.{{ $label }}', e.detail)" />
-                @elseif (!$hiddenOrAuth)
-                    <input id="{{ $label }}" class="pier-input" name="{{ $label }}"
-                        required="{{ $required }}" type="{{ $type }}"
-                        x-model="$wire.values['{{ $label }}']" />
+                    <x-pier::radio :choices="$choices" :value="$value" />
                 @endif
 
-                <input required="{{ $required }}" form="{{ $formId }}" type="text"
-                    class="bg-transparent absolute -bottom-0 inset-x-0 opacity-0 pointer-events-none"
-                    name="{{ $label }}" x-model="$wire.values['{{ $label }}']" />
+                @if ($specialFields->contains($type))
+                    <input tabindex="-1" required="{{ $required }}" form="{{ $formId }}" type="text"
+                        class="bg-transparent absolute -bottom-0 inset-x-0 opacity-0 pointer-events-none"
+                        name="{{ $label }}"
+                        x-bind:value="{{ $type == 'reference' ? 'value?._id' : 'value' }}" />
+                @else
+                    <input id="{{ $label }}" form="{{ $formId }}" class="pier-input"
+                        name="{{ $label }}" required="{{ $required }}" type="{{ $type }}"
+                        x-model="value" />
+                @endif
             </div>
         </div>
     </div>
