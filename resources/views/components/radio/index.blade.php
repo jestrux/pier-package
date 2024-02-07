@@ -13,7 +13,7 @@
             this.$dispatch('input', newValue);
         });
     }
-}" x-radio x-model="value" x-on:reset-form="value = ''" class="w-full">
+}" x-radio x-model="value" class="w-full">
     <!-- Radio Label -->
     {{-- <label x-radio:label class="sr-only">Backend framework: <span x-text="value"></span></label> --}}
 
