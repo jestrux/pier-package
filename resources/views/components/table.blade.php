@@ -11,5 +11,5 @@
     }
 @endphp
 
-<livewire:pier-table :$data :$fields />
+<livewire:pier-table :$model :$data :$fields />
 {{-- <livewire:pier-datatable :$model :$page :$perPage /> --}}

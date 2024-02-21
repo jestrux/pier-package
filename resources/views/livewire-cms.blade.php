@@ -8,7 +8,7 @@
     <link rel="icon" href="{{ asset('apple-touch-icon.png') }}" sizes="any">
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}" />
 
-    <meta name="csrf_token" value="{{ csrf_token() }}"/>
+    <meta name="csrf_token" value="{{ csrf_token() }}" />
 
     <title>Pier CMS</title>
 
@@ -18,7 +18,7 @@
 </head>
 
 <body class="h-screen bg-gray-200">
-    <livewire:pier-cms :modelName="$modelName ?? null" />
+    <livewire:pier-cms :upsert="$upsert ?? false" :modelName="$modelName ?? null" :rowId="$rowId ?? null" />
 </body>
 
 </html>

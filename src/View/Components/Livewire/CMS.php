@@ -7,7 +7,9 @@ use Jestrux\Pier\PierMigration;
 
 class CMS extends Component
 {
-    public $modelName;
+    public $upsert = false;
+    public $modelName = null;
+    public $rowId = null;
     public $models;
     public $appName;
     public $appColor;

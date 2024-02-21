@@ -1,4 +1,4 @@
-<button x-menu:item
+<a x-menu:item
     x-bind:class="{
         'bg-content/5 text-content/90': $menuItem.isActive,
         'text-content/70': !$menuItem.isActive,
@@ -9,4 +9,4 @@
         'type' => 'button',
     ]) }}>
     {{ $slot }}
-</button>
+</a>

@@ -27,7 +27,7 @@
                 <td class="w-12 text-center">
                     @if ($row->_id ?? null)
                         <span class="inline-flex">
-                            @include('pier::components.livewire.table.column-dropdown')
+                            @include('pier::components.livewire.table.column-dropdown', ["model" => $model->name])
                         </span>
                     @endif
                 </td>

@@ -7,6 +7,8 @@ use Livewire\Attributes\Reactive;
 
 class Table extends Component
 {
+    public $model;
+
     #[Reactive]
     public $fields;
 

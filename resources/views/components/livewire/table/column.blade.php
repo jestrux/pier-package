@@ -53,7 +53,7 @@
             // $color = $color ? "<span class='w-2.5 h-2.5 rounded-full' style='background: $color;'></span>" : '';
             // return "<span class='inline-flex items-center gap-1.5'>$color$value</span>";
 
-            return "<span class='inline-block rounded-full px-2 py-1.5 text-white text-xs leading-none font-medium'
+            return "<span class='inline-block rounded-full px-2.5 py-1.5 text-white text-xs/none leading-none font-medium'
                 style='background: $color'>
                 $value
             </span>";

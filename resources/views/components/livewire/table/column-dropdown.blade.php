@@ -8,6 +8,9 @@
 
     <x-pier::menu.items>
         <x-pier::menu.close>
+            <x-pier::menu.item href="{{ url('cms/' . $model) }}/upsert/{{ $row->_id }}">
+                Edit
+            </x-pier::menu.item>
             <x-pier::menu.item wire:click="deleteRow({{ $row->_id }})"
                 wire:confirm="Are you sure you want to delete this row?">
                 Delete

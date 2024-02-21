@@ -100,7 +100,9 @@
 
                 <div class="h-8 flex items-center px-4 bg-content/5 rounded-b-md">
                     {{-- <x-pier::popover.close> --}}
-                    <button class="underline opacity-45 hover:opacity-60 text-xs font-semibold"
+                    <button class="text-xs font-semibold"
+                        x-bind:class="Object.keys(filters).length ? 'underline opacity-45 hover:opacity-60' :
+                            'opacity-20 pointer-events-none'"
                         x-on:click="resetFilters">
                         Reset filters
                     </button>
