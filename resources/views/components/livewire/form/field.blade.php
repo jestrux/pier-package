@@ -137,7 +137,7 @@
                 @endphp
 
                 @if (collect(['image', 'file'])->contains($type))
-                    <x-pier::file-uploader :value="$value" />
+                    <x-pier::file-uploader :value="$value" :is-face="$meta->face" />
                 @elseif ($type == 'reference')
                     <x-pier::combobox class="pier-input" :model="$meta->model" :value="$value" :displayField="$meta->mainField ?? 'label'" />
                 @elseif ($type == 'rating')
