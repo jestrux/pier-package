@@ -287,10 +287,9 @@ class PierMigration extends Model
                         $result->{$field->label} = $reference_ids ?? [];
 
                         if (!$flat && $reference_ids->count() > 0) {
-                            $result->{$field->label} = DB::table(Str::snake($field->meta->model))->whereIn(
-                                '_id',
-                                $reference_ids
-                            )->get();
+                            $result->{$field->label} = self::browse($field->meta->model, [
+                                "whereIn" => $reference_ids
+                            ]);
                         }
                     }
                 } catch (\Throwable $th) {
@@ -439,30 +438,36 @@ class PierMigration extends Model
 
             if ($where_params->count() > 0) {
                 foreach ($where_params as $index => $param) {
-                    $table_column = strtolower(str_replace(" ", "_", self::pascal_to_sentence(str_replace(["where", "andWhere", "orWhere", "isGreaterThan", "isGreaterThanOrEqual", "isLessThan", "isLessThanOrEqual"], "", $param))));
-                    $copmarators = ["isGreaterThanOrEqual", "isLessThanOrEqual", "isLessThan", "isGreaterThan"];
-                    $table_column = strtolower(str_ireplace(" ", "_", self::pascal_to_sentence(str_ireplace(array_merge(["andWhere", "orWhere", "where"], $copmarators), "", $param))));
-                    $symbol = collect($copmarators)->first(function ($value, $key) use ($param) {
-                        return strpos(strtolower($param), strtolower($value));
-                    });
+                    $andWhere = $index == 0 || strpos($param, "andWhere") === 0;
 
-                    if (is_null($symbol))
-                        $symbol = "Equals";
+                    if ($param == "whereIn") {
+                        $param_value = $params[$param];
+                        $value = is_string($param_value) ? explode(",", $param_value) : $param_value;
 
-                    $symbolMap = [
-                        "isGreaterThan" => ">",
-                        "isGreaterThanOrEqual" => ">=",
-                        "isLessThan" => "<",
-                        "isLessThanOrEqual" => "<=",
-                        "Equals" => "=",
-                    ];
+                        $results = $andWhere ? $results->whereIn('_id', $value) : $results->orWhereIn('_id', $value);
+                    } else {
+                        $table_column = strtolower(str_replace(" ", "_", self::pascal_to_sentence(str_replace(["where", "andWhere", "orWhere", "isGreaterThan", "isGreaterThanOrEqual", "isLessThan", "isLessThanOrEqual"], "", $param))));
+                        $copmarators = ["isGreaterThanOrEqual", "isLessThanOrEqual", "isLessThan", "isGreaterThan"];
+                        $table_column = strtolower(str_ireplace(" ", "_", self::pascal_to_sentence(str_ireplace(array_merge(["andWhere", "orWhere", "where"], $copmarators), "", $param))));
+                        $symbol = collect($copmarators)->first(function ($value, $key) use ($param) {
+                            return strpos(strtolower($param), strtolower($value));
+                        });
 
-                    $copmarator = $symbolMap[$symbol];
+                        if (is_null($symbol))
+                            $symbol = "Equals";
 
-                    if ($index == 0 || strpos($param, "andWhere") === 0)
-                        $results = $results->where($table_column, $copmarator, $params[$param]);
-                    else
-                        $results = $results->orWhere($table_column, $copmarator, $params[$param]);
+                        $symbolMap = [
+                            "isGreaterThan" => ">",
+                            "isGreaterThanOrEqual" => ">=",
+                            "isLessThan" => "<",
+                            "isLessThanOrEqual" => "<=",
+                            "Equals" => "=",
+                        ];
+
+                        $copmarator = $symbolMap[$symbol];
+                        $args = [$table_column, $copmarator, $params[$param]];
+                        $results = $andWhere ? $results->where(...$args) : $results->orWhere(...$args);
+                    }
                 }
             }
 
