@@ -1,19 +1,45 @@
 @php
     $value = $row->{$field->label} ?? '';
     $type = $field->type;
+    $label = $field->label;
     $meta = $field->meta ?? null;
-    $tooltip = $value->{$meta->mainField ?? ''} ?? '';
+    $tooltip = '';
 
     if ($type == 'reference') {
+        $tooltip = $value->{$meta->mainField ?? ''} ?? '';
         $type = $meta->type;
         $value = $value->{$meta->field} ?? '';
     }
 
-    $centered = in_array($type, $centeredFields);
-
     $value = match ($type) {
+        'multi-reference' => (function () use ($value, $meta, $label) {
+            if (!$value || count($value) < 1) {
+                return "No $label";
+            } elseif ($meta->type === 'image' && $meta->face ?? null) {
+                $images = $value->map(fn($row) => $row->{$meta->field} ?? '')->take(3);
+                $sizing =
+                    $meta && ($meta->face ?? null)
+                        ? ' w-[40px] aspect-square rounded-full'
+                        : ' w-[60px] aspect-[2/1.3] rounded';
+
+                $diff = count($value) - 3;
+
+                return $images
+                    ->map(function ($image, $index) {
+                        $class = $index > 0 ? '-ml-4' : '';
+                        return "<img class='$class border-4 border-card w-10 aspect-square rounded-full inline-block object-cover object-center' src='$image' />";
+                    })
+                    ->join('') . ($diff > 0 ? "+$diff" : '');
+            }
+
+            return count($value) . " $label";
+        })(),
+
         'image' => (function () use ($value, $meta) {
-            $sizing = $meta && ($meta->face ?? null) ? ' w-[40px] aspect-square rounded-full' : ' w-[60px] aspect-[2/1.3] rounded';
+            $sizing =
+                $meta && ($meta->face ?? null)
+                    ? ' w-[40px] aspect-square rounded-full'
+                    : ' w-[60px] aspect-[2/1.3] rounded';
             return "<img class='$sizing inline-block object-cover object-center' src='$value' />";
         })(),
 
@@ -47,7 +73,7 @@
             return $date->format($date->year === now()->year ? 'M d, g:i A' : 'M d, Y, g:i A');
         })(),
 
-        'status' => (function () use ($value, $field, $row, $centered) {
+        'status' => (function () use ($value, $field, $row) {
             $color = $row->{$field->label . 'Meta'}->color ?? '';
 
             // $color = $color ? "<span class='w-2.5 h-2.5 rounded-full' style='background: $color;'></span>" : '';
@@ -115,6 +141,12 @@
             return $value;
         })(),
     };
+
+    if ($type == 'multi-reference') {
+        $type = $meta->type;
+    }
+
+    $centered = in_array($type, $centeredFields);
 @endphp
 
 <td class="p-3 text-sm max-w-[120px] truncate {{ $centered ? 'text-center' : 'text-left' }}">
