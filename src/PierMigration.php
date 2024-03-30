@@ -456,26 +456,31 @@ class PierMigration extends Model
                         $results = $andWhere ? $results->whereNotIn('_id', $value) : $results->orWhereNotIn('_id', $value);
                     } else {
                         $table_column = strtolower(str_replace(" ", "_", self::pascal_to_sentence(str_replace(["where", "andWhere", "orWhere", "isGreaterThan", "isGreaterThanOrEqual", "isLessThan", "isLessThanOrEqual"], "", $param))));
-                        $copmarators = ["isGreaterThanOrEqual", "isLessThanOrEqual", "isLessThan", "isGreaterThan"];
-                        $table_column = strtolower(str_ireplace(" ", "_", self::pascal_to_sentence(str_ireplace(array_merge(["andWhere", "orWhere", "where"], $copmarators), "", $param))));
-                        $symbol = collect($copmarators)->first(function ($value, $key) use ($param) {
-                            return strpos(strtolower($param), strtolower($value));
-                        });
+                        $column = $model_fields->firstWhere("label", $table_column);
+                        $isDefaultField = collect(["created_at", "updated_at", "_id"])->contains($table_column);
 
-                        if (is_null($symbol))
-                            $symbol = "Equals";
-
-                        $symbolMap = [
-                            "isGreaterThan" => ">",
-                            "isGreaterThanOrEqual" => ">=",
-                            "isLessThan" => "<",
-                            "isLessThanOrEqual" => "<=",
-                            "Equals" => "=",
-                        ];
-
-                        $copmarator = $symbolMap[$symbol];
-                        $args = [$table_column, $copmarator, $params[$param]];
-                        $results = $andWhere ? $results->where(...$args) : $results->orWhere(...$args);
+                        if($column || $isDefaultField) {
+                            $copmarators = ["isGreaterThanOrEqual", "isLessThanOrEqual", "isLessThan", "isGreaterThan"];
+                            $table_column = strtolower(str_ireplace(" ", "_", self::pascal_to_sentence(str_ireplace(array_merge(["andWhere", "orWhere", "where"], $copmarators), "", $param))));
+                            $symbol = collect($copmarators)->first(function ($value, $key) use ($param) {
+                                return strpos(strtolower($param), strtolower($value));
+                            });
+    
+                            if (is_null($symbol))
+                                $symbol = "Equals";
+    
+                            $symbolMap = [
+                                "isGreaterThan" => ">",
+                                "isGreaterThanOrEqual" => ">=",
+                                "isLessThan" => "<",
+                                "isLessThanOrEqual" => "<=",
+                                "Equals" => "=",
+                            ];
+    
+                            $copmarator = $symbolMap[$symbol];
+                            $args = [$table_column, $copmarator, $params[$param]];
+                            $results = $andWhere ? $results->where(...$args) : $results->orWhere(...$args);
+                        }
                     }
                 }
             }
