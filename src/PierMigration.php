@@ -398,17 +398,17 @@ class PierMigration extends Model
         return $data;
     }
 
-    static function get_param($paramKey, $allow_no_value = false)
+    static function get_param($params, $key)
     {
-        $params = $_GET;
+        $param_set = isset($params[$key]);
 
-        $param_set = isset($params[$paramKey]);
+        if (!$param_set) return null;
 
-        if ($param_set && (!$allow_no_value || strlen($params[$paramKey]) > 0)) {
-            return null;
-        }
+        $value = $params[$key];
 
-        return !$param_set ? true : $params[$paramKey];
+        if ($value == false || $value == "false") return false;
+
+        return $value;
     }
 
     static function browse($model, $params = null)
@@ -537,15 +537,15 @@ class PierMigration extends Model
                     $key = $group->{$grouped_by_reference_field->meta->mainField};
                 }
 
-                $agg[$key] = self::get_param('flat') == null
+                $agg[$key] = self::get_param($params, 'flat')
                     ? self::eager_load_multi_reference_values($value, $model)
                     : self::eager_load($value, $model, $params);
 
                 return $agg;
             }, []);
         } else if (count($results) > 0) {
-            if (self::get_param('flat') == null) $results = self::eager_load_multi_reference_values($results, $model);
-            else $results = self::eager_load($results, $model, $params);
+            $results = self::get_param($params, 'flat') ? self::eager_load_multi_reference_values($results, $model)
+                : self::eager_load($results, $model, $params);
         }
 
         return $results;
@@ -806,18 +806,15 @@ class PierMigration extends Model
 
     static function detail($model, $row_id, $filters = [])
     {
-        $_GET['flat'] = $filters['flat'] ?? null;
         $table_name = Str::snake($model);
         $result = DB::table($table_name)->where("_id", '=', $row_id)->first();
 
-        if (!$result)
-            return null;
+        if (!$result) return null;
 
         $results = [$result];
 
-        if (self::get_param('flat') == null) $results = self::eager_load_multi_reference_values($results, $model);
-
-        else $results = self::eager_load($results, $model, null);
+        $results = self::get_param($filters, 'flat') ? self::eager_load_multi_reference_values($results, $model)
+            : self::eager_load($results, $model, null);
 
         return $results[0];
     }
