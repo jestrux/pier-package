@@ -440,11 +440,16 @@ class PierMigration extends Model
                 foreach ($where_params as $index => $param) {
                     $andWhere = $index == 0 || strpos($param, "andWhere") === 0;
 
-                    if ($param == "whereIn") {
+                    if (strtolower($param) == "wherein") {
                         $param_value = $params[$param];
                         $value = is_string($param_value) ? explode(",", $param_value) : $param_value;
 
                         $results = $andWhere ? $results->whereIn('_id', $value) : $results->orWhereIn('_id', $value);
+                    } else if (strtolower($param) == "wherenotin") {
+                        $param_value = $params[$param];
+                        $value = is_string($param_value) ? explode(",", $param_value) : $param_value;
+
+                        $results = $andWhere ? $results->whereNotIn('_id', $value) : $results->orWhereNotIn('_id', $value);
                     } else {
                         $table_column = strtolower(str_replace(" ", "_", self::pascal_to_sentence(str_replace(["where", "andWhere", "orWhere", "isGreaterThan", "isGreaterThanOrEqual", "isLessThan", "isLessThanOrEqual"], "", $param))));
                         $copmarators = ["isGreaterThanOrEqual", "isLessThanOrEqual", "isLessThan", "isGreaterThan"];
