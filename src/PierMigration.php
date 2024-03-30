@@ -305,7 +305,6 @@ class PierMigration extends Model
     {
         $db_model = self::describe($model);
         $fields = collect(json_decode($db_model->fields));
-        $table_name = Str::snake($model);
 
         $status_fields = $fields->filter(function ($field) {
             return $field->type == 'status';
@@ -370,7 +369,14 @@ class PierMigration extends Model
             $data = self::eager_load_multi_reference_values($data, $model, false);
         }
 
-        [$data, $pluck_props] = self::do_pluck($data, $params, false);
+        [$data] = self::do_pluck($data, $params, false);
+
+        return $data;
+    }
+
+    static function take_results($data, $params)
+    {
+        [$data] = self::do_pluck($data, $params, false);
 
         if (isset($params['randomize'])) {
             $data = $data->shuffle();
@@ -386,13 +392,11 @@ class PierMigration extends Model
 
         if (isset($params['limit'])) {
             $limit = $params['limit'];
-            if ($limit == 1) {
-                if ($data->count() == 0)
-                    return null;
+            $data = $data->count() == 0 ? [] : $data->take($limit);
+        }
 
-                return $data->first();
-            }
-            $data = $data->take($limit);
+        if (isset($params['first'])) {
+            $data = $data->count() == 0 ? null : $data->first();
         }
 
         return $data;
@@ -541,11 +545,15 @@ class PierMigration extends Model
                     ? self::eager_load_multi_reference_values($value, $model)
                     : self::eager_load($value, $model, $params);
 
+                $agg[$key] = self::take_results($agg[$key], $params);
+
                 return $agg;
             }, []);
         } else if (count($results) > 0) {
             $results = self::get_param($params, 'flat') ? self::eager_load_multi_reference_values($results, $model)
                 : self::eager_load($results, $model, $params);
+
+            $results = self::take_results($results, $params);
         }
 
         return $results;
