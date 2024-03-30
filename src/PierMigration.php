@@ -389,8 +389,6 @@ class PierMigration extends Model
             $data = self::eager_load_multi_reference_values($data, $model, false, $multi_reference_filters);
         }
 
-        [$data] = self::do_pluck($data, $params, false);
-
         return $data;
     }
 
