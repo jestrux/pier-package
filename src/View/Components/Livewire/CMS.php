@@ -24,7 +24,7 @@ class CMS extends Component
         $index = 0;
 
         foreach ($this->filters as $key => $value) {
-            if ($value ?? '' != '') {
+            if ((isset($value) && $value != null && $value != '')) {
                 $filters[($index == 0 ? "where" : "andWhere") . $key] = $value;
             }
 
