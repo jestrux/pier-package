@@ -1256,23 +1256,106 @@ class PierMigration extends Model
                 return json_encode($location);
 
             case 'long text':
-                $start_from = $faker->numberBetween(0, 30);
-                return substr(
-                    $sample_text,
-                    $start_from,
-                    200,
-                );
+                return collect(
+                    [
+                        "Before embarking on your angling journey, it's crucial to have the right gear. A dependable fishing rod, a variety of lures, and sturdy fishing line are the basic tools every angler needs. Don't forget to pack your patience and resilience, as fishing is as much about strategy as it is about luck.",
+                        "One of the key aspects of abstract art is its ability to evoke emotions and provoke thought without providing a concrete narrative. Viewers are encouraged to explore the artwork freely and derive their own meanings from the piece, making each viewing a unique and personal experience.",
+                        "In many cases, fire hazards stem from simple negligence. Failing to properly maintain appliances, leaving flammable materials near heat sources, or disregarding basic safety precautions can all increase the likelihood of a fire breaking out. By taking a more conscientious approach to fire safety, we can significantly reduce the chances of a catastrophic event occurring.",
+                        "The consequences of a fire can be devastating, resulting in property damage, injury, or even loss of life. It's crucial to understand the gravity of the situation and take proactive measures to minimize the risks. Prevention is key when it comes to fire hazards, and by staying informed and vigilant, we can help prevent potential disasters before they occur.",
+                        "For nature lovers, Tijuca National Park is a verdant oasis within the bustling city. The lush rainforest is home to diverse flora and fauna, offering visitors a chance to escape the urban hustle and immerse themselves in the beauty of nature.",
+                        "Words have the power to evoke emotions, create desire, and drive decisions. A skilled copywriter understands how to use language to tap into the reader's emotions and create a sense of urgency. By choosing the right words and crafting a compelling narrative, copywriters can influence behavior and drive results.",
+                        "Clear and concise copy is essential for effective communication. Avoid using jargon or complex language that may confuse your audience. Instead, focus on delivering your message in a straightforward and easy-to-understand manner. Keep your sentences short, and use bullet points or numbered lists to break up the text and make it more digestible.",
+                        "From tranquil ponds to roaring rivers, the world is full of prime fishing spots waiting to be explored. Whether you prefer freshwater or saltwater fishing, each destination offers its own unique set of challenges and rewards. Dive into the adventure and discover the wonders that await beneath the surface.",
+                        "In essence, semitones serve as the building blocks of musical expression, offering endless possibilities for artistic exploration and innovation. By mastering the art of semitones, musicians can elevate their compositions to new heights and connect with audiences on a profound level. Embrace the nuances of semitones, and unlock a world of musical brilliance.",
+                        "Effective copywriting begins with a deep understanding of your target audience. By knowing your audience's needs, desires, and pain points, you can tailor your messaging to resonate with them on a personal level. This personal connection is key to creating content that not only captures attention but also compels action.",
+                        "Brewing the perfect cup of coffee is both a science and an art. The grind size, water temperature, and brewing time all play a crucial role in determining the flavor profile of the final brew. Whether you prefer an espresso or a pour-over, there's a method out there that will suit your taste buds.",
+                        "Aside from its rich flavor and aroma, coffee also boasts a myriad of health benefits. Studies have shown that coffee can improve brain function, boost metabolism, and even lower the risk of certain diseases. So go ahead, pour yourself another cup guilt-free.",
+                        "One of the key objectives of cinematography is to convey emotions and moods through visual storytelling. By manipulating elements such as lighting, color, and composition, cinematographers can create a sense of tension, joy, sadness, or excitement within a scene. Every frame is carefully crafted to evoke a specific emotional response from the audience, making cinematography a powerful tool for shaping the viewer's experience.",
+                        "Whether using natural light or artificial sources, cinematographers use lighting to highlight characters, create shadows, and set the tone for the story. Similarly, color plays a significant role in conveying emotions and themes within a film, with different color palettes evoking varying psychological responses from viewers.",
+                        "Composition and framing are crucial aspects of cinematography that determine how viewers perceive and engage with a scene. By carefully positioning elements within the frame, cinematographers can draw attention to certain details, create visual balance, and guide the viewer's eye through the image. The rule of thirds, leading lines, and symmetry are common compositional techniques used to enhance the visual appeal of a shot.",
+                        "Camera movement is another tool used by cinematographers to add depth and dynamism to a film. Whether through tracking shots, panning, or handheld camera work, movement can create a sense of urgency, intimacy, or spectacle within a scene. By incorporating movement strategically, cinematographers can enhance the narrative flow and emotional impact of a film.",
+                        "Cinematography is a blend of artistry and technical skill that plays a fundamental role in shaping the visual language of cinema. From capturing emotions through lighting and color to composing frames that engage viewers, every decision made by a cinematographer contributes to the overall impact of a film. By understanding the principles of cinematography and appreciating its creative possibilities, audiences can develop a deeper appreciation for the magic of visual storytelling.",
+                        "Beyond the joy of birdwatching lies a deeper purpose: conservation. By observing and appreciating birds in their natural habitat, we become more aware of the fragile ecosystems that support them. Take this opportunity to learn about local conservation efforts and ways to protect avian species for future generations.",
+                        "In the world of birdwatching, every flutter of wings and every melodic chirp holds the promise of a new discovery. Whether you are a novice or a seasoned enthusiast, the art of birdwatching offers endless opportunities for exploration, learning, and connection with the natural world. So grab your binoculars, step outside, and let the magic of birdwatching unfold before your eyes.",
+                        "As technology continues to advance, the future of e-commerce looks promising. Innovations like AI, AR, and blockchain are shaping the way we shop online, providing immersive experiences and enhanced security and offering convenience and accessibility to consumers worldwide. With continuous innovation and adaptation, e-commerce is set to thrive in the years to come, reshaping the way we shop and do business.",
+                        "Investing in quality tools is crucial for achieving professional results in woodworking. Some essential tools for woodworking include a saw, chisel, plane, hammer, measuring tape, and sandpaper. These tools allow you to cut, shape, assemble, and finish your wood projects with precision and accuracy.",
+                        "Creativity is at the heart of woodworking, allowing you to transform raw wood into functional and aesthetic pieces of art. Experimenting with different wood species, finishes, and designs enables you to push the boundaries of traditional woodworking and create innovative and original creations that reflect your personality and style.",
+                        "As the lights go out and the race begins, the drivers unleash the full power of their machines, hurtling down the straightaways and tackling hairpin turns with finesse. The roar of the engines and the screech of tires create an adrenaline-fueled atmosphere that keeps fans on the edge of their seats.",
+                        "The game is played in three periods of 12 minutes each, with a shorter playing time to accommodate the challenging sandy terrain. Players are barefoot and must wear jerseys, shorts, and socks. The goalkeepers have restrictions on handling the ball, adding an extra layer of strategy to the game.",
+                        "Whether you're a longtime reggae enthusiast or a newcomer to the genre, there's something undeniably captivating about the laid-back melodies and thought-provoking lyrics of reggae music which provoke a cultural movement that continues to inspire and unite people across the globe. So, the next time you find yourself in need of a musical escape, turn to the soothing sounds of reggae and let its positive vibrations wash over you.",
+                        "Beyond the music, hip hop has influenced fashion trends, language, and even politics. From the iconic baggy pants and chains to popularizing slang terms like “bling” and “dope,” its impact is undeniable. Hip hop has also given rise to successful entrepreneurs and philanthropists who have used their platform to give back to their communities.",
+                        "At the heart of samba music are intricate rhythms played on instruments such as tamborims, surdos, and cuicas, creating a pulsating sound that compels listeners to move their bodies in sync with the beat. The lyrics of samba songs often reflect the joys and struggles of everyday life, evoking a range of emotions in those who hear them.",
+                        "Whether you're tapping your feet to the beat of a samba song or swaying your hips to the rhythm of a samba dance, the essence of samba lies in its ability to uplift spirits and bring people together in joyous celebration. So why not immerse yourself in the irresistible charm of samba and let its infectious energy sweep you off your feet?",
+                        "From the fiery spectacle of the Up Helly Aa festival in Scotland to the spiritual rituals of the Las Fallas festival in Spain, fire festivals offer a diverse range of customs and ceremonies that captivate the senses and ignite the imagination. Participants often dress in elaborate costumes, carry torches, and perform intricate fire dances that blend tradition with modern creativity.",
+                        "If you're eager to witness the magic of a fire festival firsthand, there are numerous events held globally throughout the year. Whether you're drawn to the mystical allure of the Beltane Fire Festival in Edinburgh or the pulsating energy of the Taunggyi Hot Air Balloon Festival in Myanmar, there's a fire festival waiting to ignite your spirit.",
+                        "In a world filled with chaos and uncertainty, fire festivals offer a beacon of hope and a reminder of the enduring human spirit. So, gather around the fire, feel its warmth on your skin, and let the flames guide you towards new adventures and discoveries. Unleash your passion, embrace the unknown, and let the magic of fire festivals illuminate your path.",
+                        "Imagine a kaleidoscope of colors, pulsating beats, and a sense of freedom in the air. Coachella embodies an eclectic mix of musical genres, from indie and rock to hip-hop and electronic dance music. It's a melting pot of creativity and self-expression that captivates attendees year after year.",
+                        "At its core, it's more than just a music festival; it's a cultural phenomenon that celebrates diversity, creativity, and self-expression. A place where strangers become friends, and memories are made that last a lifetime. An experience like no other, a place where magic happens, and dreams come to life. Experience the magic for yourself and immerse yourself in a world where music, art, fashion, and community converge to create an unforgettable journey. Join the festival-goers and be part of a celebration that transcends boundaries and embraces the essence of what it means to truly live in the moment.",
+                        "Whether as a form of entertainment, artistic inspiration, or scientific exploration, kaleidoscopes continue to fascinate and delight audiences with their mesmerizing beauty and intricate patterns. Embark on a journey into the mesmerizing world of kaleidoscopes and discover the endless possibilities of light, color, and reflection.",
+                        "While traditional kaleidoscopes remain popular, modern iterations have evolved to incorporate new materials and technologies. From handheld versions to digital simulations, kaleidoscopes continue to captivate audiences and serve as a source of inspiration for creative endeavors.",
+                        "Despite its demise, the legacy lives on in modern society. Law, language, architecture, and engineering continue to influence our world today. It remains a symbol of power, ambition, and the consequences of unchecked hubris. It's rise and fall serve as a cautionary tale of the perils of overreach and the importance of adaptability in the face of change. As we reflect on it's legacy, we are reminded of the fragility of empires and the enduring impact of their achievements on the course of history.",
+                        "The world is full of breathtaking destinations waiting to be explored. Whether you prefer the serene beauty of the mountains, the tranquility of the forest, or the excitement of the beach, there is a backpacking destination perfect for you. Research different locations to find one that aligns with your interests and experience level.",
+                        "At the heart of fringe science lies a tapestry of enigmatic phenomena and unexplained mysteries that defy the constraints of traditional scientific understanding. From UFO sightings and paranormal experiences to alternative energy sources and mind-bending theories of the universe, fringe science encompasses a diverse array of subjects that captivate the imagination and provoke thought-provoking discussions.",
+                        "In a world where the boundaries between science and speculation are increasingly blurred, fringe science serves as a reminder of the limitless possibilities that exist beyond the confines of mainstream scientific discourse. By embracing the complexity of the unknown and daring to question the unquestionable, fringe science invites us to expand our minds and consider the seemingly impossible.",
+                        "One of the key advantages of mobile photography is its ability to capture moments on the go. Whether you're traveling, attending a special event, or simply out and about, your smartphone allows you to seize the moment and snap a photo effortlessly. The burst mode feature further enhances the spontaneity of mobile photography, enabling you to capture a series of shots in quick succession.",
+                        "Mobile photography empowers you to unleash your creativity and capture moments in a unique and personal way. By mastering the art of mobile photography, you can elevate your photos to new heights and share your vision with the world. Embrace the convenience and spontaneity of mobile photography, experiment with different perspectives and lighting conditions, and harness the power of editing tools to bring out the best in your photos. Let your creativity soar as you embark on your mobile photography journey.",
+                        "Despite the challenges, the future of space travel looks promising. Advancements in technology are making space travel more accessible, with private companies like SpaceX leading the way in commercial space travel. Missions to Mars and beyond are no longer just science fiction but realistic goals for the future.",
+                        "Just as early explorers set out to discover new lands, astronauts today venture into the depths of space, expanding our understanding of the universe and our place within it reaching new destinations, pushing the limits of human potential and imagination. As we continue to explore the cosmos, we are bound to uncover even more mysteries and wonders that will inspire generations to come.",
+                        "One of the most iconic landmarks is a towering rock formation that rises dramatically from the surrounding landscape. This natural wonder is a popular destination for rock climbers and hikers, offering breathtaking views of the surrounding plains. For those seeking a more leisurely experience, the charming town of Jackson Hole is a must-visit, with its quaint shops, galleries, and world-class ski resorts.",
+                        "Decades after its initial publication, The Great Gatsby remains a literary classic that continues to enthrall readers of all ages. Its themes of love, ambition, and disillusionment are as relevant today as they were in the Jazz Age, ensuring that Fitzgerald's masterpiece will stand the test of time."
+                    ]
+                )->random();
 
             case 'string':
-                $start_from = $faker->numberBetween(0, strlen($sample_text) - 10);
-                return substr(
-                    $sample_text,
-                    $start_from,
-                    50,
-                );
+                return collect([
+                    "The Art of Birdwatching: A Beginner's Guide",
+                    "Unleashing Your Creativity: A Beginner's Guide to Woodworking",
+                    "The Thrilling World of Formula 1 Racing",
+                    "The Beach Soccer Phenomenon: Kick Off Your Summer Fun Now",
+                    "Unraveling the Rhythms and Roots of Reggae Music",
+                    "The Magic of Coachella: A Closer Look at the Ultimate Music Festival Experience",
+                    "Exploring the Mesmerizing World of Kaleidoscopes",
+                    "Endless Wanderlust: A Beginner's Guide to Backpacking",
+                    "The Enigmatic World of Fringe Science. Mysteries, boundaries and possibility",
+                    "Creativity at your fingertips: Mastering Mobile Photography",
+                    "The Fascinating History and science behind Space Travel",
+                    "The Natural Wonders, Rich Cultural Tapestry and Wildlife Safari Adventures of Tanzania",
+                    "Unveiling the Timeless Charm of The Great Gatsby",
+                    "“Learning to Fly” — Kiki’s Delivery Service and the Unchanging Economy",
+                    "The Great Exhaustion",
+                    "Thirteen Things a Middle-Aged Man Can Learn From the Baby-Sitters Club",
+                    "You Shouldn’t Have to Pay $24 for a 2-Pack of At-Home Covid Tests",
+                    "The Best Business Book of 2021 (According to Every Other Best-of-2021 List)",
+                    "Tiktok Stirs up the Food Industry as It Enters The Kitchen",
+                    "The Reason We May Never Have Another bell hooks, Eve Babitz, or Joan Didion",
+                    "Invisible: The Fault Lines of Motherhood",
+                    "I Gained Nothing From My Perfect Attendance At Work",
+                    "The Very First Sermon Christ Gave Taught Us About The Jubilee",
+                    "Company Loyalty Doesn’t Exist",
+                    "We Were Always Disposable, and We Can’t Ignore It Anymore",
+                    "In Losing The Village We Abandoned Society’s Parents",
+                    "Who Was ‘First’ with a Big Idea? It’s Often Hard To Know",
+                    "An Ancient Greek Weapon Could Become the Future of Solar Energy",
+                    "The Art of Seeing",
+                    "Uncovering Family Secrets Through At-Home DNA Tests",
+                    "NFTs Are Critical for the Future of Art",
+                    "What If We Aren’t As Divided As They Tell Us We Are?",
+                    "An Extended Break From the Rat Race Has Changed My Life",
+                    "Things I Wish My Students Knew",
+                    "Ode to bell hooks",
+                    "My Favorite Podcast Is Talking To You On The Phone For Hours",
+                    "How to Get Addicted to Writing",
+                    "When the World Feels Dark and Beautiful in the Same Moment",
+                    "The Inescapable Neoliberal Bias Behind ‘Kurzgesagt — In a Nutshell'",
+                    "The Best Books I Read Are All About Weirdos",
+                    "When Life Is Slow, Go Even Slower",
+                    "In my Abuela’s Kitchen",
+                    "In ‘Drama Queens’ Podcast, ‘One Tree Hill’ Stars Rehash the Making of The Show — the Good, Bad and…",
+                    "How to Ground Your Mind, Body, Spirit, and Emotions"
+                ])->random();
 
             case 'number':
-                return $faker->numberBetween(13, 237);
+                return $faker->numberBetween(87, 532193);
 
             case 'rating':
                 return $faker->randomFloat(1, 1, $meta->outOf);
