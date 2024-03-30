@@ -1,4 +1,4 @@
-@props(['choices' => [], 'value' => ''])
+@props(['choices' => [], 'value' => '', 'xModel'])
 
 @assets()
     <script defer src="https://unpkg.com/@alpinejs/ui@3.13.3-beta.4/dist/cdn.min.js"></script>
@@ -6,14 +6,21 @@
 @endassets
 
 <div x-data="{
+    xmodelSet: {{ json_encode($xModel ?? null != null) }},
     value: '{{ $value ?? '' }}',
     choices: {!! $choices !!},
     init() {
-        this.$watch('value', newValue => {
-            this.$dispatch('input', newValue);
-        });
+        if (!this.xmodelSet) {
+            this.$watch('value', value => {
+                this.$dispatch('input', value);
+            });
+        }
     }
-}" x-radio x-model="value" class="w-full">
+}" x-radio @if (!($xModel ?? null))
+    x-model="value"
+@else
+    x-modelable="value" x-model="{{ $xModel }}"
+    @endif class="w-full">
     <!-- Radio Label -->
     {{-- <label x-radio:label class="sr-only">Backend framework: <span x-text="value"></span></label> --}}
 
