@@ -1092,6 +1092,8 @@ class PierMigration extends Model
                 }
             } else if ($type == "video" && is_array($videos) && count($videos) > 0)
                 $pierModel[$label] = $videos[array_rand($videos, 1)];
+            else if ($type == "auth")
+                $pierModel[$label] = 1;
             else
                 $pierModel[$label] = self::field_generator($field, $_id);
         };
