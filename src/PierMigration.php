@@ -261,7 +261,7 @@ class PierMigration extends Model
         return [$results, $pluck_props];
     }
 
-    static function eager_load_multi_reference_values($data, $model, $flat = true)
+    static function eager_load_multi_reference_values($data, $model, $flat = true, $multi_reference_filters = null)
     {
         $db_model = self::describe($model);
         $table_name = Str::snake($model);
@@ -275,9 +275,29 @@ class PierMigration extends Model
         if ($multi_reference_fields->count() > 0) {
             foreach ($multi_reference_fields as $field) {
                 $referenced_table = Str::snake($field->label);
+                $param_filter = $multi_reference_filters[$referenced_table] ?? null;
+
+                if ($param_filter && is_string($param_filter))
+                    $param_filter = explode(",", $param_filter);
 
                 try {
                     foreach ($data as $result) {
+                        if ($param_filter) {
+                            $matches = DB::table($table_name . '_' . $referenced_table)->where(
+                                $table_name . "_id",
+                                '=',
+                                $result->_id
+                            )->whereIn(
+                                $referenced_table . "_id",
+                                $param_filter
+                            );
+
+                            if ($matches->count() < 1) {
+                                $data = $data->filter(fn ($entry) => $entry->_id != $result->_id);
+                                continue;
+                            }
+                        }
+
                         $reference_ids = DB::table($table_name . '_' . $referenced_table)->where(
                             $table_name . "_id",
                             '=',
@@ -301,7 +321,7 @@ class PierMigration extends Model
         return $data;
     }
 
-    static function eager_load($data, $model, $params)
+    static function eager_load($data, $model, $params, $multi_reference_filters = null)
     {
         $db_model = self::describe($model);
         $fields = collect(json_decode($db_model->fields));
@@ -365,8 +385,8 @@ class PierMigration extends Model
                     }
                 }
             }
-
-            $data = self::eager_load_multi_reference_values($data, $model, false);
+            
+            $data = self::eager_load_multi_reference_values($data, $model, false, $multi_reference_filters);
         }
 
         [$data] = self::do_pluck($data, $params, false);
@@ -426,6 +446,8 @@ class PierMigration extends Model
         $db_model = self::describe($model);
         $display_field = $db_model->display_field;
         $model_fields = self::model_fields($model);
+        $model_fields = self::model_fields($model);
+        $multi_reference_filters = [];
 
         $table_name = Str::snake($model);
         $results = DB::table($table_name);
@@ -459,27 +481,34 @@ class PierMigration extends Model
                         $column = $model_fields->firstWhere("label", $table_column);
                         $isDefaultField = collect(["created_at", "updated_at", "_id"])->contains($table_column);
 
-                        if($column || $isDefaultField) {
-                            $copmarators = ["isGreaterThanOrEqual", "isLessThanOrEqual", "isLessThan", "isGreaterThan"];
-                            $table_column = strtolower(str_ireplace(" ", "_", self::pascal_to_sentence(str_ireplace(array_merge(["andWhere", "orWhere", "where"], $copmarators), "", $param))));
-                            $symbol = collect($copmarators)->first(function ($value, $key) use ($param) {
-                                return strpos(strtolower($param), strtolower($value));
-                            });
-    
-                            if (is_null($symbol))
-                                $symbol = "Equals";
-    
-                            $symbolMap = [
-                                "isGreaterThan" => ">",
-                                "isGreaterThanOrEqual" => ">=",
-                                "isLessThan" => "<",
-                                "isLessThanOrEqual" => "<=",
-                                "Equals" => "=",
-                            ];
-    
-                            $copmarator = $symbolMap[$symbol];
-                            $args = [$table_column, $copmarator, $params[$param]];
-                            $results = $andWhere ? $results->where(...$args) : $results->orWhere(...$args);
+                        if ($column || $isDefaultField) {
+                            if ($column->type == "multi-reference") {
+                                $param_value = $params[$param];
+                                $value = is_string($param_value) ? explode(",", $param_value) : $param_value;
+
+                                $multi_reference_filters[$table_column] = $value;
+                            } else {
+                                $copmarators = ["isGreaterThanOrEqual", "isLessThanOrEqual", "isLessThan", "isGreaterThan"];
+                                $table_column = strtolower(str_ireplace(" ", "_", self::pascal_to_sentence(str_ireplace(array_merge(["andWhere", "orWhere", "where"], $copmarators), "", $param))));
+                                $symbol = collect($copmarators)->first(function ($value, $key) use ($param) {
+                                    return strpos(strtolower($param), strtolower($value));
+                                });
+
+                                if (is_null($symbol))
+                                    $symbol = "Equals";
+
+                                $symbolMap = [
+                                    "isGreaterThan" => ">",
+                                    "isGreaterThanOrEqual" => ">=",
+                                    "isLessThan" => "<",
+                                    "isLessThanOrEqual" => "<=",
+                                    "Equals" => "=",
+                                ];
+
+                                $copmarator = $symbolMap[$symbol];
+                                $args = [$table_column, $copmarator, $params[$param]];
+                                $results = $andWhere ? $results->where(...$args) : $results->orWhere(...$args);
+                            }
                         }
                     }
                 }
@@ -540,23 +569,23 @@ class PierMigration extends Model
                 )->get();
             }
 
-            $results = $results->reduce(function ($agg, $value, $key) use ($groups, $grouped_by_reference_field, $params, $model) {
+            $results = $results->reduce(function ($agg, $value, $key) use ($groups, $grouped_by_reference_field, $params, $model, $multi_reference_filters) {
                 if ($grouped_by_reference_field != null) {
                     $group = $groups->where('_id', $key)->first();
                     $key = $group->{$grouped_by_reference_field->meta->mainField};
                 }
 
                 $agg[$key] = self::get_param($params, 'flat')
-                    ? self::eager_load_multi_reference_values($value, $model)
-                    : self::eager_load($value, $model, $params);
+                    ? self::eager_load_multi_reference_values($value, $model, true, $multi_reference_filters)
+                    : self::eager_load($value, $model, $params, $multi_reference_filters);
 
                 $agg[$key] = self::take_results($agg[$key], $params);
 
                 return $agg;
             }, []);
         } else if (count($results) > 0) {
-            $results = self::get_param($params, 'flat') ? self::eager_load_multi_reference_values($results, $model)
-                : self::eager_load($results, $model, $params);
+            $results = self::get_param($params, 'flat') ? self::eager_load_multi_reference_values($results, $model, true, $multi_reference_filters)
+                : self::eager_load($results, $model, $params, $multi_reference_filters);
 
             $results = self::take_results($results, $params);
         }
