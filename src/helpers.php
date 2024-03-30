@@ -7,9 +7,13 @@ function pierRow($model, $rowId, $filters = [])
     return PierMigration::detail($model, $rowId, $filters);
 }
 
-function pierData($model, $filters = null)
+function pierData($model, $filters = null, $paginated = false)
 {
     $filters = $filters ?? [];
+    if (!$paginated && !isset($filters['page']) && !isset($filters['per_page'])) {
+        return PierMigration::browse($model, $filters);
+    }
+
     if (!isset($filters['page'])) $filters['page'] = 1;
     $res = PierMigration::browse_model($model, $filters);
 

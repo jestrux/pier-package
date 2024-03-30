@@ -86,7 +86,7 @@ class PierServiceProvider extends ServiceProvider
                             \$filters = \$arg;
                         }
 
-                        \$__res = pierData(model: \$model, filters: \$filters);
+                        \$__res = pierData(model: \$model, filters: \$filters, paginated: true);
 
                         extract(\$__res);
 
