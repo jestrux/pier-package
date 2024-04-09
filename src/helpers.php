@@ -11,7 +11,20 @@ function pierData($model, $filters = null, $paginated = false)
 {
     $filters = $filters ?? [];
     if (!$paginated && !isset($filters['page']) && !isset($filters['per_page'])) {
-        return PierMigration::browse($model, $filters);
+        $data = PierMigration::browse($model, $filters);
+        $modelRes = PierMigration::describe($model);
+
+        $modelRes->mainField = $modelRes->display_field;
+        $modelRes->fields = collect(json_decode($modelRes->fields));
+        $modelRes->settings = collect(json_decode($modelRes->settings));
+
+        return [
+            "data" => $data,
+            "model" => $modelRes,
+            "pagination" => (object) [
+                "page" => 1
+            ]
+        ];
     }
 
     if (!isset($filters['page'])) $filters['page'] = 1;
