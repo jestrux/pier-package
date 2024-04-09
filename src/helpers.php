@@ -2,6 +2,16 @@
 
 use Jestrux\Pier\PierMigration;
 
+function pierInsertRow($model, $data = [])
+{
+    return PierMigration::insertRow($model, $data);
+}
+
+function pierUpdateRow($model, $rowId, $data = [])
+{
+    return PierMigration::updateRow($model, $rowId, $data);
+}
+
 function pierRow($model, $rowId, $filters = [])
 {
     return PierMigration::detail($model, $rowId, $filters);
