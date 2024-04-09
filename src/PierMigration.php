@@ -596,6 +596,7 @@ class PierMigration extends Model
         $db_model = self::describe($model);
         $display_field = $db_model->display_field;
         $model_fields = self::model_fields($model);
+        $multi_reference_filters = [];
 
         $table_name = Str::snake($model);
         $results = DB::table($table_name);
@@ -613,30 +614,53 @@ class PierMigration extends Model
 
             if ($where_params->count() > 0) {
                 foreach ($where_params as $index => $param) {
-                    $table_column = strtolower(str_replace(" ", "_", self::pascal_to_sentence(str_replace(["where", "andWhere", "orWhere", "isGreaterThan", "isGreaterThanOrEqual", "isLessThan", "isLessThanOrEqual"], "", $param))));
-                    $copmarators = ["isGreaterThanOrEqual", "isLessThanOrEqual", "isLessThan", "isGreaterThan"];
-                    $table_column = strtolower(str_ireplace(" ", "_", self::pascal_to_sentence(str_ireplace(array_merge(["andWhere", "orWhere", "where"], $copmarators), "", $param))));
-                    $symbol = collect($copmarators)->first(function ($value, $key) use ($param) {
-                        return strpos(strtolower($param), strtolower($value));
-                    });
+                    $andWhere = $index == 0 || strpos($param, "andWhere") === 0;
 
-                    if (is_null($symbol))
-                        $symbol = "Equals";
+                    if (strtolower($param) == "wherein") {
+                        $param_value = $params[$param];
+                        $value = is_string($param_value) ? explode(",", $param_value) : $param_value;
 
-                    $symbolMap = [
-                        "isGreaterThan" => ">",
-                        "isGreaterThanOrEqual" => ">=",
-                        "isLessThan" => "<",
-                        "isLessThanOrEqual" => "<=",
-                        "Equals" => "=",
-                    ];
+                        $results = $andWhere ? $results->whereIn('_id', $value) : $results->orWhereIn('_id', $value);
+                    } else if (strtolower($param) == "wherenotin") {
+                        $param_value = $params[$param];
+                        $value = is_string($param_value) ? explode(",", $param_value) : $param_value;
 
-                    $copmarator = $symbolMap[$symbol];
+                        $results = $andWhere ? $results->whereNotIn('_id', $value) : $results->orWhereNotIn('_id', $value);
+                    } else {
+                        $table_column = strtolower(str_replace(" ", "_", self::pascal_to_sentence(str_replace(["where", "andWhere", "orWhere", "isGreaterThan", "isGreaterThanOrEqual", "isLessThan", "isLessThanOrEqual"], "", $param))));
+                        $column = $model_fields->firstWhere("label", $table_column);
+                        $isDefaultField = collect(["created_at", "updated_at", "_id"])->contains($table_column);
 
-                    if ($index == 0 || strpos($param, "andWhere") === 0)
-                        $results = $results->where($table_column, $copmarator, $params[$param]);
-                    else
-                        $results = $results->orWhere($table_column, $copmarator, $params[$param]);
+                        if ($column || $isDefaultField) {
+                            if ($column->type == "multi-reference") {
+                                $param_value = $params[$param];
+                                $value = is_string($param_value) ? explode(",", $param_value) : $param_value;
+
+                                $multi_reference_filters[$table_column] = $value;
+                            } else {
+                                $copmarators = ["isGreaterThanOrEqual", "isLessThanOrEqual", "isLessThan", "isGreaterThan"];
+                                $table_column = strtolower(str_ireplace(" ", "_", self::pascal_to_sentence(str_ireplace(array_merge(["andWhere", "orWhere", "where"], $copmarators), "", $param))));
+                                $symbol = collect($copmarators)->first(function ($value, $key) use ($param) {
+                                    return strpos(strtolower($param), strtolower($value));
+                                });
+
+                                if (is_null($symbol))
+                                    $symbol = "Equals";
+
+                                $symbolMap = [
+                                    "isGreaterThan" => ">",
+                                    "isGreaterThanOrEqual" => ">=",
+                                    "isLessThan" => "<",
+                                    "isLessThanOrEqual" => "<=",
+                                    "Equals" => "=",
+                                ];
+
+                                $copmarator = $symbolMap[$symbol];
+                                $args = [$table_column, $copmarator, $params[$param]];
+                                $results = $andWhere ? $results->where(...$args) : $results->orWhere(...$args);
+                            }
+                        }
+                    }
                 }
             }
 
