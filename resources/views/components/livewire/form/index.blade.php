@@ -49,20 +49,20 @@
 <div x-data="{
     saving: false,
     toastTimeout: null,
-    successMessage: $wire.successMessage ?? null,
+    successMessage: `{{ $successMessage ?? null }}`,
     message: '',
     showMessage: false,
     get uploadingFile() {
         return false;
     },
-    values: $wire.values ?? [],
-    onSave: $wire.onSave ?? null,
+    values: {{ json_encode($values ?? []) }},
+    onSave: `{{ $onSave ?? null }}`,
     async handleSave(data) {
         if (this.onSave) {
             const onSave = eval(this.onSave);
             return onSave.apply(null, [data, this.$el]);
         }
-        return await $wire.submit(data);
+        {{-- return await $wire.submit(data); --}}
     },
     showToast(message) {
         if (this.toastTimeout) clearTimeout(toastTimeout);
@@ -82,7 +82,6 @@
         try {
             this.saving = true;
             const res = await this.handleSave(Object.fromEntries(new FormData(form)));
-            console.log('Form res: ', res);
 
             if (!res) return;
 

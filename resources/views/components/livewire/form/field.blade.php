@@ -104,7 +104,7 @@
 @endphp
 
 @if ($type == 'group')
-    <div class="col-span-12 border-b border-neutral-500 mt-4" style="position: {{ $hiddenOrAuth ? 'absolute' : '' }}">
+    <div class="col-span-12 border-b border-neutral-500 mt-4" {{ $hiddenOrAuth ? 'style="position: absolute"' : '' }}>
         <h3 class="mb-2 text-lg leading-none font-semibold">
             {{ $cleanLabel ? $cleanLabel : $label }}
         </h3>
@@ -127,8 +127,8 @@
         }
       }'
         x-on:change.stop="{{ $onChange }}" class="flex flex-col md:grid grid-cols-12 {{ $widthClass($width) }}"
-        style="position: {{ $hiddenOrAuth ? 'absolute' : '' }}">
-        <div class="{{ $widthClass($stretch) }}" style="position: {{ $hiddenOrAuth ? 'absolute' : '' }}">
+        {{ $hiddenOrAuth ? 'style="position: absolute"' : '' }}>
+        <div class="{{ $widthClass($stretch) }}" {{ $hiddenOrAuth ? 'style="position: absolute"' : '' }}>
             <div class="pier-form-field relative" x-model="value">
                 @unless ($hideLabel)
                     <label class="pier-label first-letter:uppercase" for="{{ $label }}">
