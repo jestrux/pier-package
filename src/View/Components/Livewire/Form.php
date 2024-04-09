@@ -14,6 +14,7 @@ class Form extends Component
     public $redirectTo = null;
     public $successMessage = null;
     public $onSave = null;
+    public $onSuccess = null;
 
     public function mount()
     {
@@ -26,6 +27,11 @@ class Form extends Component
                 $this->values = $model && $this->rowId ? (array) pierRow($this->modelName, $this->rowId) : [];
             }
         }
+    }
+
+    public function submit($data)
+    {
+        return $data;
     }
 
     public function render()

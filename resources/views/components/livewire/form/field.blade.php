@@ -56,6 +56,10 @@
             padding: 0.65rem 0.8rem;
         }
 
+        .pier-form-field .pier-textarea {
+            min-height: 150px;
+        }
+
         .pier-form-field>.mt-6 {
             margin-top: -0.1rem !important;
         }
@@ -133,7 +137,16 @@
                 @endunless
 
                 @php
-                    $specialFields = collect(['hidden', 'auth', 'image', 'file', 'rating', 'boolean', 'status', 'reference']);
+                    $specialFields = collect([
+                        'hidden',
+                        'auth',
+                        'image',
+                        'file',
+                        'rating',
+                        'boolean',
+                        'status',
+                        'reference',
+                    ]);
                 @endphp
 
                 @if (collect(['image', 'file'])->contains($type))
@@ -166,6 +179,9 @@
                         class="bg-transparent absolute -bottom-0 inset-x-0 opacity-0 pointer-events-none"
                         name="{{ $label }}"
                         x-bind:value="{{ $type == 'reference' ? 'value?._id' : 'value' }}" />
+                @elseif($type == 'long text')
+                    <textarea id="{{ $label }}" form="{{ $formId }}" class="pier-textarea" name="{{ $label }}"
+                        required="{{ $required }}" type="{{ $type }}" rows="1" x-model="value"></textarea>
                 @else
                     <input id="{{ $label }}" form="{{ $formId }}" class="pier-input"
                         name="{{ $label }}" required="{{ $required }}" type="{{ $type }}"
