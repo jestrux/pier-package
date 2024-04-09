@@ -31,7 +31,10 @@ class Form extends Component
 
     public function submit($data)
     {
-        return $data;
+        if ($this->rowId)
+            return pierUpdateRow($this->modelName, $this->rowId, $data);
+
+        return pierInsertRow($this->modelName, $data);
     }
 
     public function render()

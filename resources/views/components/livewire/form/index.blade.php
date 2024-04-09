@@ -62,15 +62,16 @@
             const onSave = eval(this.onSave);
             return onSave.apply(null, [data, this.$el]);
         }
-        {{-- return await $wire.submit(data); --}}
+
+        if (typeof $wire.submit == 'function') return await $wire.submit(data);
+
+        return data;
     },
     showToast(message) {
-        if (this.toastTimeout) clearTimeout(toastTimeout);
-
+        if (this.toastTimeout)
+            clearTimeout(toastTimeout);
         if (message) this.message = message;
-
         this.showMessage = true;
-
         this.toastTimeout = setTimeout(() => {
             this.showMessage = false;
         }, 3000);
