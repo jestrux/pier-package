@@ -751,115 +751,16 @@ class PierMigration extends Model
         $has_been_paginated = is_array($results) ? array_key_exists("data", $results) : false;
         $result_data = $has_been_paginated ? collect($results["data"]) : $results;
 
-        if (count($result_data) > 0) {
-            if (in_array("randomize", $param_keys)) {
-                $result_data = $result_data->shuffle();
-            }
-
-            $status_fields = $model_fields->filter(function ($field) {
-                return $field->type == 'status';
-            });
-
-            if ($status_fields->count() > 0) {
-                foreach ($status_fields as $field) {
-                    $statuses = $field->meta->availableStatuses;
-
-                    foreach ($result_data as $result) {
-                        if (gettype($result) != "object" || !isset($result->{$field->label})) continue;
-
-                        $resultValue = $result->{$field->label};
-                        $result->{$field->label . 'Meta'} = collect($statuses)->where("name", "=", $resultValue)->first();
-                    }
-                }
-            }
-
-            if ($reference_fields->count() > 0) {
-                // return in_array('typesy', $result_data->keys()->toArray());
-
-                foreach ($reference_fields as $field) {
-                    $referenced_table = Str::snake($field->meta->model);
-
-                    foreach ($result_data as $result) {
-                        try {
-                            $result->{$field->label} = DB::table($referenced_table)->where(
-                                "_id",
-                                '=',
-                                $result->{$field->label}
-                            )->first();
-                        } catch (\Throwable $th) {
-                            //throw $th;
-                        }
-                    }
-                }
-            }
-
-            $multi_reference_fields = $model_fields->filter(function ($field) {
-                return $field->type == 'multi-reference';
-            });
-
-            if ($multi_reference_fields->count() > 0) {
-                foreach ($multi_reference_fields as $field) {
-                    $referenced_table = Str::snake($field->label);
-
-                    try {
-                        foreach ($result_data as $result) {
-                            $reference_ids = DB::table($table_name . '_' . $referenced_table)->where(
-                                $table_name . "_id",
-                                '=',
-                                $result->_id
-                            )->pluck($referenced_table . '_id');
-
-                            if ($reference_ids->count() > 0) {
-                                $result->{$field->label} = DB::table(Str::snake($field->meta->model))->whereIn(
-                                    '_id',
-                                    $reference_ids
-                                )->get();
-                            } else
-                                $result->{$field->label} = [];
-                        }
-                    } catch (\Throwable $th) {
-                        //throw $th;
-                    }
-                }
-            }
-
-            $auth_fields = $model_fields->filter(function ($field) {
-                return $field->type == 'auth';
-            });
-
-            if ($auth_fields->count() > 0) {
-                foreach ($auth_fields as $field) {
-                    foreach ($result_data as $result) {
-                        try {
-                            $result->{$field->label} = DB::table("users")->where(
-                                "id",
-                                '=',
-                                $result->{$field->label}
-                            )->first();
-                        } catch (\Throwable $th) {
-                            //throw $th;
-                        }
-                    }
-                }
-            }
-
-            if (isset($params['unique'])) {
-                $result_data = $params['unique'] == "true"
-                    ? $result_data->unique()
-                    : $result_data->unique($params['unique']);
-
-                $result_data = $result_data->values();
-            }
-        }
+        $result_data = self::get_param($params, 'flat')
+            ? self::eager_load_multi_reference_values($result_data, $model, true, $multi_reference_filters)
+            : self::eager_load($result_data, $model, $params, $multi_reference_filters);
 
         if (isset($params['limit'])) {
             $result_data = $result_data->take($params['limit']);
         }
 
         if (isset($params['first'])) {
-            if ($result_data->count() == 0) $result_data = null;
-
-            $result_data = $result_data->first();
+            $result_data = $result_data->count() == 0 ? null : $result_data->first();
         }
 
         if ($has_been_paginated) $results['data'] = $result_data;
