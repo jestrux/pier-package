@@ -24,6 +24,7 @@ use Jestrux\Pier\View\Components\Livewire\CMS;
 use Jestrux\Pier\View\Components\Livewire\DataTable;
 use Jestrux\Pier\View\Components\Livewire\Table as LivewireTable;
 use Jestrux\Pier\View\Components\Livewire\Form as LivewireForm;
+use Jestrux\Pier\View\Components\Livewire\PierList;
 
 // use Jestrux\Pier\Pier;
 
@@ -147,6 +148,7 @@ class PierServiceProvider extends ServiceProvider
         Livewire::component('pier-datatable', DataTable::class);
         Livewire::component('pier-form', LivewireForm::class);
         Livewire::component('pier-table', LivewireTable::class);
+        Livewire::component('pier-list', PierList::class);
         Livewire::component('pier-cms', CMS::class);
 
         $this->loadViewComponentsAs('pier', [

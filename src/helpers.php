@@ -12,6 +12,25 @@ function pierUpdateRow($model, $rowId, $data = [])
     return PierMigration::updateRow($model, $rowId, $data);
 }
 
+function pierDataToViewData($data, $fields)
+{
+    return collect($data)->map(function ($row) use ($fields) {
+        $entry = [];
+
+        if ($row->_id ?? null != null)
+            $entry["_id"] = $row->_id;
+
+        foreach ($fields as $key => $value) {
+            if ($value instanceof \Closure)
+                $entry[$key] = $value($row);
+            else if ($row->{$value} ?? null != null)
+                $entry[$key] = $row->{$value};
+        }
+
+        return (object) $entry;
+    });
+}
+
 function pierRow($model, $rowId, $filters = [])
 {
     return PierMigration::detail($model, $rowId, $filters);
