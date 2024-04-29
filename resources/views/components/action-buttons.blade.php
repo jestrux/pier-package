@@ -4,17 +4,61 @@
     if (!is_null($rowActions ?? null)) {
         $actions = $rowActions;
     }
-    
+
     $model = $model ?? null;
-    
+
     if (!is_null($buttonsModel)) {
         $model = $buttonsModel;
     }
-    
+
     $editLink = is_null($model) ? '#' : url('/admin/upsertModel/' . $model . '/' . $rowId);
 @endphp
 
-<div x-data="{
+<x-pier::menu>
+    <x-pier::menu.button class="rounded hover:bg-content/5 p-1">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+        </svg>
+    </x-pier::menu.button>
+
+    <x-pier::menu.items class="!min-w-52">
+        <x-pier::menu.close>
+            @if (!is_null($onEdit ?? null))
+                <x-pier::menu.item onclick="{{ $onEdit($rowId) }}">
+                    Edit
+                </x-pier::menu.item>
+            @else
+                <x-pier::menu.item href="{{ $editLink }}" data-row-id="{{ $rowId }}"
+                    x-on:click="openUpsertModal">
+                    Edit
+                </x-pier::menu.item>
+            @endif
+
+            @isset($actions)
+                @foreach ($rowActions as $action)
+                    @if (isset($action['href']))
+                        <x-pier::menu.item href="{{ $action['href']($rowId) }}">
+                            {{ $action['label'] }}
+                        </x-pier::menu.item>
+                    @elseif (isset($action['onClick']))
+                        <x-pier::menu.item onclick="{{ $action['onClick']($rowId) }}">
+                            {{ $action['label'] }}
+                        </x-pier::menu.item>
+                    @endif
+                @endforeach
+            @endisset
+
+            @if (!is_null($model))
+                <x-pier::menu.item onclick="deleteEntry('{{ $model }}', '{{ $rowId }}')">
+                    <span class="text-red-600">Delete</span>
+                </x-pier::menu.item>
+            @endif
+        </x-pier::menu.close>
+    </x-pier::menu.items>
+</x-pier::menu>
+
+{{-- <div x-data="{
     open: false,
     toggle() {
         if (this.open) {
@@ -88,4 +132,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
