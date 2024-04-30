@@ -1,11 +1,25 @@
 {{-- @assets() --}}
-    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/sort@3.x.x/dist/cdn.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/sort@3.x.x/dist/cdn.min.js"></script>
 {{-- @endassets --}}
 
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data("pierList{{ $instanceId }}", () => ({
             fetchingModalContent: false,
+            async sort(rowId, position) {
+                await fetch("/pier-sort-list", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: "{{ $model }}",
+                        field: "{{ $sortBy }}",
+                        rowId,
+                        position
+                    })
+                });
+            },
             openUpsertModal(e) {
                 const el = this.$el;
                 let modal = el.closest("[pier-list-component]");
@@ -64,9 +78,9 @@
 
 <div>
     <div id="pierComponent{{ $instanceId }}" pier-list-component="{{ $instanceId }}" x-data="pierList{{ $instanceId }}">
-        <div class="flex flex-col gap-2" @if ($sortBy) x-sort @endif>
+        <div class="flex flex-col gap-2" @if ($sortBy) x-sort="sort($item, $position)" @endif>
             @foreach ($data as $row)
-                <div @if ($sortBy) x-sort:item @endif
+                <div @if ($sortBy) x-sort:item="'{{ $row->_id }}'" wire:key="{{ $row->_id }}" @endif
                     class="group relative bg-card p-3 w-full flex items-center gap-2 focus:outline-none border rounded-md shadow-sm">
 
                     @if ($sortBy)
