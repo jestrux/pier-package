@@ -10,10 +10,13 @@
 @if ($image instanceof \Closure || $title instanceof \Closure || $description instanceof \Closure)
     @php
         $res = pierData(model: $model, filters: $filters);
+        $fields = $res['model']->fields;
         $data = pierDataToViewData(data: $res['data'], fields: compact('title', 'description', 'image'));
+
+        $imageField = !$image || $image instanceof \Closure ? null : $image;
     @endphp
 
-    <livewire:pier-list :$data />
+    <livewire:pier-list :$model :$data :$fields :image="$imageField" />
 @else
-    <livewire:pier-list :$model :imageField="$image" :titleField="$title" :descriptionField="$description" :$sortBy :$filters />
+    <livewire:pier-list :$model :$image :$title :$description :$sortBy :$filters />
 @endif

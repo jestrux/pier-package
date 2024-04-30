@@ -1,6 +1,6 @@
 @props(['value' => 0, 'max' => 5, 'xModel'])
 
-@assets()
+{{-- @assets() --}}
     <script>
         window.pierDebouncer = (func, timeout = 300) => {
             let timer;
@@ -12,7 +12,7 @@
             };
         }
     </script>
-@endassets
+{{-- @endassets --}}
 
 <div @if ($xModel ?? null) x-modelable="value" x-model.debounce="{{ $xModel }}" @endif
     x-data='{

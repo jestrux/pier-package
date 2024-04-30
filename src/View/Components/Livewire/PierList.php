@@ -11,15 +11,16 @@ class PierList extends Component
     public $model;
     public $filters;
     public $data;
+    public $fields;
 
-    public $imageField = "image";
-    public $titleField = "title";
-    public $descriptionField = "description";
+    public $image = "image";
+    public $title = "title";
+    public $description = "description";
     public $sortBy;
 
     protected function mapData($data)
     {
-        $this->data = pierDataToViewData(data: $data, fields: ['title' => $this->titleField, 'description' => $this->descriptionField, 'image' => $this->imageField]);
+        $this->data = pierDataToViewData(data: $data, fields: ['title' => $this->title, 'description' => $this->description, 'image' => $this->image]);
     }
 
     protected function fetchData()
@@ -30,6 +31,7 @@ class PierList extends Component
         );
 
         $data = $res['data'];
+        $this->fields = $res['model']->fields;
 
         $sortable = $this->sortBy ?? null != null && count($data) > 0 && isset($data[0]->{$this->sortBy});
 

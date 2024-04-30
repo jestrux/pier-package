@@ -1,4 +1,6 @@
-@php
+<livewire:pier-upsert :$model :$rowId :$successMessage :$onSave :$onSuccess />
+
+{{-- @php
     $plain = $plain ?? false;
     $successMessage = $successMessage ?? null;
     $onSave = $onSave ?? null; // "() => window.location.reload()";
@@ -7,9 +9,9 @@
 @if ($plain)
     <x-pier-form :model="$model" :row-id="$rowId ?? null" :success-message="$successMessage" :on-save="$onSave" />
 @else
-    <div class="bg-gray-200 h-screen overflow-y-auto">
+    <div class="bg-canvas h-screen overflow-y-auto">
         <div class="-mt-4 mb-6">
-            <div class="bg-white shadow-sm fixed inset-x-0 py-3 z-10" style="top: 0">
+            <div class="bg-card text-content shadow-sm fixed inset-x-0 py-3 z-10" style="top: 0">
                 <div class="container mx-auto flex items-center">
                     <button onclick="history.back()"
                         class="inline-flex items-center text-xs uppercase tracking-wider border rounded pt-2 pb-1 px-3 hover:bg-gray-100">
@@ -34,9 +36,10 @@
         </div>
 
         <div class="container mx-auto py-16">
-            <div class="bg-white rounded-xl shadow my-4 pt-2 pb-5 px-6 mx-auto w-full" style="max-width: 680px">
+            <div class="bg-card text-content rounded-xl shadow my-4 pt-2 pb-5 px-6 mx-auto w-full"
+                style="max-width: 680px">
                 <x-pier-form :model="$model" :row-id="$rowId ?? null" :success-message="$successMessage" :on-save="$onSave" />
             </div>
         </div>
     </div>
-@endif
+@endif --}}

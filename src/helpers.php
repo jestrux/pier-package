@@ -2,6 +2,11 @@
 
 use Jestrux\Pier\PierMigration;
 
+function pierRandomId()
+{
+    return bin2hex(random_bytes(6));
+}
+
 function pierInsertRow($model, $data = [])
 {
     return PierMigration::insertRow($model, $data);
@@ -15,20 +20,31 @@ function pierUpdateRow($model, $rowId, $data = [])
 function pierDataToViewData($data, $fields)
 {
     return collect($data)->map(function ($row) use ($fields) {
-        $entry = [];
-
-        if ($row->_id ?? null != null)
-            $entry["_id"] = $row->_id;
+        $entry = (array) $row;
 
         foreach ($fields as $key => $value) {
             if ($value instanceof \Closure)
                 $entry[$key] = $value($row);
+            else if (in_array($value, ["null", null]))
+                $entry[$key] = null;
             else if ($row->{$value} ?? null != null)
                 $entry[$key] = $row->{$value};
         }
 
         return (object) $entry;
     });
+}
+
+function pierLocationImage($location, $width = 500, $height = 500)
+{
+    if (!env('PIER_MAPQUEST_API_KEY')) return null;
+
+    $url = 'https://www.mapquestapi.com/staticmap/v5/map?zoom=8&marker-7B0099';
+    $size = "&size=" . collect([$width, $height])->join(",");
+    $key = '&key=' . env('PIER_MAPQUEST_API_KEY');
+    $center = '&center=' . implode(',', array_reverse($location->coords));
+
+    return $url . $size . $key . $center;
 }
 
 function pierRow($model, $rowId, $filters = [])
@@ -97,17 +113,17 @@ function pierModelFields($model)
 }
 
 function pierField(
-    $label,
-    $type = 'text',
-    $meta = [],
-    $required = false,
+    $field = []
 ) {
-    return (object) [
-        'label' => $label,
-        'type' => $type,
-        'meta' => (object) ($meta ?? []),
-        'required' => $required,
+    $props = [
+        'type' => 'text',
+        'required' => 'false',
+        ...$field
     ];
+
+    $props['meta'] = (object) ($props['meta'] ?? []);
+
+    return (object) $props;
 }
 
 function pierConfig()

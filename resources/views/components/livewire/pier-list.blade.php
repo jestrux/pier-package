@@ -1,6 +1,6 @@
-@assets()
+{{-- @assets() --}}
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/sort@3.x.x/dist/cdn.min.js"></script>
-@endassets
+{{-- @endassets --}}
 
 <script>
     document.addEventListener('alpine:init', () => {
@@ -67,7 +67,7 @@
         <div class="flex flex-col gap-2" @if ($sortBy) x-sort @endif>
             @foreach ($data as $row)
                 <div @if ($sortBy) x-sort:item @endif
-                    class="group relative bg-card p-2 w-full flex items-center gap-3 focus:outline-none border rounded-md shadow-sm">
+                    class="group relative bg-card p-3 w-full flex items-center gap-2 focus:outline-none border rounded-md shadow-sm">
 
                     @if ($sortBy)
                         <div style="cursor: -webkit-grabbing"
@@ -81,23 +81,28 @@
                     @endif
 
                     @if ($row->image ?? null != null)
-                        <img style="width: 100px; aspect-ratio: 2/1.25; object-fit: cover"
-                            class="flex-shrink-0 md:rounded-md inset-0 w-full object-cover" src="{{ $row->image }}" />
+                        @php
+                            $imageField = $fields->firstWhere('label', $image);
+                            $isFace = ($imageField->meta ?? (object) [])->face ?? null;
+                        @endphp
+
+                        <img style="{{ $isFace ? 'aspect-ratio:1/1; border-radius: 50%;' : 'aspect-ratio:1.4/1; border-radius: 4px;' }} height: 40px; object-fit: cover"
+                            class="bg-content/5 flex-shrink-0 inset-0 object-cover" src="{{ $row->image }}" />
                     @endif
 
-                    <div class="px-2 py-2 flex flex-col gap-1">
+                    <div class="pr-10">
                         @if ($row->title ?? null != null)
-                            <h5 class="text-sm font-medium">
+                            <h5 class="line-clamp-1 text-sm font-medium">
                                 {{ $row->title }}
                             </h5>
                         @else
-                            <h5 class="text-sm font-medium">
+                            <h5 class="line-clamp-1 text-sm font-medium">
                                 &nbsp;
                             </h5>
                         @endif
 
                         @if ($row->description ?? null != null)
-                            <p class="text-xs leading-relaxed opacity-80 font-light">
+                            <p class="line-clamp-1 text-xs leading-relaxed opacity-80 font-light">
                                 {{ mb_strimwidth(strip_tags($row->description), 0, 100, '...') }}
                             </p>
                         @endif

@@ -1,99 +1,11 @@
-@props(['field' => (object) [], 'value' => '', 'formId' => '', 'onChange' => 'console.log'])
-
-@assets()
-    <style>
-        :root {
-            --input-bg-color: rgba(0, 0, 0, 0.05);
-            --input-border-color: rgba(0, 0, 0, 0.02);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --input-bg-color: rgba(255, 255, 255, 0.08);
-                --input-border-color: rgba(255, 255, 255, 0.02);
-            }
-        }
-
-        .pier-form-field .pier-label {
-            font-size: 0.95rem;
-            opacity: 0.9;
-            margin-bottom: 0.1rem;
-        }
-
-        .pier-form-field .pier-input,
-        .pier-form-field .pier-textarea,
-        .pier-form-field .pier-select {
-            font-size: 20px;
-            width: 100%;
-        }
-
-        .pier-form-field .pier-label,
-        .pier-form-field .pier-select,
-        .pier-form-field .pier-textarea,
-        .pier-form-field .pier-input {
-            display: block;
-            width: 100%;
-        }
-
-        .pier-form-field .pier-select,
-        .pier-form-field .pier-textarea,
-        .pier-form-field .pier-input {
-            background-color: var(--input-bg-color);
-            border: 1px solid var(--input-border-color);
-            border-radius: 0.35rem;
-            font-size: 1rem;
-            line-height: 1.5rem;
-            padding: 0.5rem 0.75rem;
-            outline: none;
-            /* box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3); */
-        }
-
-        .pier-form-field .pier-select,
-        .pier-form-field .pier-input,
-        .pier-form-field .pier-textarea {
-            min-height: 3rem;
-            font-size: 1.1rem;
-            padding: 0.65rem 0.8rem;
-        }
-
-        .pier-form-field .pier-textarea {
-            min-height: 150px;
-        }
-
-        .pier-form-field>.mt-6 {
-            margin-top: -0.1rem !important;
-        }
-
-        #qlEditorWrapper .ql-container,
-        #qlEditorWrapper .ql-editor {
-            height: auto !important;
-        }
-
-        #qlEditorWrapper .ql-toolbar {
-            border-radius: 0.35rem 0.35rem 0 0 !important;
-        }
-
-        #qlEditorWrapper .ql-container {
-            border-radius: 0 0 0.35rem 0.35rem !important;
-        }
-
-        .PierTelInput .vti__dropdown {
-            pointer-events: none;
-        }
-
-        @media only screen and (max-width: 680px) {
-            .pier-form-fields .grid {
-                display: flex;
-                flex-direction: column;
-            }
-        }
-    </style>
-@endassets
+@props(['field' => (object) [], 'value' => null, 'formId' => '', 'onChange' => 'console.log'])
 
 @php
     $type = $field->type ?? 'text';
     $name = $field->name ?? '';
     $label = $field->label ?? '';
+    $value = $value ?? ($field->value ?? null);
+    $onChange = $onChange ?? ($field->onChange ?? '');
     $cleanLabel = $field->cleanLabel ?? '';
     $hideLabel = false;
     $meta = $field->meta ?? null;
@@ -115,7 +27,7 @@
     @endphp
 
     <div x-data='{ 
-        value: {{ !is_scalar($value) ? json_encode($value) : '"' . $value . '"' }},
+        value: {{ ($type == 'location' ? $value ?? null : !is_scalar($value)) ? json_encode($value) : '"' . $value . '"' }},
         init() {
           this.$watch("value", newValue => {
             this.$el.dispatchEvent(
@@ -132,7 +44,7 @@
             <div class="pier-form-field relative" x-model="value">
                 @unless ($hideLabel)
                     <label class="pier-label first-letter:uppercase" for="{{ $label }}">
-                        {{ $label }}
+                        {{ str_replace(['_', '-'], ' ', $label) }}
                     </label>
                 @endunless
 
@@ -145,25 +57,32 @@
                         'rating',
                         'boolean',
                         'status',
+                        'location',
                         'reference',
+                        'multi-reference',
                     ]);
                 @endphp
 
                 @if (collect(['image', 'file'])->contains($type))
-                    <x-pier::file-uploader :value="$value" :is-face="$meta->face" />
+                    <x-pier::file-uploader :value="$value" :is-face="$meta->face ?? null" />
                 @elseif ($type == 'reference')
-                    <x-pier::combobox class="pier-input" :model="$meta->model" :value="$value" :displayField="$meta->mainField ?? 'label'" />
+                    <x-pier::reference-autocomplete class="pier-input" :$meta :$value />
+                @elseif ($type == 'multi-reference')
+                    <x-pier::multi-reference-autocomplete class="pier-input" :$meta :$value />
+                @elseif ($type == 'location')
+                    <x-pier::location-autocomplete class="pier-input" :$meta :$value />
                 @elseif ($type == 'rating')
-                    <x-pier::multi-range :max="$meta->outOf" :value="$value ?? 0" />
+                    <x-pier::multi-range :max="$meta->outOf ?? 5" :value="$value ?? 0" />
                 @elseif ($type == 'boolean')
-                    @php
+                    <x-pier::switch :checked="$value == '1'" />
+                    {{-- @php
                         $choices = collect([['label' => '✅', 'value' => '1'], ['label' => '❌', 'value' => '0']]);
                     @endphp
 
-                    <x-pier::radio :choices="$choices" :value="$value" />
+                    <x-pier::radio :choices="$choices" :value="$value" /> --}}
                 @elseif ($type == 'status')
                     @php
-                        $choices = collect($meta->availableStatuses)->map(
+                        $choices = collect($meta->availableStatuses ?? [])->map(
                             fn($status) => [
                                 'label' => $status->name,
                                 'value' => $status->name,

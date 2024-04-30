@@ -185,7 +185,7 @@ Showing: {{ $data->count() }} of {{ $pagination->totalRows }} results
 ```blade
 @php
     $data = [(object) ['name' => 'Heather Moon', 'phone' => '+255 700 123 467', 'image' => 'https://images.unsplash.com/photo-1507036066871-b7e8032b3dea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxNjE2NXwwfDF8c2VhcmNofDE4fHxnaXJsfGVufDB8fHx8MTcwNDU4NjMzMXww&ixlib=rb-4.0.3&q=80&w=100']];
-    $fields = [pierField('name'), pierField('phone'), pierField(label: 'image', type: 'image', meta: ['face' => true])];
+    $fields = [pierField(['label' => 'name']), pierField(['label' => 'phone']), pierField(['label' => 'image', 'type' => 'image', 'meta'=> ['face' => true]])];
 @endphp
 
 <x-pier-table :$data :$fields />

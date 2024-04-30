@@ -1,56 +1,6 @@
-@assets()
 <meta name="csrf_token" value="{{ csrf_token() }}" />
 
-<style type="text/tailwindcss">
-    :root {
-        --stroke-color: 226 232 240;
-        --border-color: #e2e8f0;
-        --canvas-color: 229 229 229;
-        --card-color: 255 255 255;
-        --content-color: 0 0 0;
-        --primary-color: {{ join(' ', sscanf($appColor, '#%02x%02x%02x')) }};
-    }
-
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --stroke-color: 53 53 53;
-            --border-color: rgba(255, 255, 255, 0.16);
-            --canvas-color: 24 24 24;
-            --card-color: 37 37 37;
-            --content-color: 255 255 255;
-        }
-
-        input[type="date"] {
-            color-scheme: dark;
-        }
-    }
-
-    * {
-        border-color: rgb(var(--stroke-color));
-    }
-
-    .flex>* {
-        min-width: 0;
-    }
-</style>
-
-<script>
-    window.tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    canvas: "rgb(var(--canvas-color) / <alpha-value>)",
-                    card: "rgb(var(--card-color) / <alpha-value>)",
-                    content: "rgb(var(--content-color) / <alpha-value>)",
-                    primary: "rgb(var(--primary-color) / <alpha-value>)",
-                    stroke: "rgb(var(--stroke-color) / <alpha-value>)",
-                },
-            },
-        },
-    };
-</script>
-@endassets()
-
+@include('pier::theme', compact('appColor'))
 
 <div class="h-screen overflow-hidden flex bg-canvas text-content">
     <aside class="h-screen overflow-y-auto w-72 flex-shrink-0 shadow bg-card">
@@ -68,7 +18,7 @@
         <ul class="py-3">
             @foreach ($models as $model)
                 <li wire:key="{{ $model->_id }}">
-                    <a wire:navigate href="{{ url('cms/' . $model->name) }}"
+                    <a href="{{ url('cms/' . $model->name) }}"
                         class="{{ $model->_id == $currentModel->_id ? 'bg-content/5 text-primary border-current' : 'border-transparent opacity-75' }} hover:bg-content/5 capitalize px-4 h-12 flex items-center border-l-[3px] text-base font-medium">
                         {{ str($model->name)->plural() }}
                     </a>
@@ -82,7 +32,7 @@
         <header class="flex items-center justify-between px-8 h-16 bg-card flex-shrink-0 border shadow-sm">
 
             @if ($upsert)
-                <a wire:navigate href="{{ url('cms/' . $currentModel->name) }}"
+                <a href="{{ url('cms/' . $currentModel->name) }}"
                     class="flex items-center gap-2 my-3 font-bold capitalize text-xl">
                     <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                         aria-hidden="true" data-slot="icon">
@@ -102,7 +52,7 @@
                     {{ str($currentModel->name)->plural() }}
                 </span>
 
-                <a wire:navigate href="{{ url('cms/' . $currentModel->name) }}/upsert"
+                <a href="{{ url('cms/' . $currentModel->name) }}/upsert"
                     class="border border-current flex font-semibold gap-1 items-center rounded-full text-primary text-sm leading-none hover:bg-neutral-200/50"
                     style="padding: 0.4rem 1rem;">
                     <svg height="18px" fill="currentColor" viewBox="0 0 24 24" class="-ml-1">

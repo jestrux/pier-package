@@ -1,49 +1,9 @@
-@assets()
-    <style>
-        @media only screen and (max-width: 680px) {
-            .pier-form-fields .grid {
-                display: flex;
-                flex-direction: column;
-            }
-        }
+<meta name="csrf_token" value="{{ csrf_token() }}" />
 
-        .pier-toast-message {
-            background: #333;
-            color: white;
-            font-size: 0.9rem;
-            padding: 0.8rem 1rem;
-            border-radius: 4px;
-            pointer-events: none;
-
-            display: inline-flex;
-            align-items: center;
-
-            position: fixed;
-            top: 1rem;
-            left: 50%;
-            z-index: 9999;
-
-            transform: translateX(-50%);
-            transition: all 0.15s ease-in-out;
-        }
-
-        .pier-toast-message span {
-            color: greenyellow;
-        }
-
-        .pier-toast-message svg {
-            fill: currentColor;
-        }
-
-        .pier-toast-message:not(.show) {
-            transform: translateX(-50%) translateY(-80%);
-            opacity: 0;
-        }
-    </style>
-@endassets
+@include('pier::theme')
 
 @php
-    $formId = 'pierForm' . bin2hex(random_bytes(6));
+    $formId = 'pierForm' . pierRandomId();
 @endphp
 
 <div x-data="{

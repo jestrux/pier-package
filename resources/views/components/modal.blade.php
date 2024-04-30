@@ -1,5 +1,7 @@
 <link href="{{ asset('pier/css/modal.css') }}" rel="stylesheet" />
 
+@include('pier::theme')
+
 @include('pier::utils')
 
 <div id="{{ $id }}"
@@ -9,9 +11,9 @@
     </div>
 
     <div class="piermodal__content pointer-events-none fixed inset-0 z-[999] flex items-start justify-center md:py-12">
-        <div class="{{ $placement == 'right' ? 'fixed inset-y-0 right-0' : 'md:rounded-lg' }} piermodal__card pointer-events-auto min-w-full md:min-w-0 h-screen md:h-auto max-h-screen overflow-auto bg-white"
+        <div class="{{ $placement == 'right' ? 'fixed inset-y-0 right-0' : 'md:rounded-lg' }} piermodal__card pointer-events-auto min-w-full md:min-w-0 h-screen md:h-auto max-h-screen overflow-auto !bg-card !text-content"
             role="dialog" aria-modal="true" aria-labelledby="modal-1-title" style="width: {{ $width }}">
-            <div class="sticky z-10 bg-white border-b shadow-sm p-3 top-0 flex items-center gap-3">
+            <div class="sticky z-10 bg-card border-b shadow-sm p-3 top-0 flex items-center gap-3">
                 <button class="w-7 h-7 rounded-full border flex items-center justify-center" aria-label="Close modal"
                     data-pieromodal-close="{{ $id }}">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">

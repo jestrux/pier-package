@@ -1,8 +1,8 @@
 @props(['value' => '', 'xModel', 'isFace' => false])
 
-@assets()
-    <script src="{{ asset('pier/js/file-uploader.umd.cjs') }}"></script>
-@endassets
+{{-- @assets() --}}
+<script src="{{ asset('pier/js/file-uploader.umd.cjs') }}"></script>
+{{-- @endassets --}}
 
 @php
     $config = pierConfig();

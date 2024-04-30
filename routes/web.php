@@ -11,6 +11,7 @@ Route::get('/admin/upsertModel/{model}/{rowId?}', function ($model, $rowId = nul
         "plain" => $_GET['plain'] ?? null,
         "successMessage" => $_GET['successMessage'] ?? null,
         "onSave" => $_GET['onSave'] ?? null,
+        "onSuccess" => $_GET['onSuccess'] ?? null,
     ]);
 });
 Route::get('/cms-old', [CMSController::class, 'index'])->name('cms');

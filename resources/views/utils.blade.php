@@ -87,7 +87,9 @@
         return _loadPierContent(_htmlToElements(data), 0, document.querySelector(sectionSelector), false);
     }
 
-    window.appendPierScript = (filepath) => {
+    window.appendPierScript = (filepath, {
+        defer
+    } = {}) => {
         return new Promise((resolve, reject) => {
             if (document.querySelector('head script[src="' + filepath + '"]'))
                 return resolve();
@@ -95,6 +97,9 @@
             const script = document.createElement("script");
             script.setAttribute("type", "text/javascript");
             script.setAttribute("src", filepath);
+            if (defer)
+                script.setAttribute("defer", "defer");
+
             document.querySelector("head").appendChild(script);
 
             script.onload = setTimeout(() => {
@@ -103,7 +108,9 @@
         });
     };
 
-    window.appendAlpineJS = () => appendPierScript("//unpkg.com/alpinejs");
+    window.appendAlpineJS = () => appendPierScript("//unpkg.com/alpinejs", {
+        defer: true
+    });
 
     window.appendSortable = () => appendPierScript("https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js");
 </script>

@@ -67,7 +67,8 @@
                             <div key={field._id} class="flex-shrink-0" style="width: 220px"
                                 x-model="tempFilters['{{ $field->label . ($field->type == 'rating' ? 'IsGreaterThanOrEqual' : '') }}']">
                                 @if ($field->type == 'reference')
-                                    <x-pier::combobox :model="$field->meta->model" x-model="tempFilters['{{ $field->label }}']" />
+                                    <x-pier::reference-autocomplete :model="$field->meta->model"
+                                        x-model="tempFilters['{{ $field->label }}']" />
                                 @endif
 
                                 @if ($field->type == 'rating')
@@ -77,7 +78,11 @@
 
                                 @if ($field->type == 'boolean')
                                     @php
-                                        $choices = collect([['label' => 'All', 'value' => ''], ['label' => '✅', 'value' => '1'], ['label' => '❌', 'value' => '0']]);
+                                        $choices = collect([
+                                            ['label' => 'All', 'value' => ''],
+                                            ['label' => '✅', 'value' => '1'],
+                                            ['label' => '❌', 'value' => '0'],
+                                        ]);
                                     @endphp
 
                                     <x-pier::radio :choices="$choices" x-model="tempFilters['{{ $field->label }}']" />
