@@ -330,6 +330,10 @@ class PierMigration extends Model
             return $field->type == 'status';
         });
 
+        $date_fields = $fields->filter(function ($field) {
+            return $field->type == 'date';
+        });
+
         $reference_fields = $fields->filter(function ($field) {
             return $field->type == 'reference';
         });
@@ -348,6 +352,22 @@ class PierMigration extends Model
 
                         $resultValue = $result->{$field->label};
                         $result->{$field->label . 'Meta'} = collect($statuses)->where("name", "=", $resultValue)->first();
+                    }
+                }
+            }
+
+            if ($date_fields->count() > 0) {
+                foreach ($date_fields as $field) {
+                    foreach ($data as $result) {
+                        if (gettype($result) != "object" || !isset($result->{$field->label})) continue;
+
+                        $resultValue = $result->{$field->label};
+                        $date = \Carbon\Carbon::parse($resultValue);
+                        $result->{$field->label . 'Meta'} = (object) [
+                            "regular" => $date->format('F d, Y'),
+                            "short" => $date->format($date->year === now()->year ? 'M d' : 'M d, Y'),
+                            "full" => $date->format('F d, Y, g:i A'),
+                        ];
                     }
                 }
             }
