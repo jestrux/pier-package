@@ -12,6 +12,16 @@ function pierInsertRow($model, $data = [])
     return PierMigration::insertRow($model, $data);
 }
 
+function pierTruncateModel($model)
+{
+    return PierMigration::truncate($model);
+}
+
+function pierBulkInsert($model, $data = [])
+{
+    return collect($data)->each(fn ($row) => pierInsertRow($model, $row));
+}
+
 function pierUpdateRow($model, $rowId, $data = [])
 {
     return PierMigration::updateRow($model, $rowId, $data);
