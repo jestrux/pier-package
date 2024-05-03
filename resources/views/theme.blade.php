@@ -63,16 +63,9 @@
 
 {{-- Form --}}
 <style>
-    :root {
-        --input-bg-color: rgba(0, 0, 0, 0.05);
-        --input-border-color: rgba(0, 0, 0, 0.02);
-    }
-
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --input-bg-color: rgba(255, 255, 255, 0.08);
-            --input-border-color: rgba(255, 255, 255, 0.02);
-        }
+    body {
+        --input-bg-color: rgb(var(--content-color) / 0.05);
+        --input-border-color: rgb(var(--content-color) / 0.07);
     }
 
     .pier-form-field .pier-label {
