@@ -2,8 +2,8 @@
 
 @php
     $type = $field->type ?? 'text';
-    $name = $field->name ?? '';
     $label = $field->label ?? '';
+    $name = $field->name ?? $label;
     $value = $value ?? ($field->value ?? null);
     $onChange = $onChange ?? ($field->onChange ?? '');
     $cleanLabel = $field->cleanLabel ?? '';
@@ -23,7 +23,7 @@
     </div>
 @else
     @php
-        $widthClass = fn($width) => ['col-span-6' => 'half', 'col-span-4' => 'third'][$width ?? ''] ?? 'col-span-12';
+        $widthClass = fn($width) => ['half' => 'col-span-6', 'third' => 'col-span-4'][$width ?? ''] ?? 'col-span-12';
     @endphp
 
     <div x-data='{ 
@@ -94,17 +94,40 @@
                 @endif
 
                 @if ($specialFields->contains($type))
-                    <input tabindex="-1" required="{{ $required }}" form="{{ $formId }}" type="text"
-                        class="bg-transparent absolute -bottom-0 inset-x-0 opacity-0 pointer-events-none"
-                        name="{{ $label }}"
+                    <input tabindex="-1" {{ $required ? 'required="true"' : '' }} form="{{ $formId }}"
+                        type="text" class="bg-transparent absolute -bottom-0 inset-x-0 opacity-0 pointer-events-none"
+                        name="{{ $name }}"
                         x-bind:value="{{ $type == 'reference' ? 'value?._id' : 'value' }}" />
+                @elseif($type == 'select')
+                    @php
+                        $choices = collect($meta->choices ?? [])->map(
+                            fn($choice) => [
+                                'label' => $choice->label ?? $choice,
+                                'value' => $choice->value ?? $choice,
+                            ],
+                        );
+                    @endphp
+
+                    <div
+                        class="relative after:content-['\2304'] after:text-xl after:absolute after:right-3.5 after:bottom-3.5
+                    after:pointer-events-none">
+                        <select id="{{ $label }}" form="{{ $formId }}"
+                            class="pier-select appearance-none" name="{{ $name }}"
+                            {{ $required ? 'required="true"' : '' }} x-model="value">
+                            <option>Choose One</option>
+
+                            @foreach ($choices as $choice)
+                                <option value="{{ $choice['value'] }}">{{ $choice['label'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 @elseif($type == 'long text')
-                    <textarea id="{{ $label }}" form="{{ $formId }}" class="pier-textarea" name="{{ $label }}"
-                        required="{{ $required }}" type="{{ $type }}" rows="1" x-model="value"></textarea>
+                    <textarea id="{{ $label }}" form="{{ $formId }}" class="pier-textarea" name="{{ $name }}"
+                        {{ $required ? 'required="true"' : '' }} type="{{ $type }}" rows="1" x-model="value"></textarea>
                 @else
                     <input id="{{ $label }}" form="{{ $formId }}" class="pier-input"
-                        name="{{ $label }}" required="{{ $required }}" type="{{ $type }}"
-                        x-model="value" />
+                        name="{{ $name }}" {{ $required ? 'required="true"' : '' }}
+                        type="{{ $type }}" x-model="value" />
                 @endif
             </div>
         </div>
