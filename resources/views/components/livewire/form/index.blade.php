@@ -90,9 +90,9 @@
         @endforeach
     </div>
 
-    <div class="my-7 flex justify-end">
+    <div class="my-7 flex">
         <button form="{{ $formId }}" type="submit"
-            class="w-full px-12 py-0 h-12 bg-primary text-white border-primary text-sm uppercase tracking-wide font-bold focus:outline-none rounded-lg hover:opacity-90"
+            class="px-10 py-0 h-11 bg-primary text-white border-primary text-sm uppercase tracking-wide font-bold focus:outline-none rounded-lg hover:opacity-90"
             x-bind:class="{
                 'pointer-events-none opacity-50': saving || uploadingFile,
             }"
