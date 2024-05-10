@@ -40,23 +40,36 @@
         const form = e.target;
         const formFields = document.querySelectorAll(`[form='{{ $formId }}']`);
 
-        try {
-            this.saving = true;
-            const res = await this.handleSave(Object.fromEntries(new FormData(form)));
-
-            if (!res) return;
-
-            if (formFields)
-                formFields.forEach(node => node.value = '');
-
-            if (this.successMessage?.length)
-                this.showToast(this.successMessage);
-        } catch (error) {
-            console.log('Error: ', error);
-            this.showToast('An unkown error occured');
-        } finally {
-            this.saving = false;
+        if (!this.cachedValues) {
+            this.cachedValues = Object.fromEntries(new FormData(form));
         }
+
+        if (window.pierFormTimeout) {
+            clearTimeout(window.pierFormTimeout);
+            window.pierFormTimeout = null;
+        }
+
+        this.saving = true;
+
+        window.pierFormTimeout = setTimeout(async () => {
+            try {
+                const res = await this.handleSave(Object.fromEntries(Object.entries(this.cachedValues)));
+
+                if (!res) return;
+
+                if (formFields)
+                    formFields.forEach(node => node.value = '');
+
+                if (this.successMessage?.length)
+                    this.showToast(this.successMessage);
+            } catch (error) {
+                console.log('Error: ', error);
+                this.showToast('An unkown error occured');
+            } finally {
+                this.cachedValues = null;
+                this.saving = false;
+            }
+        }, 50);
     }
 }">
     <form id="{{ $formId }}" action="#" method="POST" x-on:submit.prevent="onSubmit($event)"></form>
