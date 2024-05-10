@@ -127,7 +127,7 @@ function pierField(
 ) {
     $props = [
         'type' => 'text',
-        'required' => false,
+        'required' => true,
         ...$field
     ];
 
