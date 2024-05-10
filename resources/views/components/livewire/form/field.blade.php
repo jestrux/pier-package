@@ -41,11 +41,10 @@
         x-on:change.stop="{{ $onChange }}" class="flex flex-col md:grid grid-cols-12 {{ $widthClass($width) }}"
         {{ $hiddenOrAuth ? 'style="position: absolute"' : '' }}>
         <div class="{{ $widthClass($stretch) }}" {{ $hiddenOrAuth ? 'style="position: absolute"' : '' }}>
-            <div class="pier-form-field relative" x-model="value">
+            <div class="pier-form-field relative {{ $required ? 'required' : '' }}" x-model="value">
                 @unless ($hideLabel)
-                    <label class="pier-label first-letter:uppercase" for="{{ $label }}">
-                        {{ str_replace(['_', '-'], ' ', $label) }}
-                    </label>
+                    <label class="pier-label first-letter:uppercase"
+                        for="{{ $label }}">{{ str_replace(['_', '-'], ' ', $label) }}</label>
                 @endunless
 
                 @php
@@ -57,6 +56,7 @@
                         'rating',
                         'boolean',
                         'status',
+                        'radio',
                         'location',
                         'reference',
                         'multi-reference',
@@ -90,12 +90,25 @@
                         );
                     @endphp
 
-                    <x-pier::radio :choices="$choices" :value="$value" />
+                    <x-pier::radio :$choice :$value />
+                @elseif($type == 'radio')
+                    @php
+                        $choices = collect($meta->choices ?? [])->map(
+                            fn($choice) => [
+                                'label' => $choice->label ?? $choice,
+                                'value' => $choice->value ?? $choice,
+                            ],
+                        );
+                    @endphp
+
+                    <div x-model="value">
+                        <x-pier::radio :$choices :$value />
+                    </div>
                 @endif
 
                 @if ($specialFields->contains($type))
-                    <input tabindex="-1" {{ $required ? 'required="true"' : '' }} form="{{ $formId }}"
-                        type="text" class="bg-transparent absolute -bottom-0 inset-x-0 opacity-0 pointer-events-none"
+                    <input tabindex="-1" {{ $required ? 'required' : '' }} form="{{ $formId }}" type="text"
+                        class="bg-transparent absolute -bottom-0 inset-x-0 opacity-0 pointer-events-none"
                         name="{{ $name }}"
                         x-bind:value="{{ $type == 'reference' ? 'value?._id' : 'value' }}" />
                 @elseif($type == 'select')
@@ -113,8 +126,8 @@
                     after:pointer-events-none">
                         <select id="{{ $label }}" form="{{ $formId }}"
                             class="pier-select appearance-none" name="{{ $name }}"
-                            {{ $required ? 'required="true"' : '' }} x-model="value">
-                            <option>Choose One</option>
+                            {{ $required ? 'required' : '' }} x-model="value">
+                            <option value="">Choose One</option>
 
                             @foreach ($choices as $choice)
                                 <option value="{{ $choice['value'] }}">{{ $choice['label'] }}</option>
@@ -123,11 +136,11 @@
                     </div>
                 @elseif($type == 'long text')
                     <textarea id="{{ $label }}" form="{{ $formId }}" class="pier-textarea" name="{{ $name }}"
-                        {{ $required ? 'required="true"' : '' }} type="{{ $type }}" rows="1" x-model="value"></textarea>
+                        {{ $required ? 'required' : '' }} type="{{ $type }}" rows="1" x-model="value"></textarea>
                 @else
                     <input id="{{ $label }}" form="{{ $formId }}" class="pier-input"
-                        name="{{ $name }}" {{ $required ? 'required="true"' : '' }}
-                        type="{{ $type }}" x-model="value" />
+                        name="{{ $name }}" {{ $required ? 'required' : '' }} type="{{ $type }}"
+                        x-model="value" />
                 @endif
             </div>
         </div>
