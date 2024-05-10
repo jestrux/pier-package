@@ -1,4 +1,4 @@
-@props(['field' => (object) [], 'value' => null, 'formId' => '', 'onChange' => 'console.log'])
+@props(['field' => (object) [], 'required' => null, 'value' => null, 'formId' => '', 'onChange' => 'console.log'])
 
 @php
     $type = $field->type ?? 'text';
@@ -9,7 +9,7 @@
     $cleanLabel = $field->cleanLabel ?? '';
     $hideLabel = false;
     $meta = $field->meta ?? null;
-    $required = $field->required ?? false;
+    $required = $field->required ?? $required;
     $width = $field->width ?? 'full';
     $stretch = $field->stretch ?? 'full';
     $hiddenOrAuth = collect(['hidden', 'auth'])->contains($type);

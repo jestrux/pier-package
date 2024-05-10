@@ -85,7 +85,7 @@
                 $value = $values[$field->label] ?? '';
             @endphp
 
-            <x-pier::livewire.form.field :$field :$value :$formId
+            <x-pier::livewire.form.field :$field :$value :$formId :required="$mostFieldsRequired"
                 on-change="e => values['{{ $field->label }}'] = e.detail" />
         @endforeach
     </div>

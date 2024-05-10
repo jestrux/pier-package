@@ -10,6 +10,7 @@ class Form extends Component
     public $model;
     public $fields;
     public $values = [];
+    public $mostFieldsRequired = true;
     public $rowId = null;
     public $redirectTo = null;
     public $successMessage = null;

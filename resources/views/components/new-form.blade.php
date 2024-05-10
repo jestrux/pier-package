@@ -4,8 +4,14 @@
     'fields' => [],
     'values' => [],
     'successMessage' => null,
+    'mostFieldsRequired',
     'onSave' => null,
     'onSuccess' => null,
 ])
 
-<livewire:pier-form :model-name="$model" :$rowId :$fields :$values :$successMessage :$onSave :$onSuccess />
+@php
+    $mostFieldsRequired = $mostFieldsRequired ?? true;
+@endphp
+
+<livewire:pier-form :model-name="$model" :$rowId :$fields :$values :$successMessage :$onSave :$onSuccess
+    :$mostFieldsRequired />
