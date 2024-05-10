@@ -74,6 +74,13 @@
         margin-bottom: 0.1rem;
     }
 
+    .pier-form-field.required .pier-label::after {
+        content: "*";
+        color: red;
+        font-size: 1.2rem;
+        padding-left: 0.15rem;
+    }
+
     .pier-form-field .pier-input,
     .pier-form-field .pier-textarea,
     .pier-form-field .pier-select {
