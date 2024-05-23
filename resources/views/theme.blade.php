@@ -72,6 +72,7 @@
         font-size: 0.95rem;
         opacity: 0.9;
         margin-bottom: 0.1rem;
+        position: relative;
     }
 
     .pier-form-field.required .pier-label::after {
@@ -79,6 +80,7 @@
         color: red;
         font-size: 1.2rem;
         padding-left: 0.15rem;
+        position: absolute;
     }
 
     .pier-form-field .pier-input,
