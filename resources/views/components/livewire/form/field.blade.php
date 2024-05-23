@@ -3,6 +3,7 @@
 @php
     $type = $field->type ?? 'text';
     $label = $field->label ?? '';
+    $placeholder = $field->placeholder ?? null;
     $name = $field->name ?? $label;
     $value = $value ?? ($field->value ?? null);
     $onChange = $onChange ?? ($field->onChange ?? '');
@@ -109,7 +110,7 @@
                 @if ($specialFields->contains($type))
                     <input tabindex="-1" {{ $required ? 'required' : '' }} form="{{ $formId }}" type="text"
                         class="bg-transparent absolute -bottom-0 inset-x-0 opacity-0 pointer-events-none"
-                        name="{{ $name }}"
+                        name="{{ $name }}" placeholder="{{ $placeholder }}"
                         x-bind:value="{{ $type == 'reference' ? 'value?._id' : 'value' }}" />
                 @elseif($type == 'select')
                     @php
@@ -127,7 +128,7 @@
                         <select id="{{ $label }}" form="{{ $formId }}"
                             class="pier-select appearance-none" name="{{ $name }}"
                             {{ $required ? 'required' : '' }} x-model="value">
-                            <option value="">Choose One</option>
+                            <option value="">{{ $placeholder ?? 'Choose One' }}</option>
 
                             @foreach ($choices as $choice)
                                 <option value="{{ $choice['value'] }}">{{ $choice['label'] }}</option>
@@ -136,11 +137,12 @@
                     </div>
                 @elseif($type == 'long text')
                     <textarea id="{{ $label }}" form="{{ $formId }}" class="pier-textarea" name="{{ $name }}"
-                        {{ $required ? 'required' : '' }} type="{{ $type }}" rows="1" x-model="value"></textarea>
+                        placeholder="{{ $placeholder ?? '' }}" {{ $required ? 'required' : '' }} type="{{ $type }}"
+                        rows="1" x-model="value"></textarea>
                 @else
                     <input id="{{ $label }}" form="{{ $formId }}" class="pier-input"
                         name="{{ $name }}" {{ $required ? 'required' : '' }} type="{{ $type }}"
-                        x-model="value" />
+                        placeholder="{{ $placeholder ?? '' }}" x-model="value" />
                 @endif
             </div>
         </div>
