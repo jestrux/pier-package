@@ -16,7 +16,7 @@
     :root {
         --stroke-color: 226 232 240;
         --border-color: #e2e8f0;
-        --canvas-color: 229 229 229;
+        --canvas-color: 255 255 255;
         --card-color: 255 255 255;
         --content-color: 0 0 0;
         --primary-color: {{ join(' ', sscanf(env('APP_COLOR') ?? '#2c5282', '#%02x%02x%02x')) }};
