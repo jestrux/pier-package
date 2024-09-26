@@ -87,6 +87,7 @@
 
         <file-uploader 
             v-if="src === null"
+            :type="type"
             v-model="src"
             :upload-url="uploadUrl" />
 
@@ -105,11 +106,12 @@ import FieldPreview from "./FieldPreview";
 export default {
     name: "FileField",
     props: {
+        type: String,
         url: String,
         label: {
             type: String,
             default: "File"
-        },
+        }
     },
     inject: ['PierCMSConfig'],
     mounted(){

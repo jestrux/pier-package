@@ -60,6 +60,7 @@
         :label="field.cleanLabel ? field.cleanLabel : field.label"
         v-model="val"
         :url="val"
+        :type="field.meta.type"
         :required="field.required"
       />
 

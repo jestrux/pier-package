@@ -83,13 +83,19 @@ class APIController extends Controller
             "json",
         ];
 
-        if ($fileType ?? "" == "image")
+        if (($fileType ?? "") == "image")
             $supportedFileTypes = ["png", "svg", "jpg", "jpeg", "webp", "gif"];
 
-        if (!in_array(pathinfo($imageNameExt, PATHINFO_EXTENSION), $supportedFileTypes)) {
+        if (
+            !in_array(pathinfo($imageNameExt, PATHINFO_EXTENSION), $supportedFileTypes)
+            && !in_array($fileType, $supportedFileTypes)
+        ) {
             return response()->json([
                 "success" => false,
                 "msg" => "Invalid file type",
+                "supportedFileTypes" => $supportedFileTypes,
+                "fileType" => $fileType,
+                "ext" => pathinfo($imageNameExt, PATHINFO_EXTENSION),
             ]);
         }
 
