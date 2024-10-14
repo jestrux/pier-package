@@ -34,9 +34,17 @@
 	},
 	"require": {
 		"fakerphp/faker": "^1.9.1",
-		"livewire/livewire": "^3.3.5"
+		"livewire/flux": "^1.0",
+		"livewire/flux-pro": "^1.0",
+		"livewire/livewire": "^3.5"
 	},
 	"require-dev": {
 		"orchestra/testbench": "^8.19.0"
+	},
+	"repositories": {
+		"flux-pro": {
+			"type": "composer",
+			"url": "https://composer.fluxui.dev"
+		}
 	}
 }

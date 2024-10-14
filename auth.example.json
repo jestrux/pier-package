@@ -1,0 +1,8 @@
+{
+	"http-basic": {
+		"composer.fluxui.dev": {
+			"username": "",
+			"password": ""
+		}
+	}
+}

@@ -91,7 +91,7 @@
                         );
                     @endphp
 
-                    <x-pier::radio :$choice :$value />
+                    <x-pier::radio :$choices :$value />
                 @elseif($type == 'radio')
                     @php
                         $choices = collect($meta->choices ?? [])->map(
